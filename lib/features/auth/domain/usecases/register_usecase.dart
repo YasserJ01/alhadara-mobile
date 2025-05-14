@@ -8,12 +8,13 @@ class RegisterUseCase {
 
   RegisterUseCase(this.repository);
 
-  Future<UserRegisterEntity> call(
+  Future<String> call(
     String firstName,
     String middleName,
     String lastName,
     String phone,
     String password,
+    String confirm_password,
   ) {
     return repository.register(
       firstName,
@@ -21,6 +22,7 @@ class RegisterUseCase {
       lastName,
       phone,
       password,
+      confirm_password,
     );
   }
 }

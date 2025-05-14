@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/app_size.dart';
 import '../../../../core/utils/validators.dart';
+import '../../../security_question/presentation/pages/security_question_modal.dart';
 import '../../../start/presentation/widgets/login_modal.dart';
 import '../bloc/register/register_bloc.dart';
 import 'custom_register_text_field.dart';
@@ -183,7 +184,13 @@ class _RegisterFormState extends State<RegisterForm> {
             SnackBar(content: Text(state.error)),
           );
         } else if (state is RegisterSuccess) {
-          Navigator.pop(context);
+          Navigator.pop(context); // Close register modal
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
+            builder: (context) => SecurityQuestionModal(authToken: state.authToken),
+          );
         }
       },
       // child: Column(
@@ -378,7 +385,7 @@ class _RegisterFormState extends State<RegisterForm> {
               lastName: _controllers['lastName']!.text.trim(),
               phone: _controllers['phone']!.text.trim(),
               password: _controllers['password']!.text.trim(),
-              confirmPassword: _controllers['confirmPassword']!.text.trim(),
+              confirm_password: _controllers['confirmPassword']!.text.trim(),
             ),
           );
     }

@@ -16,11 +16,11 @@ class RegisterLoading extends RegisterState {
 }
 
 class RegisterSuccess extends RegisterState {
-  final UserRegisterEntity user;
+  final String authToken;  // Add this field
 
-  const RegisterSuccess(this.user);
+  const RegisterSuccess(this.authToken);  // Update constructor
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [authToken];
 }
 
 class RegisterFailure extends RegisterState {

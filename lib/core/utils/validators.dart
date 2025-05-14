@@ -19,7 +19,6 @@ class Validators {
     if (!value.contains(RegExp(r'[0-9]'))) errors.add('1 number');
     if (!value.contains(RegExp('(?=.*?[!@#\$&*~])')))
       errors.add('1 special character');
-
     return errors.isEmpty ? null : 'Requires: ${errors.join(', ')}';
   }
 }

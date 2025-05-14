@@ -20,7 +20,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     RegisterRequested event,
     Emitter<RegisterState> emit,
   ) async {
-    if (event.password != event.confirmPassword) {
+    if (event.password != event.confirm_password) {
       emit(const RegisterFailure("Passwords do not match"));
       return;
     }
@@ -29,14 +29,15 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
 
     emit(RegisterLoading());
     try {
-      final user = await registerUseCase(
+      final authToken = await registerUseCase(
         event.firstName,
         event.middleName,
         event.lastName,
         event.phone,
         event.password,
+        event.confirm_password
       );
-      emit(RegisterSuccess(user));
+      emit(RegisterSuccess(authToken));
     } catch (e) {
       emit(RegisterFailure(e.toString()));
     }

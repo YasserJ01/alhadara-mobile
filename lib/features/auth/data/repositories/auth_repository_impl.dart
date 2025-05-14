@@ -29,22 +29,25 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<UserRegisterEntity> register(String firstName, String middleName,
-      String lastName, String phone, String password) async {
+  Future<String> register(
+    String firstName,
+    String middleName,
+    String lastName,
+    String phone,
+    String password,
+    String confirm_password,
+  ) async {
     final request = RegisterRequestModel(
       firstName: firstName,
       middleName: middleName,
       lastName: lastName,
       phone: phone,
       password: password,
+      confirm_password: confirm_password,
     );
     final response = await remoteDataSource.register(request);
-    return UserRegisterEntity(
-      firstName: firstName,
-      middleName: middleName,
-      lastName: lastName,
-      phone: phone,
-      accessToken: response['access'],
-    );
+
+    return response['access'] as String;
+
   }
 }
