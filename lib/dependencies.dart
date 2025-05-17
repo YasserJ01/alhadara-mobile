@@ -2,6 +2,7 @@
 
   import 'package:get_it/get_it.dart';
   import 'package:http/http.dart' as http;
+import 'package:project2/onboarding/bloc/onboarding_bloc.dart';
 
   import 'features/auth/data/datasources/auth_remote_data_source.dart';
   import 'features/auth/data/repositories/auth_repository_impl.dart';
@@ -64,4 +65,6 @@ import 'features/security_question/presentation/bloc/security_question_bloc.dart
       getSecurityQuestionsUseCase: getIt<GetSecurityQuestionsUseCase>(),
       submitSecurityAnswerUseCase: getIt<SubmitSecurityAnswerUseCase>(),
     ));
+
+    // getIt.onBoardingFactory(() => OnboardingBloc());
   }
