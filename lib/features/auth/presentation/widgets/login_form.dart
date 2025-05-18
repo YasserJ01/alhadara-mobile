@@ -83,6 +83,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project2/features/reset_password/presentation/pages/request_security_question_page.dart';
 import '../../../../core/constants/app_size.dart';
 import '../../../../core/constants/auth_text_field.dart';
 import '../../../../core/utils/validators.dart';
@@ -184,14 +185,22 @@ class _LoginFormContentState extends State<LoginFormContent> {
                     textInputType: TextInputType.text,
                   ),
                   const SizedBox(height: 20),
-                  const Align(
+                  Align(
                     alignment: Alignment.centerRight,
-                    child: Text(
-                      "forgot password ?",
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Color.fromARGB(255, 148, 145, 146),
-                        fontWeight: FontWeight.bold,
+                    child: GestureDetector(
+                      onTap: () => Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RequestSecurityQuestionPage(),
+                        ),
+                      ),
+                      child: const Text(
+                        "forgot password ?",
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Color.fromARGB(255, 148, 145, 146),
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),

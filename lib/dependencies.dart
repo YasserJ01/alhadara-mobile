@@ -21,6 +21,13 @@ import 'features/security_question/domain/repositories/security_question_reposit
 import 'features/security_question/domain/usecases/get_security_questions_usecase.dart';
 import 'features/security_question/domain/usecases/submit_security_answer_usecase.dart';
 import 'features/security_question/presentation/bloc/security_question_bloc.dart';
+import 'package:project2/features/reset_password/data/datasources/reset_password_datasource.dart';
+import 'package:project2/features/reset_password/data/repositories/reset_password_repository_im.dart';
+import 'package:project2/features/reset_password/domain/repositories/reset_passwor_repository.dart';
+import 'package:project2/features/reset_password/domain/usecases/request_question.dart';
+import 'package:project2/features/reset_password/presentation/bloc/answar_security_question/answar_security_qu_bloc.dart';
+import 'package:project2/features/reset_password/presentation/bloc/new_password/new_password_bloc.dart';
+import 'package:project2/features/reset_password/presentation/bloc/reset_password/reset_password_bloc.dart';
 
 final getIt = GetIt.instance;
 
@@ -71,6 +78,42 @@ void setupDependencies() {
         getSecurityQuestionsUseCase: getIt<GetSecurityQuestionsUseCase>(),
         submitSecurityAnswerUseCase: getIt<SubmitSecurityAnswerUseCase>(),
       ));
+
+  // Data Layer
+  getIt.registerLazySingleton<PasswordResetApi>(
+    () => PasswordResetApi(client: getIt()),
+  );
+  getIt.registerLazySingleton<PasswordResetRepository>(
+    () => PasswordResetRepositoryImpl(api: getIt()),
+  );
+
+  // Domain Layer
+  getIt.registerLazySingleton<RequestSecurityQuestionUseCase>(
+    () => RequestSecurityQuestionUseCase(getIt()),
+  );
+  getIt.registerLazySingleton<ValidateSecurityAnswerUseCase>(
+    () => ValidateSecurityAnswerUseCase(getIt()),
+  );
+  getIt.registerLazySingleton<ConfirmPasswordResetUseCase>(
+    () => ConfirmPasswordResetUseCase(getIt()),
+  );
+
+  // Presentation Layer
+  getIt.registerFactory<RequestSecurityQuestionBloc>(
+    () => RequestSecurityQuestionBloc(
+      requestSecurityQuestionUseCase: getIt(),
+    ),
+  );
+  getIt.registerFactory<AnswerSecurityQuestionBloc>(
+    () => AnswerSecurityQuestionBloc(
+      validateSecurityAnswerUseCase: getIt(),
+    ),
+  );
+  getIt.registerFactory<ResetPasswordBloc>(
+    () => ResetPasswordBloc(
+      confirmPasswordResetUseCase: getIt(),
+    ),
+  );
 
   // Departments Feature
   // Data sources

@@ -25,7 +25,7 @@ class CourseTypesForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final padding = AppSizes.screenWidth(context) * 0.04; // 4% of screen width
+    final padding = AppSizes.screenWidth(context) * 0.04;
 
     return BlocBuilder<CourseTypesBloc, CourseTypesState>(
       builder: (context, state) {
