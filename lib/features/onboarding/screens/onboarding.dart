@@ -194,13 +194,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dots_indicator/dots_indicator.dart';
-import 'package:project2/core/constants/app_size.dart';
-import 'package:project2/features/start/presentation/pages/start_page.dart';
-import 'package:project2/onboarding/widgets/onboarding_single_page.dart';
+import 'package:project2/features/onboarding/widgets/onboarding_single_page.dart';
 import '../bloc/onboarding_bloc.dart';
 import '../bloc/onboarding_events.dart';
 import '../bloc/onboarding_states.dart';
-import '../widgets/onboarding_buttons.dart';
 
 class Onboarding extends StatelessWidget {
   final PageController controller = PageController(initialPage: 0);

@@ -8,3 +8,6 @@ class ApiException implements Exception {
   @override
   String toString() => 'ApiException: $message (Status $statusCode)';
 }
+class ServerException implements Exception {}
+
+class CacheException implements Exception {}

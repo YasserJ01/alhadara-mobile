@@ -83,12 +83,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:project2/onboarding/screens/onboarding.dart';
 import '../../../../core/constants/app_size.dart';
 import '../../../../core/constants/auth_text_field.dart';
 import '../../../../core/utils/validators.dart';
-import '../../../../onboarding/bloc/onboarding_bloc.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../onboarding/bloc/onboarding_bloc.dart';
+import '../../../onboarding/screens/onboarding.dart';
 import 'custom_register_text_field.dart';
 
 class LoginFormContent extends StatefulWidget {

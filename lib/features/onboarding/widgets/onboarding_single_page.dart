@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../core/constants/app_size.dart';
-import '../../features/start/presentation/pages/start_page.dart';
+import '../../../core/constants/app_size.dart';
+import '../../courses/presentation/pages/departments_page.dart';
 import 'onboarding_buttons.dart';
 class OnboardingSinglePage extends StatelessWidget {
   int pageIndex;
@@ -101,7 +101,7 @@ class OnboardingSinglePage extends StatelessWidget {
                       pageIndex == 2
                           ? Navigator.of(context)
                           .pushReplacement(MaterialPageRoute(builder: (context) {
-                        return const StartPage();
+                        return const DepartmentsPage();
                       }))
                           : pageController.animateToPage(pageIndex + 1,
                           duration: const Duration(milliseconds: 500),
@@ -116,7 +116,7 @@ class OnboardingSinglePage extends StatelessWidget {
                     onTap: () {
                       Navigator.of(context)
                           .pushReplacement(MaterialPageRoute(builder: (context) {
-                        return const StartPage();
+                        return const DepartmentsPage();
                       }));
                     },
                     child: const Text(

@@ -1,13 +1,9 @@
-import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'dependencies.dart';
 import 'features/auth/presentation/pages/login_page.dart';
+import 'features/courses/presentation/pages/departments_page.dart';
 import 'features/spalsh_screen/presentation/pages/splash_screen.dart';
 import 'features/start/presentation/pages/start_page.dart';
-import 'onboarding/bloc/onboarding_bloc.dart';
-import 'onboarding/screens/onboarding.dart';
 
 void main() {
   setupDependencies();
@@ -38,7 +34,7 @@ class MyApp extends StatelessWidget {
         '/splashScreen': (context) => const SplashScreen(),
         '/start': (context) => const StartPage(),
         '/login': (context) => const LoginPage(), // Your existing login page
-        '/guest': (context) => Container(), // Create this if needed
+        '/departments': (context) => const  DepartmentsPage(),
       },
     );
   }

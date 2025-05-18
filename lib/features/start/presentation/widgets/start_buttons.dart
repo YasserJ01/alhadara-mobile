@@ -63,7 +63,7 @@ class StartButtons extends StatelessWidget {
               ),
               backgroundColor: Colors.white
             ),
-            onPressed: () => Navigator.pushNamed(context, '/guest'),
+            onPressed: () => Navigator.pushNamed(context, '/departments'),
             child: const Text(
               'AS A GUEST',
               style: TextStyle(
