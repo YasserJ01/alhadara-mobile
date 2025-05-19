@@ -81,6 +81,8 @@
 
 // auth/presentation/widgets/login_form.dart
 
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project2/features/reset_password/presentation/pages/request_security_question_page.dart';
@@ -91,6 +93,7 @@ import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../onboarding/bloc/onboarding_bloc.dart';
 import '../../../onboarding/screens/onboarding.dart';
 import 'custom_register_text_field.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 
 class LoginFormContent extends StatefulWidget {
   final VoidCallback? onSignUpPressed; // Add this
@@ -110,9 +113,25 @@ class _LoginFormContentState extends State<LoginFormContent> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.error)),
-          );
+          AwesomeDialog(
+            context: context,
+            transitionAnimationDuration: const Duration(milliseconds: 500),
+            // autoHide: const Duration(seconds: 6),
+            dialogType: DialogType.error,
+            animType: AnimType.bottomSlide,
+            headerAnimationLoop: false,
+            title: 'Error',
+            desc: state.error,
+            btnOkOnPress: () {},
+            buttonsBorderRadius: BorderRadius.circular(0),
+            // btnOkIcon: Icons.cancel,
+            btnOkColor: Colors.red,
+            buttonsTextStyle: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+              fontSize: 18,
+            ),
+          ).show();
         } else if (state is AuthSuccess) {
           Navigator.pop(context); // Close modal first
           Navigator.pushReplacement(
@@ -126,7 +145,32 @@ class _LoginFormContentState extends State<LoginFormContent> {
             ),
           );
         }
+        // AwesomeDialog(
+        //   context: context,
+        //   dialogType: DialogType.success,
+        //   animType: AnimType.bottomSlide,
+        //   title: 'Login Successful',
+        //   desc: 'Welcome back!',
+        //   headerAnimationLoop: false,
+        //   transitionAnimationDuration: const Duration(milliseconds: 500),
+        //   autoHide: const Duration(seconds: 6), // Auto-hide after 2 seconds
+        //   onDismissCallback: (type) {
+        //     // This callback runs when dialog is dismissed
+        //     Navigator.pop(context); // Close login modal
+        //     Navigator.pushReplacement(
+        //       context,
+        //       MaterialPageRoute(
+        //         builder: (context) => BlocProvider(
+        //           create: (context) => OnboardingBloc(),
+        //           child:  Onboarding(),
+        //         ),
+        //       ),
+        //     );
+        //   },
+        // ).show();
       },
+
+      // },
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -177,13 +221,21 @@ class _LoginFormContentState extends State<LoginFormContent> {
                     keyboardType: TextInputType.phone,
                     validator: Validators.validateSyrianPhone,
                   ),
+
                   const SizedBox(height: 20),
-                  AuthTextField(
-                    textEditingController: _passwordController,
+                  CustomRegisterTextField(
+                    controller: _passwordController,
+                    label: 'Password',
                     obscureText: true,
-                    labelText: "Password",
-                    textInputType: TextInputType.text,
+                    keyboardType: TextInputType.phone,
+                    validator: Validators.validatePassword,
                   ),
+                  // AuthTextField(
+                  //   textEditingController: _passwordController,
+                  //   obscureText: true,
+                  //   labelText: "Password",
+                  //   textInputType: TextInputType.text,
+                  // ),
                   const SizedBox(height: 20),
                   Align(
                     alignment: Alignment.centerRight,

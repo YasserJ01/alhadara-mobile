@@ -29,11 +29,25 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       },
       body: jsonEncode(request.toJson()),
     );
+    final responseBody = jsonDecode(response.body);
+
     if (response.statusCode == 200) {
-      return jsonDecode(response.body) as Map<String, dynamic>;
+      return responseBody as Map<String, dynamic>;
+    } else if (response.statusCode == 400) {
+      // Handle validation errors
+      if (responseBody is Map<String, dynamic>) {
+        if (responseBody.containsKey('phone') ||
+            responseBody.containsKey('password')) {
+          throw ValidationException(responseBody);
+        }
+      }
+      throw ServerException(responseBody.toString());
+    } else if (response.statusCode == 401) {
+      // Handle unauthorized (wrong credentials)
+      throw UnauthorizedException(
+          responseBody['detail'] ?? 'Invalid credentials');
     } else {
-      print(response.body);
-      throw Exception('Failed to login: ${response.statusCode}');
+      throw ServerException('Failed to login: ${response.statusCode}');
     }
   }
 
@@ -48,13 +62,19 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       },
       body: jsonEncode(request.toJson()),
     );
-
+    final responseBody = json.decode(response.body);
     if (response.statusCode == 201) {
       // Typically 201 for created resources
       return jsonDecode(response.body) as Map<String, dynamic>;
+    } else if (response.statusCode == 400) {
+      if (responseBody.containsKey('phone')) {
+        // Extract the first error message from the phone array
+        final phoneError = (responseBody['phone'] as List).first;
+        throw ValidationnException(phoneError);
+      }
     } else {
-      print(response.body);
-      throw Exception('Failed to register: ${response.statusCode}');
+      throw ServerException('Failed to login: ${response.statusCode}');
     }
+    throw Exception('Invalid');
   }
 }

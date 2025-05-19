@@ -8,6 +8,47 @@ class ApiException implements Exception {
   @override
   String toString() => 'ApiException: $message (Status $statusCode)';
 }
-class ServerException implements Exception {}
 
-class CacheException implements Exception {}
+class ServerException implements Exception {
+  final String message;
+
+  ServerException(this.message);
+
+  @override
+  String toString() => message;
+}
+
+class UnauthorizedException implements Exception {
+  final String message;
+
+  UnauthorizedException(this.message);
+
+  @override
+  String toString() => message;
+}
+
+class ValidationException implements Exception {
+  final Map<String, dynamic> errors;
+
+  ValidationException(this.errors);
+
+  @override
+  String toString() => errors.toString();
+}
+class ValidationnException implements Exception {
+  final String errors;
+
+  ValidationnException(this.errors);
+
+  @override
+  String toString() => errors.toString();
+}
+
+class CacheException implements Exception {
+  final String message;
+
+  CacheException(this.message);
+
+  @override
+  String toString() => message;
+}

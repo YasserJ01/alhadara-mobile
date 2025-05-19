@@ -1,4 +1,5 @@
 // auth/presentation/widgets/register_form.dart
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -180,9 +181,30 @@ class _RegisterFormState extends State<RegisterForm> {
     return BlocListener<RegisterBloc, RegisterState>(
       listener: (context, state) {
         if (state is RegisterFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.error)),
-          );
+          AwesomeDialog(
+            context: context,
+            transitionAnimationDuration: const Duration(milliseconds: 500),
+            // autoHide: const Duration(seconds: 6),
+            dialogType: DialogType.error,
+            animType: AnimType.bottomSlide,
+            headerAnimationLoop: false,
+            title: 'Error',
+            desc: state.error,
+            btnOkOnPress: () {},
+            buttonsBorderRadius: BorderRadius.circular(0),
+            // btnOkIcon: Icons.cancel,
+            btnOkColor: Colors.red,
+            buttonsTextStyle: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+              fontSize: 18,
+            ),
+          ).show();
+
+        // print(state.error);
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   SnackBar(content: Text(state.error)),
+          // );
         } else if (state is RegisterSuccess) {
           Navigator.pop(context); // Close register modal
           showModalBottomSheet(

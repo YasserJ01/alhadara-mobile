@@ -83,13 +83,13 @@ class _RequestSecurityQuestionFormState
                   },
                 ),
                 const SizedBox(height: 40),
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height * 0.08,
-                  color: Color.fromRGBO(162, 12, 13, 1.0),
+                  // color: Color.fromRGBO(162, 12, 13, 1.0),
                   // decoration: BoxDecoration(borderRadius: BorderRadius.circular(100),),
-                  child: GestureDetector(
-                    onTap: state is RequestSecurityQuestionLoading
+                  child: ElevatedButton(
+                    onPressed: state is RequestSecurityQuestionLoading
                         ? null
                         : () {
                             if (_formKey.currentState!.validate()) {
@@ -100,24 +100,29 @@ class _RequestSecurityQuestionFormState
                                   );
                             }
                           },
-                    // style: ElevatedButton.styleFrom(
-                    //   backgroundColor: Color.fromRGBO(162, 12, 13, 1.0),
-                    // ),
-                    child: state is RequestSecurityQuestionError? const Center(
-                      child: Text('SEND',
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white)),
-                ):state is RequestSecurityQuestionLoading
-                        ? const CircularProgressIndicator()
-                        : const Center(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromRGBO(162, 12, 13, 1.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(1),
+                      ),
+                    ),
+                    child: state is RequestSecurityQuestionError
+                        ? const Center(
                             child: Text('SEND',
                                 style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w400,
                                     color: Colors.white)),
-                          ),
+                          )
+                        : state is RequestSecurityQuestionLoading
+                            ? const CircularProgressIndicator()
+                            : const Center(
+                                child: Text('SEND',
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.white)),
+                              ),
                   ),
                 ),
               ],
