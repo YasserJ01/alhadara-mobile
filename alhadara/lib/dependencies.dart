@@ -30,7 +30,6 @@ import 'package:alhadara/features/reset_password/presentation/bloc/new_password/
 import 'package:alhadara/features/reset_password/presentation/bloc/reset_password/reset_password_bloc.dart';
 
 final getIt = GetIt.instance;
-
 void setupDependencies() {
   getIt.registerSingleton<http.Client>(http.Client());
 
