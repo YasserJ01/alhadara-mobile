@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:alhadara/features/courses/domain/entites/course.dart';
 import 'package:alhadara/features/courses/domain/entites/course_types.dart';
 
 import '../../../../errors/failures.dart';
@@ -48,4 +49,22 @@ class DepartmentRepositoryImpl implements CoursesRepository {
       throw ServerFailure();
     }
   }
+
+  @override
+Future<List<Course>> getCourses(int department, int courseType) async {
+  try {
+    final models = await remoteDataSource.getCourses(department, courseType);
+    print('Repository received models: $models');
+    return models.map((model) => model.toEntity()).toList();
+  } on FormatException catch (e) {
+    print('Repository format error: $e');
+    throw DataFormatFailure();
+  } on HttpException catch (e) {
+    print('Repository HTTP error: $e');
+    throw ServerFailure();
+  } catch (e) {
+    print('Repository unexpected error: $e');
+    throw ServerFailure();
+  }
+}
 }

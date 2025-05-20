@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:alhadara/features/courses/data/models/course_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:alhadara/errors/failures.dart';
 import 'package:alhadara/features/courses/data/models/course_types_model.dart';
@@ -12,6 +13,8 @@ abstract class CoursesRemoteDataSource {
   Future<List<DepartmentModel>> getDepartments();
 
   Future<List<CourseTypesModel>> getCourseTypes(int department);
+
+  Future<List<CourseModel>> getCourses(int department, int courseType);
 }
 
 
@@ -84,6 +87,32 @@ class CoursesRemoteDataSourceImpl implements CoursesRemoteDataSource {
       throw ServerFailure();
     }
   }
+
+  @override
+Future<List<CourseModel>> getCourses(int department, int courseType) async {
+  final response = await client.get(
+    Uri.parse('http://10.0.2.2:8000/api/courses/courses/?department=$department&course_type=$courseType'),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  );
+
+  print('Response status: ${response.statusCode}');
+  print('Response body: ${response.body}');
+
+  if (response.statusCode == 200) {
+    final dynamic responseBody = json.decode(response.body);
+    if (responseBody is Map && responseBody.containsKey('message')) {
+      return [];
+    }
+    if (responseBody is List) {
+      return responseBody.map((json) => CourseModel.fromJson(json)).toList();
+    }
+    throw DataFormatFailure();
+  } else {
+    throw ServerFailure();
+  }
+}
 }
 
 

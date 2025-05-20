@@ -1,5 +1,7 @@
 // dependencies.dart
 
+import 'package:alhadara/features/courses/domain/usecases/get_courses.dart';
+import 'package:alhadara/features/courses/presentation/bloc/courses_bloc/courses_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:alhadara/features/courses/data/datasources/courses_remote_data_source.dart';
@@ -143,4 +145,12 @@ void setupDependencies() {
   getIt.registerFactory(
     () => CourseTypesBloc(getCourseTypes: getIt()),
   );
+  // Add these to your dependency injection setup
+// Courses Bloc
+getIt.registerFactory(() => CoursesBloc(getCourses: getIt()));
+
+// GetCourses use case
+getIt.registerLazySingleton(() => GetCourses(getIt()));
+
+// Repository is already registered
 }

@@ -1,4 +1,6 @@
 import 'package:alhadara/core/constants/colors.dart';
+import 'package:alhadara/features/courses/presentation/pages/course_category_page.dart';
+import 'package:alhadara/features/courses/presentation/pages/courses_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:alhadara/core/constants/app_size.dart';
@@ -41,7 +43,7 @@ class CourseTypesForm extends StatelessWidget {
               const Icon(
                 Icons.search_off,
                 size: 60,
-                color:AppColors.mainColor,
+                color: AppColors.mainColor,
               ),
               const SizedBox(height: 16),
               Text(
@@ -49,7 +51,7 @@ class CourseTypesForm extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 18,
-                  color:AppColors.greyColor,
+                  color: AppColors.greyColor,
                 ),
               ),
             ],
@@ -125,8 +127,18 @@ class CourseTypesForm extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
+                          // In the onTap of ListTile in CourseTypesForm
                           onTap: () {
-                            // Navigate to department detail or courses in this department
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CourseCategoryPage(
+                                  departmentId: courseTypes.department,
+                                  courseTypeId: courseTypes.id,
+                                   courseTypeName: courseTypes.name,
+                                ),
+                              ),
+                            );
                           },
                         ),
                       );
