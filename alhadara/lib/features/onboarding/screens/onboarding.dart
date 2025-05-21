@@ -221,7 +221,7 @@ class Onboarding extends StatelessWidget {
                       .add(OnboardingEvents());
                 },
                 children: [
-                  OnboardingSinglePage(
+                  OnBoardingSinglePage(
                       0,
                       'assets/img_7.png',
                       'ACCESS YOUR COURSES ANYTIME',
@@ -238,7 +238,7 @@ class Onboarding extends StatelessWidget {
                   //       'Study at your own pace with full access to your learning materials, anytime and anywhere.',
                   //   containerColor: Color.fromRGBO(214, 0, 27, 1.0),
                   // ),
-                  OnboardingSinglePage(
+                  OnBoardingSinglePage(
                     1,
                     'assets/img_1.png',
                     'Work Seamlessly',
@@ -255,7 +255,7 @@ class Onboarding extends StatelessWidget {
                   //   desc: 'Get your work done seamlessly without interruption',
                   //   containerColor: Color.fromRGBO(214, 0, 27, 1.0),
                   // ),
-                  OnboardingSinglePage(
+                  OnBoardingSinglePage(
                     2,
                     'assets/img_3.png',
                     'Achieve Higher Goals',

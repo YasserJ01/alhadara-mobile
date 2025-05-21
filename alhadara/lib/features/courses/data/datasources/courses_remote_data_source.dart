@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:alhadara/features/courses/data/models/course_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:alhadara/errors/failures.dart';
@@ -16,8 +15,6 @@ abstract class CoursesRemoteDataSource {
 
   Future<List<CourseModel>> getCourses(int department, int courseType);
 }
-
-
 
 class CoursesRemoteDataSourceImpl implements CoursesRemoteDataSource {
   final http.Client client;
@@ -36,7 +33,6 @@ class CoursesRemoteDataSourceImpl implements CoursesRemoteDataSource {
     print('Response body: ${response.body}'); // Debug
 
     if (response.statusCode == 200) {
-
       final dynamic responseBody = json.decode(response.body);
 
       // Handle empty response case
@@ -49,8 +45,8 @@ class CoursesRemoteDataSourceImpl implements CoursesRemoteDataSource {
         return responseBody
             .map((json) => DepartmentModel.fromJson(json))
             .toList();
-
-      } throw DataFormatFailure();
+      }
+      throw DataFormatFailure();
     } else {
       throw ServerFailure();
     }
@@ -59,7 +55,8 @@ class CoursesRemoteDataSourceImpl implements CoursesRemoteDataSource {
   @override
   Future<List<CourseTypesModel>> getCourseTypes(int department) async {
     final response = await client.get(
-      Uri.parse('http://10.0.2.2:8000/api/courses/course-types/?department=$department'),
+      Uri.parse(
+          'http://10.0.2.2:8000/api/courses/course-types/?department=$department'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -68,51 +65,49 @@ class CoursesRemoteDataSourceImpl implements CoursesRemoteDataSource {
     print('Response body: ${response.body}'); // Debug
 
     if (response.statusCode == 200) {
+      final dynamic responseBody = json.decode(response.body);
 
-        final dynamic responseBody = json.decode(response.body);
+      // Handle empty response case
+      if (responseBody is Map && responseBody.containsKey('message')) {
+        return []; // Return empty list when no courses found
+      }
 
-        // Handle empty response case
-        if (responseBody is Map && responseBody.containsKey('message')) {
-          return []; // Return empty list when no courses found
-        }
-
-        // Handle normal list response
-        if (responseBody is List) {
-          return responseBody
-              .map((json) => CourseTypesModel.fromJson(json))
-              .toList();
-
-      } throw DataFormatFailure();
+      // Handle normal list response
+      if (responseBody is List) {
+        return responseBody
+            .map((json) => CourseTypesModel.fromJson(json))
+            .toList();
+      }
+      throw DataFormatFailure();
     } else {
       throw ServerFailure();
     }
   }
 
   @override
-Future<List<CourseModel>> getCourses(int department, int courseType) async {
-  final response = await client.get(
-    Uri.parse('http://10.0.2.2:8000/api/courses/courses/?department=$department&course_type=$courseType'),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  );
+  Future<List<CourseModel>> getCourses(int department, int courseType) async {
+    final response = await client.get(
+      Uri.parse(
+          'http://10.0.2.2:8000/api/courses/courses/?department=$department&course_type=$courseType'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
 
-  print('Response status: ${response.statusCode}');
-  print('Response body: ${response.body}');
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
 
-  if (response.statusCode == 200) {
-    final dynamic responseBody = json.decode(response.body);
-    if (responseBody is Map && responseBody.containsKey('message')) {
-      return [];
+    if (response.statusCode == 200) {
+      final dynamic responseBody = json.decode(response.body);
+      if (responseBody is Map && responseBody.containsKey('message')) {
+        return [];
+      }
+      if (responseBody is List) {
+        return responseBody.map((json) => CourseModel.fromJson(json)).toList();
+      }
+      throw DataFormatFailure();
+    } else {
+      throw ServerFailure();
     }
-    if (responseBody is List) {
-      return responseBody.map((json) => CourseModel.fromJson(json)).toList();
-    }
-    throw DataFormatFailure();
-  } else {
-    throw ServerFailure();
   }
 }
-}
-
-

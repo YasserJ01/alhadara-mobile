@@ -1,6 +1,7 @@
 // // lib/features/courses/presentation/widgets/departments_form.dart
 
 import 'package:alhadara/core/constants/colors.dart';
+import 'package:alhadara/core/constants/no_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:alhadara/features/courses/presentation/pages/course_types_page.dart';
@@ -36,28 +37,15 @@ class DepartmentsForm extends StatelessWidget {
         if (state is DepartmentsInitial || state is DepartmentsLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is DepartmentsError) {
-          return Center(child: Text(state.message));
+          return NoItemWidget(
+            message: state.message,
+            icon: Icons.error_outline,
+            iconColor: Colors.red,
+          );
         } else if (state is DepartmentsEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.search_off,
-                  size: 60,
-                  color: AppColors.mainColor,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  state.message,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
-            ),
+          return NoItemWidget(
+            message: state.message,
+            icon: Icons.search_off,
           );
         } else if (state is DepartmentsLoaded) {
           // print(state.departments);

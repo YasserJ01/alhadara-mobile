@@ -3,7 +3,7 @@ import 'package:alhadara/features/reset_password/data/models/security_question_m
 import 'package:http/http.dart' as http;
 
 class PasswordResetApi {
-  final String baseUrl = 'http://10.0.2.2/api/core/reset-password';
+  final String baseUrl = 'http://10.0.2.2:8000/api/core/reset-password';
   final http.Client client;
 
   PasswordResetApi({required this.client});
@@ -38,7 +38,8 @@ class PasswordResetApi {
   Future<List<SecurityQuestion>> requestSecurityQuestion(
       String phoneNumber) async {
     final response = await client.post(
-      Uri.parse('http://10.0.2.2:8000/api/core/reset-password/request_reset/'),
+      Uri.parse(
+          'http://10.0.2.2:8000/api/core/reset-password/request_reset/'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'phone': phoneNumber}),
     );
@@ -89,13 +90,14 @@ class PasswordResetApi {
     }
   }
 
-Future<void> confirmPasswordReset({
+  Future<void> confirmPasswordReset({
     required String resetToken,
     required String newPassword,
     required String confirmPassword,
   }) async {
     final response = await client.post(
-      Uri.parse('http://10.0.2.2:8000/api/core/reset-password/confirm_reset/'),
+      Uri.parse(
+          'http://10.0.2.2:8000/api/core/reset-password/confirm_reset/'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'reset_token': resetToken,
@@ -108,5 +110,4 @@ Future<void> confirmPasswordReset({
       throw Exception('Failed to reset password');
     }
   }
-
 }

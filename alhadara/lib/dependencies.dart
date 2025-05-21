@@ -15,7 +15,7 @@ import 'features/auth/data/repositories/auth_repository_impl.dart';
 import 'features/auth/domain/repositories/auth_repository.dart';
 import 'features/auth/domain/usecases/login_with_phone_usecase.dart';
 import 'features/auth/domain/usecases/register_usecase.dart';
-import 'features/auth/presentation/bloc/auth_bloc.dart';
+import 'features/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'features/auth/presentation/bloc/register/register_bloc.dart';
 import 'features/security_question/data/datasources/security_question_remote_data_source.dart';
 import 'features/security_question/data/repositories/security_question_repository_impl.dart';

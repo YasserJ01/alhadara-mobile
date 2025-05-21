@@ -1,7 +1,6 @@
 // auth/presentation/bloc/register_bloc.dart
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:alhadara/features/auth/domain/entities/user_register_entity.dart';
 
 import '../../../domain/usecases/register_usecase.dart';
 

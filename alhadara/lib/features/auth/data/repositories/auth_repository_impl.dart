@@ -1,7 +1,5 @@
 // auth/data/repositories/auth_repository_impl.dart
-import '../../../../errors/expections.dart';
 import '../../domain/entities/user_entity.dart';
-import '../../domain/entities/user_register_entity.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_remote_data_source.dart';
 import '../models/login_request_model.dart';

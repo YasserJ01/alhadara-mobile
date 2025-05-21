@@ -9,7 +9,7 @@ import 'package:bloc/bloc.dart' as _i5;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:alhadara/features/auth/domain/usecases/login_with_phone_usecase.dart'
     as _i2;
-import 'package:alhadara/features/auth/presentation/bloc/auth_bloc.dart' as _i3;
+import 'package:alhadara/features/auth/presentation/bloc/auth/auth_bloc.dart' as _i3;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values

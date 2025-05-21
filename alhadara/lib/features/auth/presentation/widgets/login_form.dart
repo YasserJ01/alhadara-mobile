@@ -89,7 +89,7 @@ import 'package:alhadara/features/reset_password/presentation/pages/request_secu
 import '../../../../core/constants/app_size.dart';
 import '../../../../core/constants/auth_text_field.dart';
 import '../../../../core/utils/validators.dart';
-import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../bloc/auth/auth_bloc.dart';
 import '../../../onboarding/bloc/onboarding_bloc.dart';
 import '../../../onboarding/screens/onboarding.dart';
 import 'custom_register_text_field.dart';

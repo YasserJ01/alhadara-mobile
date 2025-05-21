@@ -5,7 +5,7 @@ import 'package:mockito/mockito.dart';
 import 'package:alhadara/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:alhadara/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:alhadara/features/auth/domain/usecases/login_with_phone_usecase.dart';
-import 'package:alhadara/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:alhadara/features/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'dart:convert';
 // Import your app files
 

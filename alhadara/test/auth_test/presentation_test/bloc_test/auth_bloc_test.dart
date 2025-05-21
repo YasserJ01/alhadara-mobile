@@ -4,7 +4,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:alhadara/features/auth/domain/entities/user_entity.dart';
 import 'package:alhadara/features/auth/domain/usecases/login_with_phone_usecase.dart';
-import 'package:alhadara/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:alhadara/features/auth/presentation/bloc/auth/auth_bloc.dart';
 // Import your app files
 
 // Generate mock use case

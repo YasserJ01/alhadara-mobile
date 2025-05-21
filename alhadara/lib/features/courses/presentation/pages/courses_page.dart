@@ -11,20 +11,24 @@ import 'package:alhadara/features/courses/presentation/widgets/courses_form.dart
 class CoursesPage extends StatelessWidget {
   final int departmentId;
   final int courseTypeId;
-   final String category;
+  final String category;
 
   const CoursesPage({
     super.key,
     required this.departmentId,
     required this.courseTypeId,
-     required this.category,
+    required this.category,
   });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => getIt<CoursesBloc>()
-        ..add(LoadCourses(department: departmentId, courseType: courseTypeId,  category: category,)),
+        ..add(LoadCourses(
+          department: departmentId,
+          courseType: courseTypeId,
+          category: category,
+        )),
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -32,7 +36,8 @@ class CoursesPage extends StatelessWidget {
           backgroundColor: Colors.white,
           shadowColor: const Color.fromARGB(157, 244, 248, 251),
           leading: Padding(
-            padding: EdgeInsets.only(left: AppSizes.screenWidth(context) * 0.03),
+            padding:
+                EdgeInsets.only(left: AppSizes.screenWidth(context) * 0.03),
             child: AppBackButton(),
           ),
           title: const Text(

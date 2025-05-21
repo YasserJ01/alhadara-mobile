@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/app_size.dart';
 import '../../courses/presentation/pages/departments_page.dart';
 import 'onboarding_buttons.dart';
-class OnboardingSinglePage extends StatelessWidget {
+class OnBoardingSinglePage extends StatelessWidget {
   int pageIndex;
   String imageUrl;
   String title;
@@ -12,7 +12,7 @@ class OnboardingSinglePage extends StatelessWidget {
   Color containerColor;
   PageController pageController;
 
-  OnboardingSinglePage(this.pageIndex, this.imageUrl, this.title, this.desc,
+  OnBoardingSinglePage(this.pageIndex, this.imageUrl, this.title, this.desc,
       this.context, this.containerColor,this.pageController);
 
 

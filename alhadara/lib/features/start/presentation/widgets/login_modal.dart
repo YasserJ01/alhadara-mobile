@@ -53,7 +53,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:alhadara/features/start/presentation/widgets/register_modal.dart';
 import '../../../../dependencies.dart';
-import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../auth/presentation/bloc/auth/auth_bloc.dart';
 import '../../../auth/presentation/widgets/login_form.dart';
 
 class LoginModal extends StatelessWidget {

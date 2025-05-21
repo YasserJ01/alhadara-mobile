@@ -125,6 +125,7 @@
 //     );
 //   }
 // }
+import 'package:alhadara/core/constants/no_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:alhadara/core/constants/app_size.dart';
@@ -143,28 +144,15 @@ class CoursesForm extends StatelessWidget {
         if (state is CoursesInitial || state is CoursesLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is CoursesError) {
-          return Center(child: Text(state.message));
+          return NoItemWidget(
+            message: state.message,
+            icon: Icons.error_outline,
+            iconColor: Colors.red,
+          );
         } else if (state is CoursesEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.search_off,
-                  size: 60,
-                  color: AppColors.mainColor,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  state.message,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: AppColors.greyColor,
-                  ),
-                ),
-              ],
-            ),
+          return NoItemWidget(
+            message: state.message,
+            icon: Icons.search_off,
           );
         } else if (state is CoursesLoaded) {
           return Padding(
@@ -285,7 +273,7 @@ class CoursesForm extends StatelessWidget {
 
                             // Arrow container positioned outside the card
                             Positioned(
-                              right: -1,
+                              right: 0,
                               top: 0,
                               bottom: 0,
                               child: Center(
@@ -295,8 +283,7 @@ class CoursesForm extends StatelessWidget {
                                       AppSizes.screenHeight(context) * 0.045,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(100),
-                                    color: const Color.fromARGB(
-                                        255, 247, 222, 224),
+                                    color: Colors.white,
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.black.withOpacity(0.2),

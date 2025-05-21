@@ -1,6 +1,5 @@
-import 'package:alhadara/core/constants/colors.dart';
+import 'package:alhadara/core/constants/no_item.dart';
 import 'package:alhadara/features/courses/presentation/pages/course_category_page.dart';
-import 'package:alhadara/features/courses/presentation/pages/courses_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:alhadara/core/constants/app_size.dart';
@@ -35,26 +34,15 @@ class CourseTypesForm extends StatelessWidget {
         if (state is CourseTypesInitial || state is CourseTypesLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is CourseTypesError) {
-          return Center(child: Text(state.message));
+          return NoItemWidget(
+            message: state.message,
+            icon: Icons.error_outline,
+            iconColor: Colors.red,
+          );
         } else if (state is CourseTypesEmpty) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(
-                Icons.search_off,
-                size: 60,
-                color: AppColors.mainColor,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                state.message,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 18,
-                  color: AppColors.greyColor,
-                ),
-              ),
-            ],
+          return NoItemWidget(
+            message: state.message,
+            icon: Icons.search_off,
           );
         } else if (state is CourseTypesLoaded) {
           // print(state.departments);
@@ -135,7 +123,7 @@ class CourseTypesForm extends StatelessWidget {
                                 builder: (context) => CourseCategoryPage(
                                   departmentId: courseTypes.department,
                                   courseTypeId: courseTypes.id,
-                                   courseTypeName: courseTypes.name,
+                                  courseTypeName: courseTypes.name,
                                 ),
                               ),
                             );

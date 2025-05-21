@@ -1,5 +1,4 @@
 // auth/domain/usecases/register_usecase.dart
-import 'package:alhadara/features/auth/domain/entities/user_register_entity.dart';
 
 import '../repositories/auth_repository.dart';
 
