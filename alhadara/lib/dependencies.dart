@@ -1,7 +1,15 @@
-// dependencies.dart
-
 import 'package:alhadara/features/courses/domain/usecases/get_courses.dart';
 import 'package:alhadara/features/courses/presentation/bloc/courses_bloc/courses_bloc.dart';
+import 'package:alhadara/features/home/presentation/bloc/home_bloc.dart';
+import 'package:alhadara/features/interests/data/datasources/interest_remote_data_source.dart';
+import 'package:alhadara/features/interests/data/repositories/interest_repository_impl.dart';
+import 'package:alhadara/features/interests/domain/entities/interest.dart';
+import 'package:alhadara/features/interests/domain/repositories/interest_repository.dart';
+import 'package:alhadara/features/interests/domain/usecases/add_user_interest.dart';
+import 'package:alhadara/features/interests/domain/usecases/get_interests.dart';
+import 'package:alhadara/features/interests/domain/usecases/save_user_interests_usecase.dart';
+import 'package:alhadara/features/interests/presentation/interestSelection/bloc/interest_selection_bloc.dart';
+import 'package:alhadara/features/interests/presentation/interest_rating/bloc/interest_rating_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:alhadara/features/courses/data/datasources/courses_remote_data_source.dart';
@@ -32,6 +40,7 @@ import 'package:alhadara/features/reset_password/presentation/bloc/new_password/
 import 'package:alhadara/features/reset_password/presentation/bloc/reset_password/reset_password_bloc.dart';
 
 final getIt = GetIt.instance;
+
 void setupDependencies() {
   getIt.registerSingleton<http.Client>(http.Client());
 
@@ -80,7 +89,7 @@ void setupDependencies() {
         submitSecurityAnswerUseCase: getIt<SubmitSecurityAnswerUseCase>(),
       ));
 
-  // Data Layer
+  // Reset Password Feature
   getIt.registerLazySingleton<PasswordResetApi>(
     () => PasswordResetApi(client: getIt()),
   );
@@ -88,7 +97,6 @@ void setupDependencies() {
     () => PasswordResetRepositoryImpl(api: getIt()),
   );
 
-  // Domain Layer
   getIt.registerLazySingleton<RequestSecurityQuestionUseCase>(
     () => RequestSecurityQuestionUseCase(getIt()),
   );
@@ -99,7 +107,6 @@ void setupDependencies() {
     () => ConfirmPasswordResetUseCase(getIt()),
   );
 
-  // Presentation Layer
   getIt.registerFactory<RequestSecurityQuestionBloc>(
     () => RequestSecurityQuestionBloc(
       requestSecurityQuestionUseCase: getIt(),
@@ -116,41 +123,51 @@ void setupDependencies() {
     ),
   );
 
-  // Departments Feature
-  // Data sources
+  // Courses Feature
   getIt.registerLazySingleton<CoursesRemoteDataSource>(
     () => CoursesRemoteDataSourceImpl(client: getIt()),
   );
 
-  // Repository
   getIt.registerLazySingleton<CoursesRepository>(
     () => DepartmentRepositoryImpl(
       remoteDataSource: getIt(),
     ),
   );
 
-  // Use cases
   getIt.registerLazySingleton(() => GetDepartments(getIt()));
+  getIt.registerFactory(() => DepartmentsBloc(getDepartments: getIt()));
 
-  // Bloc
-  getIt.registerFactory(
-    () => DepartmentsBloc(getDepartments: getIt()),
-  );
-  // Course Types Feature
-
-  // Use cases
   getIt.registerLazySingleton(() => GetCourseTypes(getIt()));
+  getIt.registerFactory(() => CourseTypesBloc(getCourseTypes: getIt()));
 
-  // Bloc
-  getIt.registerFactory(
-    () => CourseTypesBloc(getCourseTypes: getIt()),
-  );
-  // Add these to your dependency injection setup
-// Courses Bloc
-getIt.registerFactory(() => CoursesBloc(getCourses: getIt()));
+  getIt.registerFactory(() => CoursesBloc(getCourses: getIt()));
+  getIt.registerLazySingleton(() => GetCourses(getIt()));
 
-// GetCourses use case
-getIt.registerLazySingleton(() => GetCourses(getIt()));
+  getIt.registerFactory(() => HomeBloc());
 
-// Repository is already registered
+
+//interest
+// Data sources
+getIt.registerLazySingleton<InterestRemoteDataSource>(
+  () => InterestRemoteDataSourceImpl(client: getIt()),
+);
+
+// Repositories
+getIt.registerLazySingleton<InterestRepository>(
+  () => InterestRepositoryImpl(remoteDataSource: getIt()),
+);
+
+// Use cases
+getIt.registerLazySingleton(() => GetInterestsUseCase(repository: getIt()));
+getIt.registerLazySingleton(() => SaveUserInterestsUseCase(repository: getIt()));
+
+// Blocs
+getIt.registerFactory(() => InterestSelectionBloc(getInterestsUseCase: getIt()));
+getIt.registerFactoryParam<InterestRatingBloc, List<InterestEntity>, void>(
+  (interests, _) => InterestRatingBloc(
+    saveUserInterestsUseCase: getIt(),
+    interests: interests,
+  ),
+);
+
 }

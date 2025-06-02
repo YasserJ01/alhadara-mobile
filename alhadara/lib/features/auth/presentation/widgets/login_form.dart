@@ -83,6 +83,7 @@
 
 import 'package:alhadara/core/constants/app_elevated_button.dart';
 import 'package:alhadara/core/constants/colors.dart';
+import 'package:alhadara/features/interests/presentation/interestSelection/interest_selection_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:alhadara/features/reset_password/presentation/pages/request_security_question_page.dart';
@@ -117,15 +118,19 @@ class _LoginFormContentState extends State<LoginFormContent> {
           );
         } else if (state is AuthSuccess) {
           Navigator.pop(context);
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => BlocProvider(
-                create: (context) => OnboardingBloc(),
-                child: Onboarding(),
-              ),
-            ),
-          );
+          Navigator.of(context)
+              .pushReplacement(MaterialPageRoute(builder: (context) {
+            return const InterestSelectionPage(profileId: 12,);
+          }));
+          // Navigator.pushReplacement(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => BlocProvider(
+          //       create: (context) => OnboardingBloc(),
+          //       child: Onboarding(),
+          //     ),
+          //   ),
+          // );
         }
       },
       child: Container(
@@ -222,18 +227,17 @@ class _LoginFormContentState extends State<LoginFormContent> {
               BlocBuilder<AuthBloc, AuthState>(
                 builder: (context, state) {
                   return AppElevatedButton(
-                    child:     state is AuthLoading
-                          ? const CircularProgressIndicator(color: Colors.white)
-                          : Text(
-                              'LOGIN',
-                              style: TextStyle(
-                                fontSize: AppSizes.responsiveFontSize(context,
-                                    mobile: 18, tablet: 20, desktop: 22),
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.whiteColor,
-                              ),
+                    child: state is AuthLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : Text(
+                            'LOGIN',
+                            style: TextStyle(
+                              fontSize: AppSizes.responsiveFontSize(context,
+                                  mobile: 18, tablet: 20, desktop: 22),
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.whiteColor,
                             ),
-                   
+                          ),
                     onPressed: state is AuthLoading
                         ? null
                         : () {
@@ -318,6 +322,7 @@ class _LoginFormContentState extends State<LoginFormContent> {
     );
   }
 }
+
 // class LoginFormContent extends StatefulWidget {
 //   final VoidCallback? onSignUpPressed; // Add this
 

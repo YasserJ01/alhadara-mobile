@@ -24,7 +24,8 @@ class CoursesRemoteDataSourceImpl implements CoursesRemoteDataSource {
   @override
   Future<List<DepartmentModel>> getDepartments() async {
     final response = await client.get(
-      Uri.parse('http://10.0.2.2:8000/api/courses/departments/'),
+      Uri.parse(
+          'https://alhadara-production.up.railway.app/api/courses/departments/'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -56,7 +57,7 @@ class CoursesRemoteDataSourceImpl implements CoursesRemoteDataSource {
   Future<List<CourseTypesModel>> getCourseTypes(int department) async {
     final response = await client.get(
       Uri.parse(
-          'http://10.0.2.2:8000/api/courses/course-types/?department=$department'),
+          'https://alhadara-production.up.railway.app/api/courses/course-types/?department=$department'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -88,7 +89,7 @@ class CoursesRemoteDataSourceImpl implements CoursesRemoteDataSource {
   Future<List<CourseModel>> getCourses(int department, int courseType) async {
     final response = await client.get(
       Uri.parse(
-          'http://10.0.2.2:8000/api/courses/courses/?department=$department&course_type=$courseType'),
+          'https://alhadara-production.up.railway.app/api/courses/courses/?department=$department&course_type=$courseType'),
       headers: {
         'Content-Type': 'application/json',
       },

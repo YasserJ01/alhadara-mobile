@@ -1,8 +1,10 @@
+import 'package:alhadara/features/home/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/app_size.dart';
 import '../../courses/presentation/pages/departments_page.dart';
 import 'onboarding_buttons.dart';
+
 class OnBoardingSinglePage extends StatelessWidget {
   int pageIndex;
   String imageUrl;
@@ -13,8 +15,7 @@ class OnBoardingSinglePage extends StatelessWidget {
   PageController pageController;
 
   OnBoardingSinglePage(this.pageIndex, this.imageUrl, this.title, this.desc,
-      this.context, this.containerColor,this.pageController);
-
+      this.context, this.containerColor, this.pageController);
 
   @override
   Widget build(BuildContext context) {
@@ -84,8 +85,8 @@ class OnBoardingSinglePage extends StatelessWidget {
             pageIndex == 1
                 ? const SizedBox(height: 40)
                 : pageIndex == 0
-                ? const SizedBox(height: 1)
-                : const SizedBox(height: 72),
+                    ? const SizedBox(height: 1)
+                    : const SizedBox(height: 72),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               /*child: pageIndex == 2
@@ -99,13 +100,13 @@ class OnBoardingSinglePage extends StatelessWidget {
                     label: 'NEXT',
                     onTap: () {
                       pageIndex == 2
-                          ? Navigator.of(context)
-                          .pushReplacement(MaterialPageRoute(builder: (context) {
-                        return const DepartmentsPage();
-                      }))
+                          ? Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(builder: (context) {
+                              return const HomePage();
+                            }))
                           : pageController.animateToPage(pageIndex + 1,
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.decelerate);
+                              duration: const Duration(milliseconds: 500),
+                              curve: Curves.decelerate);
                     },
                     backgroundColor: Color.fromRGBO(214, 0, 27, 1.0),
                     textColor: Colors.white,
@@ -114,9 +115,9 @@ class OnBoardingSinglePage extends StatelessWidget {
                   const SizedBox(height: 15),
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context)
-                          .pushReplacement(MaterialPageRoute(builder: (context) {
-                        return const DepartmentsPage();
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) {
+                        return const HomePage();
                       }));
                     },
                     child: const Text(
@@ -178,4 +179,3 @@ class OnBoardingSinglePage extends StatelessWidget {
     );
   }
 }
-

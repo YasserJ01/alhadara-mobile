@@ -1,6 +1,7 @@
 import 'package:alhadara/features/reset_password/data/models/security_question_model.dart';
+import 'package:equatable/equatable.dart';
 
-abstract class RequestSecurityQuestionState {
+abstract class RequestSecurityQuestionState  extends Equatable {
   const RequestSecurityQuestionState();
 
   @override

@@ -1,3 +1,4 @@
+import 'package:alhadara/features/home/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'dependencies.dart';
 import 'features/auth/presentation/pages/login_page.dart';
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
           // Customize other text styles as needed
         ),
       ),
-      initialRoute: '/splashScreen',
+      initialRoute: '/start',
       routes: {
         // '/onboarding': (context) => BlocProvider(
         //       create: (context) => OnboardingBloc(),
@@ -35,6 +36,8 @@ class MyApp extends StatelessWidget {
         '/start': (context) => const StartPage(),
         '/login': (context) => const LoginPage(), // Your existing login page
         '/departments': (context) => const  DepartmentsPage(),
+        '/home': (context) => const  HomePage(),
+       
       },
     );
   }

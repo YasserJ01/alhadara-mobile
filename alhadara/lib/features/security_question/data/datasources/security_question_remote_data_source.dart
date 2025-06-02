@@ -82,7 +82,7 @@ class SecurityQuestionRemoteDataSourceImpl
     required String answer,
   }) async {
     final response = await client.post(
-      Uri.parse('http://10.0.2.2:8000/api/core/security-answers/'),
+      Uri.parse('http://alhadara-production.up.railway.app/api/core/security-answers/'),
       headers: {
         'Authorization': 'JWT $token',
         'accept': 'application/json',
