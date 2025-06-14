@@ -84,6 +84,7 @@
 import 'package:alhadara/core/constants/app_elevated_button.dart';
 import 'package:alhadara/core/constants/colors.dart';
 import 'package:alhadara/features/interests/presentation/interestSelection/interest_selection_page.dart';
+import 'package:alhadara/features/wallet/presentation/pages/wallet_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:alhadara/features/reset_password/presentation/pages/request_security_question_page.dart';
@@ -118,19 +119,19 @@ class _LoginFormContentState extends State<LoginFormContent> {
           );
         } else if (state is AuthSuccess) {
           Navigator.pop(context);
-          Navigator.of(context)
-              .pushReplacement(MaterialPageRoute(builder: (context) {
-            return const InterestSelectionPage(profileId: 12,);
-          }));
-          // Navigator.pushReplacement(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => BlocProvider(
-          //       create: (context) => OnboardingBloc(),
-          //       child: Onboarding(),
-          //     ),
-          //   ),
-          // );
+          // Navigator.of(context)
+          //     .pushReplacement(MaterialPageRoute(builder: (context) {
+          //   return  Onboarding();
+          // }));
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (context) => OnboardingBloc(),
+                child: Onboarding(),
+              ),
+            ),
+          );
         }
       },
       child: Container(

@@ -5,11 +5,22 @@ import 'package:alhadara/features/interests/data/datasources/interest_remote_dat
 import 'package:alhadara/features/interests/data/repositories/interest_repository_impl.dart';
 import 'package:alhadara/features/interests/domain/entities/interest.dart';
 import 'package:alhadara/features/interests/domain/repositories/interest_repository.dart';
-import 'package:alhadara/features/interests/domain/usecases/add_user_interest.dart';
 import 'package:alhadara/features/interests/domain/usecases/get_interests.dart';
 import 'package:alhadara/features/interests/domain/usecases/save_user_interests_usecase.dart';
 import 'package:alhadara/features/interests/presentation/interestSelection/bloc/interest_selection_bloc.dart';
 import 'package:alhadara/features/interests/presentation/interest_rating/bloc/interest_rating_bloc.dart';
+import 'package:alhadara/features/payment/depositmethod/data/datasources/deposit_method_remote_data_source.dart';
+import 'package:alhadara/features/payment/depositmethod/data/repositories/deposit_method_repository_impl.dart';
+import 'package:alhadara/features/payment/depositmethod/domain/repositories/deposit_method_repository.dart';
+import 'package:alhadara/features/payment/depositmethod/domain/usecases/get_deposit_methods.dart';
+import 'package:alhadara/features/payment/depositmethod/presentation/bloc/deposit/deposit_bloc.dart';
+import 'package:alhadara/features/wallet/data/datasourses/wallet_remote_data_source.dart';
+import 'package:alhadara/features/wallet/data/repositories/wallet_repository_impl.dart';
+import 'package:alhadara/features/wallet/domain/repositories/wallet_repository.dart';
+import 'package:alhadara/features/wallet/domain/usecases/get_transactions.dart';
+import 'package:alhadara/features/wallet/domain/usecases/get_wallet.dart';
+import 'package:alhadara/features/wallet/presentation/bloc/transaction_bloc/transaction_bloc.dart';
+import 'package:alhadara/features/wallet/presentation/bloc/wallet_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:alhadara/features/courses/data/datasources/courses_remote_data_source.dart';
@@ -170,4 +181,57 @@ getIt.registerFactoryParam<InterestRatingBloc, List<InterestEntity>, void>(
   ),
 );
 
+  // Data sources
+  getIt.registerLazySingleton<WalletRemoteDataSource>(
+    () => WalletRemoteDataSourceImpl(client: getIt()),
+  );
+
+  // Repository
+  getIt.registerLazySingleton<WalletRepository>(
+    () => WalletRepositoryImpl(remoteDataSource: getIt()),
+  );
+
+  // Use cases
+  getIt.registerLazySingleton(() => GetWallet(getIt()));
+
+  // Bloc
+  getIt.registerFactory(
+    () => WalletBloc(getWallet: getIt()),
+  );
+  getIt.registerFactory(() => TransactionBloc(getTransactions: getIt()));
+  getIt.registerLazySingleton(() => GetTransactions(getIt()));
+// // Register BLoCs
+// getIt.registerFactory(() => PaymentMethodSelectionBloc(getDepositMethods: getIt()));
+// getIt.registerFactory(() => BankSelectionBloc());
+// getIt.registerFactory(() => TransferSelectionBloc());
+
+// // Register use cases
+// getIt.registerLazySingleton(() => GetDepositMethods(getIt()));
+
+// // Register repositories
+// getIt.registerLazySingleton<PaymentRepository>(
+//   () => PaymentRepositoryImpl(remoteDataSource: getIt()),
+// );
+
+// // Register data sources
+// getIt.registerLazySingleton<PaymentRemoteDataSource>(
+//   () => PaymentRemoteDataSourceImpl(client: getIt()),
+// );
+// Blocs
+  getIt.registerFactory(
+    () => DepositBloc(getDepositMethods: getIt()),
+  );
+
+  // Use cases
+  getIt.registerLazySingleton(() => GetDepositMethods(getIt()));
+
+  // Repository
+  getIt.registerLazySingleton<DepositMethodRepository>(
+    () => DepositMethodRepositoryImpl(remoteDataSource: getIt()),
+  );
+
+  // Data sources
+  getIt.registerLazySingleton<DepositMethodRemoteDataSource>(
+    () => DepositMethodRemoteDataSourceImpl(client: getIt()),
+  );
 }

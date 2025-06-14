@@ -35,15 +35,15 @@ class AppElevatedButton extends StatelessWidget {
           AppSizes.responsiveSize(context, mobile: 56, tablet: 64, desktop: 72),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          side:side ,
+          side: side,
           backgroundColor:
               backgroundColor ?? const Color.fromRGBO(162, 12, 13, 1.0),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(borderRadius ?? 1),
+            borderRadius: BorderRadius.circular(borderRadius ?? 5),
           ),
         ),
-        onPressed:  onPressed,
-        child:child,
+        onPressed: onPressed,
+        child: child,
       ),
     );
   }
