@@ -1,5 +1,11 @@
 import 'package:alhadara/features/courses/domain/usecases/get_courses.dart';
 import 'package:alhadara/features/courses/presentation/bloc/courses_bloc/courses_bloc.dart';
+import 'package:alhadara/features/enrollments/data/datasources/enrollment_remote_data_source.dart';
+import 'package:alhadara/features/enrollments/data/repositories/enrollment_repository_impl.dart';
+import 'package:alhadara/features/enrollments/domain/repositories/enrollment_repository.dart';
+import 'package:alhadara/features/enrollments/domain/usecases/get_enrollments.dart';
+import 'package:alhadara/features/enrollments/domain/usecases/process_payment.dart';
+import 'package:alhadara/features/enrollments/presentation/bloc/enrollment_bloc.dart';
 import 'package:alhadara/features/home/presentation/bloc/home_bloc.dart';
 import 'package:alhadara/features/interests/data/datasources/interest_remote_data_source.dart';
 import 'package:alhadara/features/interests/data/repositories/interest_repository_impl.dart';
@@ -234,4 +240,24 @@ getIt.registerFactoryParam<InterestRatingBloc, List<InterestEntity>, void>(
   getIt.registerLazySingleton<DepositMethodRemoteDataSource>(
     () => DepositMethodRemoteDataSourceImpl(client: getIt()),
   );
+ // Bloc
+  getIt.registerFactory(() => EnrollmentBloc(
+        getEnrollments: getIt(),
+        processPayment: getIt(),
+      ));
+
+  // Use cases
+  getIt.registerLazySingleton(() => GetEnrollments(getIt()));
+  getIt.registerLazySingleton(() => ProcessPayment(getIt()));
+
+  // Repository
+  getIt.registerLazySingleton<EnrollmentRepository>(
+    () => EnrollmentRepositoryImpl(remoteDataSource: getIt()),
+  );
+
+  // Data sources
+  getIt.registerLazySingleton<EnrollmentRemoteDataSource>(
+    () => EnrollmentRemoteDataSourceImpl(client: getIt()),
+  );
+
 }

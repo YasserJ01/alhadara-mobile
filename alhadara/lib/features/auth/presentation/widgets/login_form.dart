@@ -83,6 +83,9 @@
 
 import 'package:alhadara/core/constants/app_elevated_button.dart';
 import 'package:alhadara/core/constants/colors.dart';
+import 'package:alhadara/dependencies.dart';
+import 'package:alhadara/features/enrollments/presentation/bloc/enrollment_bloc.dart';
+import 'package:alhadara/features/enrollments/presentation/pages/enrollment_page.dart';
 import 'package:alhadara/features/interests/presentation/interestSelection/interest_selection_page.dart';
 import 'package:alhadara/features/wallet/presentation/pages/wallet_page.dart';
 import 'package:flutter/material.dart';
@@ -121,17 +124,30 @@ class _LoginFormContentState extends State<LoginFormContent> {
           Navigator.pop(context);
           // Navigator.of(context)
           //     .pushReplacement(MaterialPageRoute(builder: (context) {
-          //   return  Onboarding();
+          //   return  EnrollmentsPage();
           // }));
+          // Navigator.pushReplacement(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => BlocProvider(
+          //       create: (context) => OnboardingBloc(),
+          //       child: Onboarding(),
+          //     ),
+          //   ),
+          // );
           Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => BlocProvider(
-                create: (context) => OnboardingBloc(),
-                child: Onboarding(),
-              ),
-            ),
-          );
+  context,
+  MaterialPageRoute(
+    builder: (context) => MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => getIt<EnrollmentBloc>()..add(FetchEnrollments()),
+        ),
+      ],
+      child: EnrollmentsPage(),
+    ),
+  ),
+);
         }
       },
       child: Container(
