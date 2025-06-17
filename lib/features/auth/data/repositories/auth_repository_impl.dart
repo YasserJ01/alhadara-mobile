@@ -46,8 +46,7 @@ class AuthRepositoryImpl implements AuthRepository {
       confirm_password: confirm_password,
     );
     final response = await remoteDataSource.register(request);
-
     return response['access'] as String;
-
   }
+
 }

@@ -3,25 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project2/core/constants/app_size.dart';
 import 'package:project2/features/courses/presentation/bloc/course_types_bloc/course_types_bloc.dart';
 
+import '../pages/choosing_course_category_screen.dart';
+
+
 class CourseTypesForm extends StatelessWidget {
   const CourseTypesForm({super.key});
 
-  // IconData _getCourseTypesIcon(String departmentName) {
-  //   switch (courseName.toLowerCase()) {
-  //     case 'design':
-  //       return Icons.design_services;
-  //     case 'computers':
-  //       return Icons.computer;
-  //     case 'charter':
-  //       return Icons.assignment;
-  //     case 'cooks':
-  //       return Icons.restaurant;
-  //     case 'hotel booking':
-  //       return Icons.hotel;
-  //     default:
-  //       return Icons.school;
-  //   }
-  // }
+
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +113,25 @@ class CourseTypesForm extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                           onTap: () {
-                            // Navigate to department detail or courses in this department
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CourseCategoryPage(
+                                  departmentId: courseTypes.department,
+                                  courseTypeId: courseTypes.id,
+                                  courseTypeName: courseTypes.name,
+                                ),
+                              ),
+                            );
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (_) => BlocProvider(
+                            //       create: (_) => getIt<CourseScheduleBloc>(),
+                            //       child: CourseDetailsPage(),
+                            //     ),
+                            //   ),
+                            // );
                           },
                         ),
                       );

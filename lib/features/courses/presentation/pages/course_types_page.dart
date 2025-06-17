@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project2/core/constants/app_size.dart';
+
 import 'package:project2/dependencies.dart';
 import 'package:project2/features/courses/presentation/bloc/course_types_bloc/course_types_bloc.dart';
 import 'package:project2/features/courses/presentation/widgets/course_types_form.dart';

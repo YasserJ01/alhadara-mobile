@@ -3,18 +3,26 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/app_size.dart';
 import '../../courses/presentation/pages/departments_page.dart';
 import 'onboarding_buttons.dart';
+
 class OnboardingSinglePage extends StatelessWidget {
-  int pageIndex;
-  String imageUrl;
-  String title;
-  String desc;
-  BuildContext context;
-  Color containerColor;
-  PageController pageController;
+  final int pageIndex;
+  final String imageUrl;
+  final String title;
+  final String desc;
+  final Color containerColor;
+  final PageController controller;
+  final VoidCallback onComplete;
 
-  OnboardingSinglePage(this.pageIndex, this.imageUrl, this.title, this.desc,
-      this.context, this.containerColor,this.pageController);
-
+  const OnboardingSinglePage({
+    super.key,
+    required this.pageIndex,
+    required this.imageUrl,
+    required this.title,
+    required this.desc,
+    required this.containerColor,
+    required this.controller,
+    required this.onComplete,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,40 +31,25 @@ class OnboardingSinglePage extends StatelessWidget {
         padding: EdgeInsets.only(top: AppSizes.screenHeight(context) * 0.15),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
-          // crossAxisAlignment: CrossAxisAlignment.,
           children: [
-            // Container(
-            //   width: double.infinity,
-            //   height: MediaQuery.of(context).size.height * 0.30,
-            //   // margin: const EdgeInsets.symmetric(horizontal: 40),
-            //   decoration: BoxDecoration(
-            //     color: containerColor,
-            // borderRadius: const BorderRadius.only(
-            //   topLeft: Radius.circular(300),
-            //   bottomLeft: Radius.circular(300),
-            // ),
-            //   borderRadius: pageIndex == 2
-            //       ? const BorderRadius.only(
-            //           topRight: Radius.circular(300),
-            //           bottomRight: Radius.circular(300),
-            //         )
-            //       : pageIndex == 0
-            //           ? const BorderRadius.only(
-            //               topLeft: Radius.circular(300),
-            //               bottomLeft: Radius.circular(300),
-            //             )
-            //           : BorderRadius.circular(0),
-            // ),
-            // borderRadius: BorderRadius.circular(0),
             Center(
               child: Image.asset(
                 imageUrl,
-                // fit: BoxFit.contain,
-                // height: MediaQuery.of(context).size.height * 0.30,
                 width: double.infinity,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    width: double.infinity,
+                    height: 200,
+                    color: Colors.grey[200],
+                    child: const Icon(
+                      Icons.image_not_supported,
+                      size: 50,
+                      color: Colors.grey,
+                    ),
+                  );
+                },
               ),
             ),
-            // ),
             const SizedBox(height: 30),
             Text(
               title,
@@ -69,9 +62,7 @@ class OnboardingSinglePage extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 50,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 50),
               child: Text(
                 desc,
                 textAlign: TextAlign.center,
@@ -81,44 +72,38 @@ class OnboardingSinglePage extends StatelessWidget {
                 ),
               ),
             ),
-            pageIndex == 1
-                ? const SizedBox(height: 40)
-                : pageIndex == 0
-                ? const SizedBox(height: 1)
-                : const SizedBox(height: 72),
+            SizedBox(
+              height: pageIndex == 1
+                  ? 40
+                  : pageIndex == 0
+                  ? 1
+                  : 72,
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
-              /*child: pageIndex == 2
-                  ?*/
               child: Column(
                 children: [
-                  const SizedBox(
-                    height: 50,
-                  ),
+                  const SizedBox(height: 50),
                   OnBoardingButton(
-                    label: 'NEXT',
+                    label: pageIndex == 2 ? 'GET STARTED' : 'NEXT',
                     onTap: () {
-                      pageIndex == 2
-                          ? Navigator.of(context)
-                          .pushReplacement(MaterialPageRoute(builder: (context) {
-                        return const DepartmentsPage();
-                      }))
-                          : pageController.animateToPage(pageIndex + 1,
+                      if (pageIndex == 2) {
+                        onComplete();
+                      } else {
+                        controller.animateToPage(
+                          pageIndex + 1,
                           duration: const Duration(milliseconds: 500),
-                          curve: Curves.decelerate);
+                          curve: Curves.decelerate,
+                        );
+                      }
                     },
-                    backgroundColor: Color.fromRGBO(214, 0, 27, 1.0),
+                    backgroundColor: const Color.fromRGBO(214, 0, 27, 1.0),
                     textColor: Colors.white,
                     context: context,
                   ),
                   const SizedBox(height: 15),
                   GestureDetector(
-                    onTap: () {
-                      Navigator.of(context)
-                          .pushReplacement(MaterialPageRoute(builder: (context) {
-                        return const DepartmentsPage();
-                      }));
-                    },
+                    onTap: onComplete,
                     child: const Text(
                       'Skip Tour',
                       style: TextStyle(
@@ -130,52 +115,9 @@ class OnboardingSinglePage extends StatelessWidget {
                 ],
               ),
             ),
-            // Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //     children: [
-            //       GestureDetector(
-            //         onTap: () {
-            //           Navigator.of(context)
-            //               .push(MaterialPageRoute(builder: (context) {
-            //             return const StartPage();
-            //           }));
-            //         },
-            //         child: Text(
-            //           'Skip',
-            //           textAlign: TextAlign.center,
-            //           style: TextStyle(
-            //             fontSize: 15,
-            //             fontWeight: FontWeight.normal,
-            //             color: Colors.red,
-            //           ),
-            //         ),
-            //       ),
-            //       GestureDetector(
-            //         onTap: () {
-            //           controller.animateToPage(pageIndex + 1,
-            //               duration: const Duration(milliseconds: 500),
-            //               curve: Curves.decelerate);
-            //         },
-            //         child: Container(
-            //           width: 60,
-            //           height: 50,
-            //           decoration: BoxDecoration(
-            //             // color: const Color.fromRGBO(239, 137, 95, 1),
-            //             color:Colors.red,
-            //             borderRadius: BorderRadius.circular(18),
-            //           ),
-            //           child: const Icon(
-            //             Icons.arrow_forward_ios_rounded,
-            //             color: Colors.white,
-            //           ),
-            //         ),
-            //       ),
-            //     ],
-            //   ),
           ],
         ),
       ),
     );
   }
 }
-

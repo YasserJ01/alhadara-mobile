@@ -1,4 +1,3 @@
-// // auth/presentation/widgets/login_form.dart
 // import 'package:flutter/material.dart';
 // import 'package:flutter_bloc/flutter_bloc.dart';
 //
@@ -81,23 +80,37 @@
 
 // auth/presentation/widgets/login_form.dart
 
+// auth/presentation/widgets/login_form.dart
+
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project2/features/profile/presentation/bloc/view_profile/profile_bloc.dart';
 import 'package:project2/features/reset_password/presentation/pages/request_security_question_page.dart';
+import 'package:project2/features/wishlist/presentation/bloc/wishlist_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/constants/app_size.dart';
-import '../../../../core/constants/auth_text_field.dart';
 import '../../../../core/utils/validators.dart';
+import '../../../../dependencies.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../onboarding/bloc/onboarding_bloc.dart';
+import '../../../onboarding/bloc/onboarding_events.dart';
 import '../../../onboarding/screens/onboarding.dart';
+import '../../../onboarding/screens/onboarding_screen.dart';
+import '../../../payment/presentation/pages/deposit_request_page.dart';
+import '../../../profile/presentation/bloc/create_profile/create_profile_bloc.dart';
+import '../../../profile/presentation/bloc/profile_image/profile_image_bloc.dart';
+import '../../../profile/presentation/pages/create_profile_basic_info_page.dart';
+import '../../../profile/presentation/pages/profile_image_upload_page.dart';
+import '../../../profile/presentation/pages/profile_images_display_page.dart';
+import '../../../profile/presentation/pages/profile_page.dart';
+import '../../../wishlist/presentation/pages/wishlist_page.dart';
 import 'custom_register_text_field.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 
 class LoginFormContent extends StatefulWidget {
   final VoidCallback? onSignUpPressed; // Add this
-
   const LoginFormContent({super.key, this.onSignUpPressed});
 
   @override
@@ -134,40 +147,77 @@ class _LoginFormContentState extends State<LoginFormContent> {
           ).show();
         } else if (state is AuthSuccess) {
           Navigator.pop(context); // Close modal first
+          // Navigation from login form:
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => BlocProvider(
+          //       create: (context) => getIt<ProfileBloc>(),
+          //       // or your DI method
+          //       child: ProfilePage(),
+          //     ),
+          //   ),
+          // );
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => BlocProvider(
+          //       create: (context) => getIt<ProfileImageBloc>(), // or your DI method
+          //       child: const ProfileImagesDisplayPage(),
+          //     ),
+          //   ),
+          // );
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => BlocProvider(
+          //       create: (context) => getIt<ProfileImageBloc>(), // or your DI method
+          //       child: const ProfileImageUploadPage(),
+          //     ),
+          //   ),
+          // );
+          // Navigate to the deposit request page
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => DepositRequestPage(
+          //       depositMethodId: 1, // Pass from previous page
+          //     ),
+          //   ),
+          // );
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => BlocProvider(
+          //       create: (context) => getIt<WishlistBloc>(), // or your DI method
+          //       child: const WishlistPage(),
+          //     ),
+          //   ),
+          // );
+          // Navigator.pushReplacement(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => BlocProvider(
+          //       create: (context) => getIt<CreateProfileBloc>(),
+          //       child: const CreateProfileBasicInfoPage(),
+          //     ),
+          //   ),
+          // );
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              // builder: (context) => Onboarding(),
+              // builder: (context) => ProfilePage(),
               builder: (context) => BlocProvider(
-                create: (context) => OnboardingBloc(),
-                child: Onboarding(),
+                create: (context) => OnboardingBloc(
+                  prefs: getIt<SharedPreferences>(),
+                )..add(CheckOnboardingStatusEvent()),
+                child: const OnboardingScreen(),
               ),
             ),
           );
         }
-        // AwesomeDialog(
-        //   context: context,
-        //   dialogType: DialogType.success,
-        //   animType: AnimType.bottomSlide,
-        //   title: 'Login Successful',
-        //   desc: 'Welcome back!',
-        //   headerAnimationLoop: false,
-        //   transitionAnimationDuration: const Duration(milliseconds: 500),
-        //   autoHide: const Duration(seconds: 6), // Auto-hide after 2 seconds
-        //   onDismissCallback: (type) {
-        //     // This callback runs when dialog is dismissed
-        //     Navigator.pop(context); // Close login modal
-        //     Navigator.pushReplacement(
-        //       context,
-        //       MaterialPageRoute(
-        //         builder: (context) => BlocProvider(
-        //           create: (context) => OnboardingBloc(),
-        //           child:  Onboarding(),
-        //         ),
-        //       ),
-        //     );
-        //   },
-        // ).show();
+
+
       },
 
       // },
@@ -227,7 +277,7 @@ class _LoginFormContentState extends State<LoginFormContent> {
                     controller: _passwordController,
                     label: 'Password',
                     obscureText: true,
-                    keyboardType: TextInputType.phone,
+                    keyboardType: TextInputType.text,
                     validator: Validators.validatePassword,
                   ),
                   // AuthTextField(
@@ -341,4 +391,5 @@ class _LoginFormContentState extends State<LoginFormContent> {
       ),
     );
   }
+
 }

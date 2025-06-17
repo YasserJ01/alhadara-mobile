@@ -4,6 +4,7 @@ import 'package:mockito/mockito.dart';
 import 'package:project2/features/auth/domain/entities/user_entity.dart';
 import 'package:project2/features/auth/domain/repositories/auth_repository.dart';
 import 'package:project2/features/auth/domain/usecases/login_with_phone_usecase.dart';
+import 'package:project2/features/auth/domain/usecases/register_usecase.dart';
 // Import your app files
 
 // Generate mock repository
@@ -11,11 +12,13 @@ import 'package:project2/features/auth/domain/usecases/login_with_phone_usecase.
 import 'login_with_phone_usecase_test.mocks.dart';
 
 void main() {
+  late RegisterUseCase registerUseCase;
   late LoginWithPhoneUseCase useCase;
   late MockAuthRepository mockRepository;
 
   setUp(() {
     mockRepository = MockAuthRepository();
+    registerUseCase=RegisterUseCase(mockRepository);
     useCase = LoginWithPhoneUseCase(mockRepository);
   });
 
@@ -42,4 +45,48 @@ void main() {
       verifyNoMoreInteractions(mockRepository);
     });
   });
+  group('RegisterUseCase', () {
+    const String tFirstName = 'John';
+    const String tMiddleName = 'Middle';
+    const String tLastName = 'Doe';
+    const String tPhone = '1234567890';
+    const String tPassword = 'password123';
+    const String tConfirmPassword = 'password123';
+    const String tAccessToken = 'test_access_token';
+
+    test('should get access token from the repository', () async {
+      // arrange
+      when(mockRepository.register(
+        any,
+        any,
+        any,
+        any,
+        any,
+        any,
+      )).thenAnswer((_) async => tAccessToken);
+
+      // act
+      final result = await registerUseCase(
+        tFirstName,
+        tMiddleName,
+        tLastName,
+        tPhone,
+        tPassword,
+        tConfirmPassword,
+      );
+
+      // assert
+      expect(result, tAccessToken);
+      verify(mockRepository.register(
+        tFirstName,
+        tMiddleName,
+        tLastName,
+        tPhone,
+        tPassword,
+        tConfirmPassword,
+      ));
+      verifyNoMoreInteractions(mockRepository);
+    });
+  });
+
 }

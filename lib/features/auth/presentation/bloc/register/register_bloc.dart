@@ -47,16 +47,5 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         // Handle any other errors
         emit(RegisterFailure(e.toString()));
       }
-    // on ValidationnException catch (e) {
-    //   emit(RequestSecurityQuestionError(message: e.errors));
-    // } on CacheException catch (e) {
-    //   emit(RequestSecurityQuestionError(message: e.message));
-    // } on ServerException catch (e) {
-    //   emit(RequestSecurityQuestionError(message: e.message));
-    // } catch (e) {
-    //   // Handle any other errors
-    //   emit(RequestSecurityQuestionError(
-    //       message: 'An unexpected error occurred'));
-    // }
   }
 }

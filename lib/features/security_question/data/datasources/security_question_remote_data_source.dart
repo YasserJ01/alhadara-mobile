@@ -36,7 +36,9 @@ import '../models/security_question_model.dart';
 
 abstract class SecurityQuestionRemoteDataSource {
   Future<List<SecurityQuestionModel>> getSecurityQuestions(String token);
-  Future<void> submitSecurityAnswer({ // Add this method signature
+
+  Future<void> submitSecurityAnswer({
+    // Add this method signature
     required String token,
     required int questionId,
     required String answer,

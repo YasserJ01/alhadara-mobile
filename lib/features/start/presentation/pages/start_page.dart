@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project2/core/widgets/language_switcher.dart';
 import '../widgets/start_logo.dart';
 import '../widgets/start_buttons.dart';
 
@@ -33,6 +34,7 @@ class StartPage extends StatelessWidget {
 
             // SizedBox(height: 40),
             StartButtons(), // Sign in + Guest buttons
+            LanguageSwitcher(),
           ],
         ),
       ),
