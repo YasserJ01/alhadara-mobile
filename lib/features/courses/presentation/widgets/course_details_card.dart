@@ -119,6 +119,39 @@ class CourseDetailsCard extends StatelessWidget {
                       backgroundColor: Colors.green,
                     ),
                   );
+                  // Moved the success dialog here
+                  AwesomeDialog(
+                    context: context,
+                    transitionAnimationDuration: const Duration(milliseconds: 500),
+                    dialogType: DialogType.success,
+                    animType: AnimType.bottomSlide,
+                    headerAnimationLoop: false,
+                    title: 'SUCCESS',
+                    desc: 'Successfully enrolled.. View Enrollments ?',
+                    btnCancelOnPress: () => Navigator.pop(context),
+                    btnOkOnPress: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MultiBlocProvider(
+                          providers: [
+                            BlocProvider(
+                              create: (context) => getIt<EnrollmentBloc>()
+                                ..add(FetchEnrollments()),
+                            ),
+                          ],
+                          child: const EnrollmentsPage(),
+                        ),
+                      ),
+                    ),
+                    buttonsBorderRadius: BorderRadius.circular(0),
+                    btnOkColor: Colors.green,
+                    btnCancelColor: Colors.red,
+                    buttonsTextStyle: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18,
+                    ),
+                  ).show();
                 } else if (state is EnrollError) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -130,79 +163,133 @@ class CourseDetailsCard extends StatelessWidget {
               },
               builder: (context, state) {
                 return ElevatedButton(
-                  onPressed: (state is EnrollLoading ||
-                          selectedScheduleId == null)
+                  onPressed: (state is EnrollLoading || selectedScheduleId == null)
                       ? null
                       : () {
-                          context.read<EnrollBloc>().add(
-                                EnrollInCourseEvent(
-                                  courseId: courseId,
-                                  scheduleSlotId: selectedScheduleId!,
-                                ),
-                              );
-                          AwesomeDialog(
-                            context: context,
-                            transitionAnimationDuration:
-                                const Duration(milliseconds: 500),
-                            // autoHide: const Duration(seconds: 6),
-                            dialogType: DialogType.success,
-                            animType: AnimType.bottomSlide,
-                            headerAnimationLoop: false,
-                            title: 'SUCCESS',
-                            desc: 'Successfully enrolled.. View Enrollments ?',
-                            // desc: state.error,
-                            btnCancelOnPress: () => Navigator.pop(context),
-                            btnOkOnPress: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => MultiBlocProvider(
-                                  providers: [
-                                    BlocProvider(
-                                      create: (context) =>
-                                          getIt<EnrollmentBloc>()
-                                            ..add(FetchEnrollments()),
-                                    ),
-                                  ],
-                                  child: const EnrollmentsPage(),
-                                ),
-                              ),
-                            ),
-                            buttonsBorderRadius: BorderRadius.circular(0),
-                            // btnOkIcon: Icons.cancel,
-                            btnOkColor: Colors.green,
-                            btnCancelColor: Colors.red,
-                            buttonsTextStyle: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 18,
-                            ),
-                          ).show();
-                        },
+                    context.read<EnrollBloc>().add(
+                      EnrollInCourseEvent(
+                        courseId: courseId,
+                        scheduleSlotId: selectedScheduleId!,
+                      ),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Color.fromRGBO(162, 12, 13, 1.0),
                     foregroundColor: Colors.white,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: state is EnrollmentLoading
+                  child: state is EnrollLoading
                       ? const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
-                        )
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
                       : const Text(
-                          'Enroll',
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        ),
+                    'Enroll',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
                 );
               },
             ),
+            // BlocConsumer<EnrollBloc, EnrollState>(
+            //   listener: (context, state) {
+            //     if (state is EnrollSuccess) {
+            //       ScaffoldMessenger.of(context).showSnackBar(
+            //         const SnackBar(
+            //           content: Text('Successfully enrolled in course!'),
+            //           backgroundColor: Colors.green,
+            //         ),
+            //       );
+            //     } else if (state is EnrollError) {
+            //       ScaffoldMessenger.of(context).showSnackBar(
+            //         SnackBar(
+            //           content: Text(state.message),
+            //           backgroundColor: Colors.red,
+            //         ),
+            //       );
+            //     }
+            //   },
+            //   builder: (context, state) {
+            //     return ElevatedButton(
+            //       onPressed: (state is EnrollLoading ||
+            //               selectedScheduleId == null)
+            //           ? null
+            //           : () {
+            //               context.read<EnrollBloc>().add(
+            //                     EnrollInCourseEvent(
+            //                       courseId: courseId,
+            //                       scheduleSlotId: selectedScheduleId!,
+            //                     ),
+            //                   );
+            //               AwesomeDialog(
+            //                 context: context,
+            //                 transitionAnimationDuration:
+            //                     const Duration(milliseconds: 500),
+            //                 // autoHide: const Duration(seconds: 6),
+            //                 dialogType: DialogType.success,
+            //                 animType: AnimType.bottomSlide,
+            //                 headerAnimationLoop: false,
+            //                 title: 'SUCCESS',
+            //                 desc: 'Successfully enrolled.. View Enrollments ?',
+            //                 // desc: state.error,
+            //                 btnCancelOnPress: () => Navigator.pop(context),
+            //                 btnOkOnPress: () => Navigator.push(
+            //                   context,
+            //                   MaterialPageRoute(
+            //                     builder: (context) => MultiBlocProvider(
+            //                       providers: [
+            //                         BlocProvider(
+            //                           create: (context) =>
+            //                               getIt<EnrollmentBloc>()
+            //                                 ..add(FetchEnrollments()),
+            //                         ),
+            //                       ],
+            //                       child: const EnrollmentsPage(),
+            //                     ),
+            //                   ),
+            //                 ),
+            //                 buttonsBorderRadius: BorderRadius.circular(0),
+            //                 // btnOkIcon: Icons.cancel,
+            //                 btnOkColor: Colors.green,
+            //                 btnCancelColor: Colors.red,
+            //                 buttonsTextStyle: const TextStyle(
+            //                   color: Colors.white,
+            //                   fontWeight: FontWeight.w700,
+            //                   fontSize: 18,
+            //                 ),
+            //               ).show();
+            //             },
+            //       style: ElevatedButton.styleFrom(
+            //         backgroundColor: Colors.blue,
+            //         foregroundColor: Colors.white,
+            //         padding:
+            //             const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            //         shape: RoundedRectangleBorder(
+            //           borderRadius: BorderRadius.circular(8),
+            //         ),
+            //       ),
+            //       child: state is EnrollmentLoading
+            //           ? const SizedBox(
+            //               width: 16,
+            //               height: 16,
+            //               child: CircularProgressIndicator(
+            //                 strokeWidth: 2,
+            //                 color: Colors.white,
+            //               ),
+            //             )
+            //           : const Text(
+            //               'Enroll',
+            //               style: TextStyle(fontWeight: FontWeight.w600),
+            //             ),
+            //     );
+            //   },
+            // ),
           ],
         ),
 

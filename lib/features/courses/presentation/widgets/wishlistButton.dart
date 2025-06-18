@@ -76,12 +76,12 @@ class _WishlistButtonState extends State<WishlistButton> {
               : _isWishlisted
               ? const Icon(
             Icons.favorite,
-            color: Colors.red,
+            color: Color.fromRGBO(162, 12, 13, 1.0),
             size: 28,
           )
               : const Icon(
             Icons.favorite_border,
-            color: Colors.red,
+            color: Color.fromRGBO(162, 12, 13, 1.0),
             size: 28,
           ),
         );

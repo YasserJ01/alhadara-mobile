@@ -1,5 +1,4 @@
 //lib/features/profile/presentation/bloc/profile_state.dart
-// import '../../domain/entity/profile.dart';
 
 part of 'profile_bloc.dart';
 
@@ -22,6 +21,8 @@ const ProfileLoaded(this.profile);
 @override
 List<Object> get props => [profile];
 }
+
+class ProfileNotFound extends ProfileState {}
 
 class ProfileError extends ProfileState {
 final String message;

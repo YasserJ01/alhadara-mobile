@@ -1,4 +1,5 @@
 import 'dart:io';
+import '../../../../errors/expections.dart';
 import '../../domain/entity/create_profile_request.dart';
 import '../../domain/entity/interests.dart';
 import '../../domain/entity/profile.dart';
@@ -23,6 +24,9 @@ class ProfileRepositoryImpl implements ProfileRepository {
       final profileModel = await remoteDataSource.getProfile();
       print('Repository received model: $profileModel');
       return profileModel; // ProfileModel extends Profile
+    } on NotFoundException catch (e) {
+      print('Profile not found: $e');
+      throw NotFoundFailure(e.message);
     } on FormatException catch (e) {
       print('Repository format error: $e');
       throw DataFormatFailure();
@@ -34,7 +38,24 @@ class ProfileRepositoryImpl implements ProfileRepository {
       throw ServerFailure();
     }
   }
-//data/repositories/profile_repository.dart
+
+  // @override
+  // Future<Profile> getProfile() async {
+  //   try {
+  //     final profileModel = await remoteDataSource.getProfile();
+  //     print('Repository received model: $profileModel');
+  //     return profileModel; // ProfileModel extends Profile
+  //   } on FormatException catch (e) {
+  //     print('Repository format error: $e');
+  //     throw DataFormatFailure();
+  //   } on HttpException catch (e) {
+  //     print('Repository HTTP error: $e');
+  //     throw ServerFailure();
+  //   } catch (e) {
+  //     print('Repository unexpected error: $e');
+  //     throw ServerFailure();
+  //   }
+  // }
 
   @override
   Future<int> createProfile(CreateProfileRequest request) async {

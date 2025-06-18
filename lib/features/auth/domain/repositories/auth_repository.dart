@@ -1,5 +1,4 @@
 // auth/domain/repositories/auth_repository.dart
-import 'package:project2/features/auth/domain/entities/user_register_entity.dart';
 
 import '../entities/user_entity.dart';
 

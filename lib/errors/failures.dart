@@ -14,3 +14,12 @@ class NoDataFailure extends Failure {}
 class DataFormatFailure extends Failure {}
 
 class HttpFailure extends Failure {}
+
+class NotFoundFailure extends Failure {
+  final String message;
+
+  NotFoundFailure(this.message);
+
+  @override
+  List<Object> get props => [message];
+}

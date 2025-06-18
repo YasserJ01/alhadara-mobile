@@ -70,7 +70,7 @@ class CustomDrawer extends StatelessWidget {
                             ),
                             SizedBox(height: screenHeight * 0.01),
                             Text(
-                              'Aya Al Issa',
+                              'Yasser Jeroodi',
                               style: TextStyle(
                                 fontSize: AppSizes.screenWidth(context) * 0.045,
                                 fontWeight: FontWeight.bold,
@@ -79,7 +79,8 @@ class CustomDrawer extends StatelessWidget {
                             ),
                             SizedBox(height: screenHeight * 0.005),
                             Text(
-                              '0951750316',
+
+                              '0934945318',
                               style: TextStyle(
                                 fontSize: AppSizes.screenWidth(context) * 0.035,
                                 color: Colors.grey[600],

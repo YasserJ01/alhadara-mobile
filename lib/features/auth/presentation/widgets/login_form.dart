@@ -120,6 +120,8 @@ class LoginFormContent extends StatefulWidget {
 class _LoginFormContentState extends State<LoginFormContent> {
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _showPassword = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -216,8 +218,6 @@ class _LoginFormContentState extends State<LoginFormContent> {
             ),
           );
         }
-
-
       },
 
       // },
@@ -276,10 +276,23 @@ class _LoginFormContentState extends State<LoginFormContent> {
                   CustomRegisterTextField(
                     controller: _passwordController,
                     label: 'Password',
-                    obscureText: true,
+                    obscureText: !_showPassword,
                     keyboardType: TextInputType.text,
                     validator: Validators.validatePassword,
+                    validateOnChange: true,
+                    suffixIcon: Icon(
+                      _showPassword ? Icons.visibility : Icons.visibility_off,
+                    ),
+                    onSuffixPressed: () =>
+                        setState(() => _showPassword = !_showPassword),
                   ),
+                  // CustomRegisterTextField(
+                  //   controller: _passwordController,
+                  //   label: 'Password',
+                  //   obscureText: true,
+                  //   keyboardType: TextInputType.text,
+                  //   validator: Validators.validatePassword,
+                  // ),
                   // AuthTextField(
                   //   textEditingController: _passwordController,
                   //   obscureText: true,
@@ -310,7 +323,9 @@ class _LoginFormContentState extends State<LoginFormContent> {
                   BlocBuilder<AuthBloc, AuthState>(
                     builder: (context, state) {
                       if (state is AuthLoading) {
-                        return const CircularProgressIndicator();
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
                       }
                       return SizedBox(
                         width: AppSizes.screenWidth(context),
@@ -391,5 +406,4 @@ class _LoginFormContentState extends State<LoginFormContent> {
       ),
     );
   }
-
 }

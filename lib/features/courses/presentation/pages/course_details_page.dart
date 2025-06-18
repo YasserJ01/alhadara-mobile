@@ -2,6 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project2/dependencies.dart'; // Import your dependency injection
+import '../../../../core/constants/app_back_button.dart';
+import '../../../../core/constants/app_size.dart';
+import '../../../../core/constants/colors.dart';
 import '../../../enrollment/presentation/bloc/enrolling/enroll_bloc.dart';
 import '../bloc/course_schedule_bloc/course_schedule_bloc.dart';
 import '../bloc/course_schedule_bloc/course_schedule_event.dart';
@@ -56,21 +59,65 @@ class CourseDetailsPage extends StatelessWidget {
             create: (context) => getIt<EnrollBloc>(),
           ),
       ],
-      child: Scaffold(
+      child:  Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => Navigator.pop(context),
+          toolbarHeight: AppSizes.screenHeight(context) * 0.09,
+          backgroundColor: Colors.white,
+          shadowColor: const Color.fromARGB(157, 244, 248, 251),
+          leading: Padding(
+            padding: EdgeInsets.only(left: AppSizes.screenWidth(context) * 0.03),
+            child: const AppBackButton(),
           ),
-          title: const Text('Front-End'),
+          title: const Text(
+            'Details',
+            style: TextStyle(
+              color: AppColors.mainColor,
+              fontSize: 24,
+            ),
+          ),
           centerTitle: true,
           actions: [
-            IconButton(
-              icon: const Badge(
-                label: Text('2'),
-                child: Icon(Icons.notifications_outlined),
+            Padding(
+              padding:
+              EdgeInsets.only(right: AppSizes.screenWidth(context) * 0.03),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.notifications_outlined,
+                      color: AppColors.mainColor,
+                      size: AppSizes.screenWidth(context) * 0.09,
+                    ),
+                    onPressed: () {},
+                  ),
+                  Positioned(
+                    right: AppSizes.screenWidth(context) * 0,
+                    top: AppSizes.screenHeight(context) * 0.01,
+                    child: Container(
+                      padding:
+                      EdgeInsets.all(AppSizes.screenWidth(context) * 0.01),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      constraints: BoxConstraints(
+                        minWidth: AppSizes.screenWidth(context) * 0.055,
+                        minHeight: AppSizes.screenHeight(context) * 0,
+                      ),
+                      child: Text(
+                        '3',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: AppSizes.screenWidth(context) * 0.03,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  )
+                ],
               ),
-              onPressed: () {},
             ),
           ],
         ),

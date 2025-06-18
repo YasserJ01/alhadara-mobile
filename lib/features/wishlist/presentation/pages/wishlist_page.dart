@@ -1,6 +1,7 @@
 // presentation/pages/wishlist_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/constants/app_scaffold.dart';
 import '../bloc/wishlist_bloc.dart';
 import '../bloc/wishlist_event.dart';
 import '../bloc/wishlist_state.dart';
@@ -11,13 +12,9 @@ class WishlistPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('My Wishlist'),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        elevation: 1,
-      ),
+    return AppScaffold(
+      title: 'Wishlist',
+      edgeInsets: const EdgeInsets.all(0),
       body: BlocBuilder<WishlistBloc, WishlistState>(
         builder: (context, state) {
           if (state is WishlistInitial) {
@@ -106,7 +103,8 @@ class WishlistPage extends StatelessWidget {
   }
 
   int _getTotalCourses(List<Wishlist> wishlists) {
-    return wishlists.fold(0, (total, wishlist) => total + wishlist.courses.length);
+    return wishlists.fold(
+        0, (total, wishlist) => total + wishlist.courses.length);
   }
 
   Map<String, String> _getCourseAtIndex(List<Wishlist> wishlists, int index) {
@@ -128,7 +126,7 @@ class WishlistPage extends StatelessWidget {
   Widget _buildCourseCard(Map<String, String> courseData) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
-      elevation: 2,
+      elevation: 5,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
@@ -136,20 +134,7 @@ class WishlistPage extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: Colors.blue.shade100,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(
-                Icons.book,
-                size: 30,
-                color: Colors.blue.shade600,
-              ),
-            ),
-            const SizedBox(width: 16),
+            // const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -159,25 +144,27 @@ class WishlistPage extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
+                      color: Color.fromRGBO(162, 12, 13, 1.0),
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 20),
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 8,
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(4),
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(5),
                     ),
                     child: Text(
                       courseData['courseTypeName'] ?? '',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 12,
-                        color: Colors.grey.shade700,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),

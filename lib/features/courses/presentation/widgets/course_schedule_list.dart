@@ -1,113 +1,3 @@
-// // presentation/widgets/course_schedule_list.dart
-// import 'package:flutter/material.dart';
-//
-// import '../../domain/entites/course_schedule.dart';
-//
-// class CourseScheduleList extends StatelessWidget {
-//   final List<CourseSchedule> schedules;
-//
-//   const CourseScheduleList({Key? key, required this.schedules})
-//       : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       crossAxisAlignment: CrossAxisAlignment.start,
-//       children: [
-//         // const Text(
-//         //   'Times',
-//         //   style: TextStyle(
-//         //     fontSize: 16,
-//         //     fontWeight: FontWeight.bold,
-//         //   ),
-//         // ),
-//         // const SizedBox(height: 10),
-//         ListView.builder(
-//           shrinkWrap: true,
-//           physics: const NeverScrollableScrollPhysics(),
-//           itemCount: schedules.length,
-//           itemBuilder: (context, index) {
-//             final schedule = schedules[index];
-//             return Card(
-//               margin: const EdgeInsets.only(bottom: 10),
-//               elevation: 0,
-//               color: Colors.grey.shade100,
-//               shape: RoundedRectangleBorder(
-//                 borderRadius: BorderRadius.circular(15),
-//               ),
-//               child: Padding(
-//                 padding: const EdgeInsets.all(12.0),
-//                 child: Column(
-//                   children: [
-//                     Row(
-//                       children: [
-//                         Expanded(
-//                           child: ElevatedButton(
-//                             onPressed: () {},
-//                             style: ElevatedButton.styleFrom(
-//                               backgroundColor: Colors.grey.shade200,
-//                               foregroundColor: Colors.black,
-//                               shape: RoundedRectangleBorder(
-//                                 borderRadius: BorderRadius.circular(30),
-//                               ),
-//                             ),
-//                             child: const Text('SUN TUE THU'),
-//                           ),
-//                         ),
-//                         const SizedBox(width: 10),
-//                         Expanded(
-//                           child: ElevatedButton(
-//                             onPressed: () {},
-//                             style: ElevatedButton.styleFrom(
-//                               backgroundColor: Colors.red,
-//                               foregroundColor: Colors.white,
-//                               shape: RoundedRectangleBorder(
-//                                 borderRadius: BorderRadius.circular(30),
-//                               ),
-//                             ),
-//                             child: Text(
-//                               '${schedule.daysOfWeek[0].toUpperCase()} ${schedule.daysOfWeek[1].toUpperCase()} ${schedule.daysOfWeek[2].toUpperCase()}',
-//                             ),
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                     Row(
-//                       children: [
-//                         Expanded(
-//                           flex: 2,
-//                           child: Text(
-//                             '${schedule.formattedStartTime} - ${schedule.formattedEndTime}',
-//                             style: const TextStyle(fontWeight: FontWeight.bold),
-//                           ),
-//                         ),
-//                         Expanded(
-//                           flex: 1,
-//                           child: Text(
-//                             schedule.formattedStartDate,
-//                             style: const TextStyle(fontWeight: FontWeight.w500),
-//                           ),
-//                         ),
-//                         Expanded(
-//                           flex: 1,
-//                           child: Text(
-//                             schedule.hallName,
-//                             style: const TextStyle(fontWeight: FontWeight.w500),
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             );
-//           },
-//         ),
-//       ],
-//     );
-//   }
-// }
-// presentation/widgets/course_schedule_list.dart
 import 'package:flutter/material.dart';
 
 import '../../domain/entites/course_schedule.dart';
@@ -172,9 +62,9 @@ class _CourseScheduleListState extends State<CourseScheduleList> {
             // Header with schedule selector
             Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.schedule,
-                  color: Colors.blue.shade600,
+                  color: Color.fromRGBO(162, 12, 13, 1.0),
                   size: 20,
                 ),
                 const SizedBox(width: 8),
@@ -192,14 +82,22 @@ class _CourseScheduleListState extends State<CourseScheduleList> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: Colors.blue.shade50,
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.6),
+                          spreadRadius: 1,
+                          blurRadius: 3,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
                     ),
                     child: Text(
                       '${selectedScheduleIndex + 1} of ${widget.schedules.length}',
                       style: TextStyle(
                         fontSize: 12,
-                        color: Colors.blue.shade700,
+                        color: Colors.red.shade700,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -260,13 +158,22 @@ class _CourseScheduleListState extends State<CourseScheduleList> {
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.blue.shade50, Colors.blue.shade100],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
+                color: Colors.white,
+                // gradient: LinearGradient(
+                //   colors: [Colors.blue.shade50, Colors.blue.shade100],
+                //   begin: Alignment.topLeft,
+                //   end: Alignment.bottomRight,
+                // ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.6),
+                    spreadRadius: 4,
+                    blurRadius: 10,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.blue.shade100),
+                // border: Border.all(color: Colors.blue.shade100),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -278,14 +185,14 @@ class _CourseScheduleListState extends State<CourseScheduleList> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
-                          color: Colors.blue.shade600,
+                          color: const Color.fromRGBO(162, 12, 13, 1.0),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
                           _formatDaysOfWeek(selectedSchedule.daysOfWeek),
                           style: const TextStyle(
                             color: Colors.white,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w700,
                             fontSize: 12,
                           ),
                         ),
@@ -297,12 +204,12 @@ class _CourseScheduleListState extends State<CourseScheduleList> {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Colors.blue.shade200),
+                          border: Border.all(color: Color.fromRGBO(162, 12, 13, 0.5)),
                         ),
                         child: Text(
                           '${selectedSchedule.formattedStartTime} - ${selectedSchedule.formattedEndTime}',
                           style: TextStyle(
-                            color: Colors.blue.shade700,
+                            color: Color.fromRGBO(162, 12, 13, 1.0),
                             fontWeight: FontWeight.w600,
                             fontSize: 12,
                           ),
@@ -370,14 +277,14 @@ class _CourseScheduleListState extends State<CourseScheduleList> {
       children: [
         Row(
           children: [
-            Icon(icon, size: 16, color: Colors.grey.shade600),
+            Icon(icon, size: 16, color: Color.fromRGBO(162, 12, 13, 1.0)),
             const SizedBox(width: 4),
             Text(
               label,
               style: TextStyle(
                 fontSize: 12,
-                color: Colors.grey.shade600,
-                fontWeight: FontWeight.w500,
+                color: Color.fromRGBO(162, 12, 13, 1.0),
+                fontWeight: FontWeight.w700,
               ),
             ),
           ],
@@ -386,8 +293,9 @@ class _CourseScheduleListState extends State<CourseScheduleList> {
         Text(
           value,
           style: const TextStyle(
+            letterSpacing: 0.5,
             fontSize: 13,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w700,
             color: Colors.black87,
           ),
           maxLines: 1,

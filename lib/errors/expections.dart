@@ -1,3 +1,4 @@
+//exceptions.dart
 class ApiException implements Exception {
   final String message;
   final int statusCode;
@@ -48,6 +49,15 @@ class CacheException implements Exception {
   final String message;
 
   CacheException(this.message);
+
+  @override
+  String toString() => message;
+}
+
+class NotFoundException implements Exception {
+  final String message;
+
+  NotFoundException(this.message);
 
   @override
   String toString() => message;

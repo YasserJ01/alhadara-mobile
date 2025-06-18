@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 import '../../../../core/token.dart';
+import '../../../../errors/expections.dart';
 import '../../../../errors/failures.dart';
 import '../models/create_profile_request_model.dart';
 import '../models/create_profile_response_model.dart';
@@ -38,16 +39,36 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
         'Authorization': 'JWT ${Token.token}',
       },
     );
-    print('Response status: ${response.statusCode}'); // Debug
-    print('Response body: ${response.body}'); // Debug
 
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
-      return ProfileModel.fromJson(jsonData); // Return the ProfileModel
+      return ProfileModel.fromJson(jsonData);
+    } else if (response.statusCode == 404) {
+      throw NotFoundException('Profile not found');
     } else {
       throw ServerFailure();
     }
   }
+
+  // @override
+  // Future<ProfileModel> getProfile() async {
+  //   final response = await client.get(
+  //     Uri.parse('http://10.0.2.2:8000/api/core/profile/me/'),
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       'Authorization': 'JWT ${Token.token}',
+  //     },
+  //   );
+  //   print('Response status: ${response.statusCode}'); // Debug
+  //   print('Response body: ${response.body}'); // Debug
+  //
+  //   if (response.statusCode == 200) {
+  //     final jsonData = json.decode(response.body);
+  //     return ProfileModel.fromJson(jsonData); // Return the ProfileModel
+  //   } else {
+  //     throw ServerFailure();
+  //   }
+  // }
 
   @override
   Future<int> createProfile(CreateProfileRequestModel request) async {

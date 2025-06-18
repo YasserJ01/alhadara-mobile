@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/constants/app_scaffold.dart';
 import '../../../../dependencies.dart';
 import '../bloc/create_profile/create_profile_bloc.dart';
 import '../bloc/interest_selection/interest_selection_bloc.dart';
@@ -99,148 +100,151 @@ class _CreateProfileBasicInfoPageState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create Profile'),
-      ),
-      body: BlocListener<CreateProfileBloc, CreateProfileState>(
-        listener: (context, state) {
-          if (state is CreateProfileSuccess) {
-            // ScaffoldMessenger.of(context).showSnackBar(
-            //   const SnackBar(content: Text('Profile created successfully!')),
-            // );
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => InterestSelectionPage(
-            //       profileId: state.profileId,
-            //     ),
-            //   ),
-            // );
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => BlocProvider(
-                  create: (context) => getIt<InterestSelectionBloc>(),
-                  // or your DI method
-                  child: InterestSelectionPage(profileId: state.profileId),
+    return AppScaffold(
+      title: 'Create Profile',
+      body: SingleChildScrollView(
+        child: BlocListener<CreateProfileBloc, CreateProfileState>(
+          listener: (context, state) {
+            if (state is CreateProfileSuccess) {
+              // ScaffoldMessenger.of(context).showSnackBar(
+              //   const SnackBar(content: Text('Profile created successfully!')),
+              // );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => InterestSelectionPage(
+              //       profileId: state.profileId,
+              //     ),
+              //   ),
+              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (context) => getIt<InterestSelectionBloc>(),
+                    // or your DI method
+                    child: InterestSelectionPage(profileId: state.profileId),
+                  ),
                 ),
-              ),
-            );
-            // print(state.profileId);
-            // Navigator.popUntil(context, (route) => route.isFirst);
-          } else if (state is CreateProfileError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
-          }
-        },
-        child: BlocBuilder<CreateProfileBloc, CreateProfileState>(
-          builder: (context, state) {
-            if (state is CreateProfileLoading) {
-              return const Center(child: CircularProgressIndicator());
+              );
+              // print(state.profileId);
+              // Navigator.popUntil(context, (route) => route.isFirst);
+            } else if (state is CreateProfileError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.message)),
+              );
             }
-
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const Text(
-                      'Basic Information',
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 20),
-                    TextFormField(
-                      controller: _birthDateController,
-                      decoration: const InputDecoration(
-                        labelText: 'Birth Date',
-                        suffixIcon: Icon(Icons.calendar_today),
-                      ),
-                      readOnly: true,
-                      onTap: _selectDate,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please select your birth date';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    DropdownButtonFormField<String>(
-                      value: _selectedGender,
-                      decoration: const InputDecoration(labelText: 'Gender'),
-                      items: _genders.map((gender) {
-                        return DropdownMenuItem(
-                          value: gender,
-                          child: Text(gender.toUpperCase()),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedGender = value;
-                        });
-                      },
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Please select your gender';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: _addressController,
-                      decoration: const InputDecoration(labelText: 'Address'),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your address';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    DropdownButtonFormField<String>(
-                      value: _selectedAcademicStatus,
-                      decoration:
-                          const InputDecoration(labelText: 'Academic Status'),
-                      items: _academicStatuses.map((status) {
-                        return DropdownMenuItem(
-                          value: status,
-                          child:
-                              Text(status.replaceAll('_', ' ').toUpperCase()),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedAcademicStatus = value;
-                        });
-                      },
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Please select your academic status';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 32),
-                    ElevatedButton(
-                      onPressed: _continue,
-                      child: Text(
-                        (_selectedAcademicStatus == 'high_school' ||
-                                _selectedAcademicStatus == 'not_studying')
-                            ? 'Create Profile'
-                            : 'Continue',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
           },
+          child: BlocBuilder<CreateProfileBloc, CreateProfileState>(
+            builder: (context, state) {
+              if (state is CreateProfileLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              return Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const Text(
+                        'Basic Information',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 1,
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      TextFormField(
+                        controller: _birthDateController,
+                        decoration: const InputDecoration(
+                          labelText: 'Birth Date',
+                          suffixIcon: Icon(Icons.calendar_today),
+                        ),
+                        readOnly: true,
+                        onTap: _selectDate,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please select your birth date';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      DropdownButtonFormField<String>(
+                        value: _selectedGender,
+                        decoration: const InputDecoration(labelText: 'Gender'),
+                        items: _genders.map((gender) {
+                          return DropdownMenuItem(
+                            value: gender,
+                            child: Text(gender.toUpperCase()),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedGender = value;
+                          });
+                        },
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Please select your gender';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: _addressController,
+                        decoration: const InputDecoration(labelText: 'Address'),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your address';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      DropdownButtonFormField<String>(
+                        value: _selectedAcademicStatus,
+                        decoration:
+                            const InputDecoration(labelText: 'Academic Status'),
+                        items: _academicStatuses.map((status) {
+                          return DropdownMenuItem(
+                            value: status,
+                            child:
+                                Text(status.replaceAll('_', ' ').toUpperCase()),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedAcademicStatus = value;
+                          });
+                        },
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Please select your academic status';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 32),
+                      ElevatedButton(
+                        onPressed: _continue,
+                        child: Text(
+                          (_selectedAcademicStatus == 'high_school' ||
+                                  _selectedAcademicStatus == 'not_studying')
+                              ? 'Create Profile'
+                              : 'Continue',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

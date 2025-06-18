@@ -34,7 +34,7 @@ class StartPage extends StatelessWidget {
 
             // SizedBox(height: 40),
             StartButtons(), // Sign in + Guest buttons
-            LanguageSwitcher(),
+            // LanguageSwitcher(),
           ],
         ),
       ),

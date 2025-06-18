@@ -1,4 +1,5 @@
 // features/courses/data/repositories/enrollment_repository_impl.dart
+import '../../../../errors/expections.dart';
 import '../../../../errors/failures.dart';
 import '../../domain/entities/enrollment_entity.dart';
 import '../datasources/enrollment_remote_data_source.dart';
@@ -23,14 +24,36 @@ class EnrollmentRepositoryImpl implements EnrollmentRepository {
         notes: notes,
       );
       return enrollment;
+    } on ValidationnException catch (e) {
+      throw ValidationnException(e.toString());
+    } on HttpFailure catch (e) {
+      throw HttpFailure();
     } catch (e) {
-      if (e is HttpFailure) {
-        throw HttpFailure();
-      } else {
-        throw ServerFailure();
-      }
+      throw ServerFailure();
     }
   }
+  // @override
+  // Future<EnrollEntity> enrollInCourse({
+  //   required int courseId,
+  //   required int scheduleSlotId,
+  //   required String notes,
+  // }) async {
+  //   try {
+  //     final enrollment = await remoteDataSource.enrollInCourse(
+  //       courseId: courseId,
+  //       scheduleSlotId: scheduleSlotId,
+  //       notes: notes,
+  //     );
+  //     return enrollment;
+  //   } catch (e) {
+  //     if (e is HttpFailure) {
+  //       throw HttpFailure();
+  //     } else {
+  //       throw ServerFailure();
+  //     }
+  //   }
+  // }
+
   @override
   Future<List<EnrollmentEntity>> getEnrollments() async {
     try {
