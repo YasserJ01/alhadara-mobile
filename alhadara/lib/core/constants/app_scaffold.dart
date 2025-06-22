@@ -1,7 +1,8 @@
-import 'package:alhadara/core/constants/app_back_button.dart';
-import 'package:alhadara/core/constants/app_size.dart';
-import 'package:alhadara/core/constants/colors.dart';
 import 'package:flutter/material.dart';
+
+import 'app_back_button.dart';
+import 'app_size.dart';
+import 'colors.dart';
 
 class AppScaffold extends StatelessWidget {
   final Widget body;
@@ -11,6 +12,9 @@ class AppScaffold extends StatelessWidget {
   final Color? backIconColor;
   final String title;
   final EdgeInsets? edgeInsets;
+  final VoidCallback? onPressedEndIcon;
+  final IconData? icon;
+  final double? elevation;
 
   const AppScaffold(
       {Key? key,
@@ -20,36 +24,88 @@ class AppScaffold extends StatelessWidget {
       this.backgroundColor,
       this.textColor,
       this.backIconColor,
-      this.edgeInsets})
+      this.edgeInsets,
+      this.onPressedEndIcon,
+      this.icon,
+      this.elevation})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          title,
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            color: textColor ?? AppColors.mainColor,
-            fontSize: AppSizes.responsiveFontSize(context,
-                mobile: 32, tablet: 36, desktop: 40),
+          //  toolbarHeight: AppSizes.screenHeight(context) * 0.09,
+          shadowColor: const Color.fromARGB(157, 244, 248, 251),
+          centerTitle: true,
+          title: Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: textColor ?? AppColors.mainColor,
+              fontSize: AppSizes.responsiveFontSize(context,
+                  mobile: 32, tablet: 36, desktop: 40),
+            ),
+            textAlign: TextAlign.center,
           ),
-          textAlign: TextAlign.center,
-        ),
-        leading: AppBackButton(
-            color: backIconColor ?? AppColors.mainColor,
-            onPressed: onBackPressed ?? () => Navigator.pop(context)),
-        backgroundColor: backgroundColor ?? Colors.transparent,
-        elevation: 0,
-      ),
+          leading: AppBackButton(
+              color: backIconColor ?? AppColors.mainColor,
+              onPressed: onBackPressed ?? () => Navigator.pop(context)),
+          actions: [
+            Padding(
+              padding:
+                  EdgeInsets.only(right: AppSizes.screenWidth(context) * 0.03),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      icon,
+                      // Icons.notifications_outlined,
+                      //Icons.home_sharp,Icons.home_sharp,
+                      color: const Color.fromRGBO(162, 12, 13, 1.0),
+                      size: AppSizes.screenWidth(context) * 0.09,
+                    ),
+                    onPressed: onPressedEndIcon,
+                  ),
+                  icon == Icons.notifications_outlined
+                      ? Positioned(
+                          right: AppSizes.screenWidth(context) * 0,
+                          top: AppSizes.screenHeight(context) * 0.01,
+                          child: Container(
+                            padding: EdgeInsets.all(
+                                AppSizes.screenWidth(context) * 0.01),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            constraints: BoxConstraints(
+                              minWidth: AppSizes.screenWidth(context) * 0.055,
+                              minHeight: AppSizes.screenHeight(context) * 0,
+                            ),
+                            child: Text(
+                              '3',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: AppSizes.screenWidth(context) * 0.03,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        )
+                      : Container(),
+                ],
+              ),
+            ),
+          ],
+          backgroundColor: backgroundColor ?? Colors.white,
+          elevation: elevation ?? 0),
       body: SafeArea(
         child: Padding(
-          padding:edgeInsets?? EdgeInsets.symmetric(
-            horizontal: AppSizes.responsiveSize(context,
-                mobile: 16, tablet: 24, desktop: 32),
-          ),
+          padding: edgeInsets ??
+              EdgeInsets.symmetric(
+                horizontal: AppSizes.responsiveSize(context,
+                    mobile: 16, tablet: 24, desktop: 32),
+              ),
           child: body,
         ),
       ),

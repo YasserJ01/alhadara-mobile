@@ -1,5 +1,5 @@
-import 'package:alhadara/core/constants/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:alhadara/core/widgets/language_switcher.dart';
 import '../widgets/start_logo.dart';
 import '../widgets/start_buttons.dart';
 
@@ -9,7 +9,7 @@ class StartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      backgroundColor:AppColors.mainColor,
+      backgroundColor: Color.fromRGBO(162, 12, 13, 1.0),
       body: Padding(
         padding: EdgeInsets.all(24.0),
         child: Column(
@@ -26,7 +26,7 @@ class StartPage extends StatelessWidget {
                 SizedBox(height: 8),
                 Text(
                   'Enjoy the world\'s fastest and best education',
-                  style: TextStyle(fontSize: 15.2, color: AppColors.whiteColor),
+                  style: TextStyle(fontSize: 15.2, color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -34,6 +34,7 @@ class StartPage extends StatelessWidget {
 
             // SizedBox(height: 40),
             StartButtons(), // Sign in + Guest buttons
+            // LanguageSwitcher(),
           ],
         ),
       ),

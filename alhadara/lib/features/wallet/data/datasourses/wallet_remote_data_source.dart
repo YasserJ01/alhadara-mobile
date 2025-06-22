@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:alhadara/core/token.dart';
-import 'package:alhadara/errors/expections.dart';
 import 'package:http/http.dart' as http;
+
+import '../../../../core/token.dart';
 
 abstract class WalletRemoteDataSource {
   Future<List<Map<String, dynamic>>> getWallet();

@@ -84,13 +84,13 @@
 import 'package:alhadara/core/constants/app_elevated_button.dart';
 import 'package:alhadara/core/constants/colors.dart';
 import 'package:alhadara/dependencies.dart';
-import 'package:alhadara/features/enrollments/presentation/bloc/enrollment_bloc.dart';
-import 'package:alhadara/features/enrollments/presentation/pages/enrollment_page.dart';
-import 'package:alhadara/features/interests/presentation/interestSelection/interest_selection_page.dart';
+import 'package:alhadara/features/onboarding/bloc/onboarding_events.dart';
+import 'package:alhadara/features/onboarding/screens/onboarding_screen.dart';
 import 'package:alhadara/features/wallet/presentation/pages/wallet_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:alhadara/features/reset_password/presentation/pages/request_security_question_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/constants/app_size.dart';
 import '../../../../core/constants/auth_text_field.dart';
 import '../../../../core/utils/validators.dart';
@@ -126,28 +126,31 @@ class _LoginFormContentState extends State<LoginFormContent> {
           //     .pushReplacement(MaterialPageRoute(builder: (context) {
           //   return  EnrollmentsPage();
           // }));
-          // Navigator.pushReplacement(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => BlocProvider(
-          //       create: (context) => OnboardingBloc(),
-          //       child: Onboarding(),
-          //     ),
-          //   ),
-          // );
-          Navigator.pushReplacement(
-  context,
-  MaterialPageRoute(
-    builder: (context) => MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => getIt<EnrollmentBloc>()..add(FetchEnrollments()),
-        ),
-      ],
-      child: EnrollmentsPage(),
-    ),
-  ),
-);
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              // builder: (context) => ProfilePage(),
+              builder: (context) => BlocProvider(
+                create: (context) => OnboardingBloc(
+                  prefs: getIt<SharedPreferences>(),
+                )..add(CheckOnboardingStatusEvent()),
+                child: const OnboardingScreen(),
+              ),
+            ),
+          );
+//           Navigator.pushReplacement(
+//   context,
+//   MaterialPageRoute(
+//     builder: (context) => MultiBlocProvider(
+//       providers: [
+//         BlocProvider(
+//           create: (context) => getIt<EnrollmentBloc>()..add(FetchEnrollments()),
+//         ),
+//       ],
+//       child: EnrollmentsPage(),
+//     ),
+//   ),
+// );
         }
       },
       child: Container(

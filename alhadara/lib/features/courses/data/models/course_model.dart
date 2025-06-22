@@ -16,39 +16,40 @@ class CourseModel extends Equatable {
   final String courseTypeName;
   final String? teacherName;
   final String category;
+  final bool wishlisted;
 
-  const CourseModel({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.price,
-    required this.duration,
-    required this.maxStudents,
-    required this.certificationEligible,
-    required this.department,
-    required this.departmentName,
-    required this.courseType,
-    required this.courseTypeName,
-    this.teacherName,
-    required this.category,
-  });
+  const CourseModel(
+      {required this.id,
+      required this.title,
+      required this.description,
+      required this.price,
+      required this.duration,
+      required this.maxStudents,
+      required this.certificationEligible,
+      required this.department,
+      required this.departmentName,
+      required this.courseType,
+      required this.courseTypeName,
+      this.teacherName,
+      required this.category,
+      required this.wishlisted});
 
   factory CourseModel.fromJson(Map<String, dynamic> json) {
     return CourseModel(
-      id: json['id'],
-      title: json['title'],
-      description: json['description'],
-      price: json['price'],
-      duration: json['duration'],
-      maxStudents: json['max_students'],
-      certificationEligible: json['certification_eligible'],
-      department: json['department'],
-      departmentName: json['department_name'],
-      courseType: json['course_type'],
-      courseTypeName: json['course_type_name'],
-      teacherName: json['teacher_name'],
-      category: json['category'],
-    );
+        id: json['id'],
+        title: json['title'],
+        description: json['description'],
+        price: json['price'],
+        duration: json['duration'],
+        maxStudents: json['max_students'],
+        certificationEligible: json['certification_eligible'],
+        department: json['department'],
+        departmentName: json['department_name'],
+        courseType: json['course_type'],
+        courseTypeName: json['course_type_name'],
+        teacherName: json['teacher_name'],
+        category: json['category'],
+        wishlisted: json['is_in_wishlist']);
   }
 
   Map<String, dynamic> toJson() {
@@ -66,6 +67,7 @@ class CourseModel extends Equatable {
       'course_type_name': courseTypeName,
       'teacher_name': teacherName,
       'category': category,
+      'is_in_wishlist': wishlisted,
     };
   }
 
@@ -84,6 +86,7 @@ class CourseModel extends Equatable {
         courseTypeName,
         teacherName,
         category,
+        wishlisted,
       ];
 
   Course toEntity() {
@@ -101,6 +104,7 @@ class CourseModel extends Equatable {
       courseTypeName: courseTypeName,
       teacherName: teacherName,
       category: category,
+      wishlisted: wishlisted,
     );
   }
 }

@@ -1,4 +1,5 @@
-import 'package:alhadara/features/wallet/domain/entities/wallet_entity.dart';
+
+import '../../domain/entities/wallet_entity.dart';
 
 class WalletModel {
   final int id;

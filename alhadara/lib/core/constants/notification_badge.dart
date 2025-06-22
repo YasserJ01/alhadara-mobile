@@ -1,6 +1,8 @@
-import 'package:alhadara/core/constants/colors.dart';
+
 import 'package:flutter/material.dart';
-import 'package:alhadara/core/constants/app_size.dart';
+
+import 'app_size.dart';
+import 'colors.dart';
 
 class NotificationBadge extends StatelessWidget {
   final int count;

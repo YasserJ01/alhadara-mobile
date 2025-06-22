@@ -1,6 +1,8 @@
-import 'package:alhadara/core/constants/app_back_button.dart';
-import 'package:alhadara/core/constants/app_size.dart';
+
 import 'package:flutter/material.dart';
+
+import 'app_back_button.dart';
+import 'app_size.dart';
 
 class ResetPasswordScaffold extends StatelessWidget {
   final Widget body;

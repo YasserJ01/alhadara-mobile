@@ -1,7 +1,8 @@
 // core/widgets/no_item_widget.dart
 import 'package:flutter/material.dart';
-import 'package:alhadara/core/constants/colors.dart';
-import 'package:alhadara/core/constants/app_size.dart';
+
+import 'app_size.dart';
+import 'colors.dart';
 
 class NoItemWidget extends StatelessWidget {
   final String message;

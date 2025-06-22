@@ -13,6 +13,7 @@ class Course {
   final String courseTypeName;
   final String? teacherName;
   final String category;
+  final bool wishlisted;
 
   const Course({
     required this.id,
@@ -28,5 +29,6 @@ class Course {
     required this.courseTypeName,
     this.teacherName,
     required this.category,
+    required this.wishlisted,
   });
 }

@@ -43,7 +43,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<Map<String, dynamic>> register(RegisterRequestModel request) async {
     final response = await client.post(
-      Uri.parse('https://alhadara-production.up.railway.app/api/auth/users/'),
+      Uri.parse('http://10.0.2.2:8000/api/auth/users/'),
       // Replace with your full API endpoint
       headers: {
         'accept': 'application/json',

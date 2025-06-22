@@ -1,12 +1,14 @@
-import 'package:alhadara/core/constants/notification_badge.dart';
-import 'package:alhadara/features/home/presentation/bloc/home_bloc.dart';
-import 'package:alhadara/features/home/presentation/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:alhadara/core/constants/colors.dart';
-import 'package:alhadara/core/constants/app_size.dart';
-import 'package:alhadara/dependencies.dart';
-import 'package:alhadara/features/home/presentation/widgets/home_form.dart';
+
+import '../../../../core/constants/app_size.dart';
+import '../../../../core/constants/colors.dart';
+import '../../../../core/constants/notification_badge.dart';
+import '../../../../dependencies.dart';
+import '../bloc/home_bloc.dart';
+import '../widgets/custom_drawer.dart';
+import '../widgets/home_form.dart';
+
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -17,7 +19,7 @@ class HomePage extends StatelessWidget {
       create: (context) => getIt<HomeBloc>()..add(LoadHomeData()),
       child: Scaffold(
         drawer: const CustomDrawer(),
-        backgroundColor: Color(0xffF4F8FB),
+        backgroundColor: const Color(0xffF4F8FB),
         appBar: AppBar(
           toolbarHeight: AppSizes.screenHeight(context) * 0.09,
           backgroundColor: Colors.white,
@@ -47,7 +49,7 @@ class HomePage extends StatelessWidget {
             Padding(
               padding:
                   EdgeInsets.only(right: AppSizes.screenWidth(context) * 0.03),
-              child: NotificationBadge(count: 3,)
+              child: const NotificationBadge(count: 3,)
             ),
           ],
         ),

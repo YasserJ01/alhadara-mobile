@@ -1,10 +1,8 @@
 // // lib/features/courses/presentation/widgets/departments_form.dart
 
-import 'package:alhadara/core/constants/colors.dart';
-import 'package:alhadara/core/constants/no_item.dart';
+import 'package:alhadara/features/courses/presentation/pages/course_types_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:alhadara/features/courses/presentation/pages/course_types_page.dart';
 import '../../../../core/constants/app_size.dart';
 import '../bloc/department_bloc/departments_bloc.dart';
 
@@ -37,15 +35,28 @@ class DepartmentsForm extends StatelessWidget {
         if (state is DepartmentsInitial || state is DepartmentsLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is DepartmentsError) {
-          return NoItemWidget(
-            message: state.message,
-            icon: Icons.error_outline,
-            iconColor: Colors.red,
-          );
+          return Center(child: Text(state.message));
         } else if (state is DepartmentsEmpty) {
-          return NoItemWidget(
-            message: state.message,
-            icon: Icons.search_off,
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.search_off,
+                  size: 60,
+                  color: Color.fromRGBO(162, 12, 13, 1.0),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  state.message,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ],
+            ),
           );
         } else if (state is DepartmentsLoaded) {
           // print(state.departments);
@@ -86,7 +97,7 @@ class DepartmentsForm extends StatelessWidget {
                             child: Icon(
                               _getDepartmentIcon(department.name),
                               size: iconSize,
-                              color:AppColors.mainColor,
+                              color: const Color.fromRGBO(162, 12, 13, 1.0),
                             ),
                           ),
                           trailing: Container(

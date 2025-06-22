@@ -1,29 +1,15 @@
-import 'package:alhadara/core/constants/no_item.dart';
-import 'package:alhadara/features/courses/presentation/pages/course_category_page.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:alhadara/core/constants/app_size.dart';
 import 'package:alhadara/features/courses/presentation/bloc/course_types_bloc/course_types_bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../pages/choosing_course_category_screen.dart';
+
 
 class CourseTypesForm extends StatelessWidget {
   const CourseTypesForm({super.key});
 
-  // IconData _getCourseTypesIcon(String departmentName) {
-  //   switch (courseName.toLowerCase()) {
-  //     case 'design':
-  //       return Icons.design_services;
-  //     case 'computers':
-  //       return Icons.computer;
-  //     case 'charter':
-  //       return Icons.assignment;
-  //     case 'cooks':
-  //       return Icons.restaurant;
-  //     case 'hotel booking':
-  //       return Icons.hotel;
-  //     default:
-  //       return Icons.school;
-  //   }
-  // }
+
 
   @override
   Widget build(BuildContext context) {
@@ -34,15 +20,26 @@ class CourseTypesForm extends StatelessWidget {
         if (state is CourseTypesInitial || state is CourseTypesLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is CourseTypesError) {
-          return NoItemWidget(
-            message: state.message,
-            icon: Icons.error_outline,
-            iconColor: Colors.red,
-          );
+          return Center(child: Text(state.message));
         } else if (state is CourseTypesEmpty) {
-          return NoItemWidget(
-            message: state.message,
-            icon: Icons.search_off,
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.search_off,
+                size: 60,
+                color: Color.fromRGBO(162, 12, 13, 1.0),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                state.message,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.grey[600],
+                ),
+              ),
+            ],
           );
         } else if (state is CourseTypesLoaded) {
           // print(state.departments);
@@ -115,7 +112,6 @@ class CourseTypesForm extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          // In the onTap of ListTile in CourseTypesForm
                           onTap: () {
                             Navigator.push(
                               context,
@@ -127,6 +123,15 @@ class CourseTypesForm extends StatelessWidget {
                                 ),
                               ),
                             );
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (_) => BlocProvider(
+                            //       create: (_) => getIt<CourseScheduleBloc>(),
+                            //       child: CourseDetailsPage(),
+                            //     ),
+                            //   ),
+                            // );
                           },
                         ),
                       );

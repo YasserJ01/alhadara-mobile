@@ -1,12 +1,11 @@
-import 'package:alhadara/core/constants/colors.dart';
-import 'package:alhadara/features/payment/depositmethod/presentation/pages/new/bank_selection_page.dart';
-import 'package:alhadara/features/payment/depositmethod/presentation/pages/new/method_selection_page.dart';
-import 'package:alhadara/features/wallet/presentation/bloc/transaction_bloc/transaction_bloc.dart';
-import 'package:alhadara/features/wallet/presentation/bloc/wallet_bloc.dart';
-import 'package:alhadara/features/wallet/presentation/pages/withdraw_page.dart';
-import 'package:alhadara/features/wallet/presentation/widgets/transaction_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/constants/colors.dart';
+import '../../../payment/presentation/pages/method_selection_page.dart';
+import '../bloc/transaction_bloc/transaction_bloc.dart';
+import '../bloc/wallet_bloc.dart';
+import '../pages/withdraw_page.dart';
+import 'transaction_item.dart';
 
 class WalletForm extends StatelessWidget {
   const WalletForm({super.key});
