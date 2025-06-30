@@ -1,5 +1,5 @@
 // features/courses/domain/usecases/enroll_in_course.dart
-import '../entities/enrollment.dart';
+import '../entities/enroll.dart';
 import '../repositories/enrollment_repository.dart';
 
 class EnrollInCourse {

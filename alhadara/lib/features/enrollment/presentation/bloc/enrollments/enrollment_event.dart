@@ -29,3 +29,12 @@ class SubmitPayment extends EnrollmentEvent {
   @override
   List<Object> get props => [enrollmentId, amount];
 }
+
+class FetchEnrollmentDetails extends EnrollmentEvent {
+  final int enrollmentId;
+
+  const FetchEnrollmentDetails(this.enrollmentId);
+
+  @override
+  List<Object> get props => [enrollmentId];
+}

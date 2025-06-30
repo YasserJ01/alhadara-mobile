@@ -1,5 +1,6 @@
 import 'package:alhadara/features/courses/domain/entites/course.dart';
 import 'package:alhadara/features/courses/presentation/pages/course_details_page.dart';
+import 'package:alhadara/features/courses/presentation/widgets/wishlistButton.dart';
 import 'package:alhadara/features/home/presentation/bloc/home_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:alhadara/core/constants/app_size.dart';
@@ -54,7 +55,7 @@ class HomeForm extends StatelessWidget {
                 // Courses Section
                 SizedBox(height: AppSizes.screenHeight(context) * 0.04),
                 Text(
-                  'Recommendations courses',
+                  'Recommendations',
                   style: TextStyle(
                     fontSize: AppSizes.screenWidth(context) * 0.05,
                     fontWeight: FontWeight.bold,
@@ -214,7 +215,8 @@ class HomeForm extends StatelessWidget {
                           Text(
                             course.price,
                             style: TextStyle(
-                              fontSize: AppSizes.screenWidth(context) * 0.04,
+                              fontSize:
+                                  AppSizes.screenWidth(context) * 0.04,
                               fontWeight: FontWeight.bold,
                               color: Colors.blue,
                             ),

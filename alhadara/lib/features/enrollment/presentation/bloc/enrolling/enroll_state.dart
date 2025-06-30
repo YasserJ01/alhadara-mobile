@@ -1,6 +1,6 @@
 // features/courses/presentation/bloc/enrollment/enroll_state.dart
 import 'package:equatable/equatable.dart';
-import '../../../domain/entities/enrollment.dart';
+import '../../../domain/entities/enroll.dart';
 
 abstract class EnrollState extends Equatable {
   const EnrollState();

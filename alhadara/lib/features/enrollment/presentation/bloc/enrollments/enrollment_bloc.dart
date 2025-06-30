@@ -1,3 +1,4 @@
+import 'package:alhadara/features/enrollment/domain/usecases/get_enrollment_details.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import '../../../domain/entities/enrollment_entity.dart';
@@ -11,13 +12,17 @@ part 'enrollment_state.dart';
 class EnrollmentBloc extends Bloc<EnrollmentEvent, EnrollmentState> {
   final GetEnrollments getEnrollments;
   final ProcessPayment processPayment;
+  final GetEnrollmentDetails getEnrollmentDetails;
+
 
   EnrollmentBloc({
     required this.getEnrollments,
     required this.processPayment,
+    required this.getEnrollmentDetails
   }) : super(EnrollmentInitial()) {
     on<FetchEnrollments>(_onFetchEnrollments);
     on<SubmitPayment>(_onSubmitPayment);
+    on<FetchEnrollmentDetails>(_onFetchEnrollmentDetails);
   }
 
   Future<void> _onFetchEnrollments(
@@ -49,4 +54,16 @@ class EnrollmentBloc extends Bloc<EnrollmentEvent, EnrollmentState> {
       }
     }
   }
+  Future<void> _onFetchEnrollmentDetails(
+  FetchEnrollmentDetails event,
+  Emitter<EnrollmentState> emit,
+) async {
+  emit(EnrollmentLoading());
+  try {
+    final enrollment = await getEnrollmentDetails(event.enrollmentId);
+    emit(EnrollmentDetailsLoaded(enrollment));
+  } catch (e) {
+    emit(EnrollmentError(e.toString()));
+  }
+}
 }

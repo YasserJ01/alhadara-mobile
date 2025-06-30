@@ -1,4 +1,5 @@
 import 'package:alhadara/core/constants/app_elevated_button.dart';
+import 'package:alhadara/core/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/deposit_request/deposit_request_bloc.dart';
@@ -232,20 +233,45 @@ class _DepositRequestViewState extends State<DepositRequestView> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                TextFormField(
-                  controller: _transactionNumberController,
-                  enabled: state is! DepositRequestLoading,
-                  decoration: const InputDecoration(
-                    hintText: 'Enter transaction number',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.confirmation_number),
+                Container(
+                  width: double.infinity,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: AppColors.mainColor.withOpacity(0.3),
+                      width: 1.5,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.mainColor
+                            .withOpacity(0.1), // Themed shadow color
+                        spreadRadius: 2,
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      )
+                    ],
                   ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Transaction number is required';
-                    }
-                    return null;
-                  },
+                  child: TextFormField(
+                    controller: _transactionNumberController,
+                    enabled: state is! DepositRequestLoading,
+                    decoration: const InputDecoration(
+                        hintText: 'Enter transaction number',
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: AppColors.mainColor)),
+                        prefixIcon: Icon(
+                          Icons.confirmation_number,
+                        ),
+                        prefixIconColor: Color.fromARGB(255, 200, 155, 155)),
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Transaction number is required';
+                      }
+                      return null;
+                    },
+                  ),
                 ),
 
                 const SizedBox(height: 10),
@@ -259,25 +285,48 @@ class _DepositRequestViewState extends State<DepositRequestView> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                TextFormField(
-                  controller: _amountController,
-                  enabled: state is! DepositRequestLoading,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    hintText: 'Enter amount',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.attach_money),
+                Container(
+                  width: double.infinity,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: AppColors.mainColor.withOpacity(0.3),
+                      width: 1.5,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.mainColor
+                            .withOpacity(0.1), // Themed shadow color
+                        spreadRadius: 2,
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      )
+                    ],
                   ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Amount is required';
-                    }
-                    final amount = double.tryParse(value.trim());
-                    if (amount == null || amount <= 0) {
-                      return 'Please enter a valid amount';
-                    }
-                    return null;
-                  },
+                  child: TextFormField(
+                    controller: _amountController,
+                    enabled: state is! DepositRequestLoading,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                        hintText: 'Enter amount',
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: AppColors.mainColor)),
+                        prefixIcon: Icon(Icons.attach_money),
+                        prefixIconColor: Color.fromARGB(255, 200, 155, 155)),
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Amount is required';
+                      }
+                      final amount = double.tryParse(value.trim());
+                      if (amount == null || amount <= 0) {
+                        return 'Please enter a valid amount';
+                      }
+                      return null;
+                    },
+                  ),
                 ),
 
                 const SizedBox(height: 20),

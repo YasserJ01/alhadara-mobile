@@ -1,5 +1,5 @@
 // features/courses/data/models/enroll_model.dart
-import '../../domain/entities/enrollment.dart';
+import '../../domain/entities/enroll.dart';
 
 class EnrollModel extends EnrollEntity {
   const EnrollModel({

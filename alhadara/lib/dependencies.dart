@@ -1,7 +1,9 @@
 // dependencies.dart
-
 import 'package:alhadara/features/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'package:alhadara/features/courses/domain/usecases/get_recommended_courses.dart';
+import 'package:alhadara/features/enrollment/domain/usecases/get_enrollment_details.dart';
+import 'package:alhadara/features/enrollment/domain/usecases/get_lesson_summaries.dart';
+import 'package:alhadara/features/enrollment/presentation/bloc/lessons/lesson_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:alhadara/features/courses/data/datasources/courses_remote_data_source.dart';
@@ -386,10 +388,12 @@ getIt.registerFactory(() => HomeBloc(
   getIt.registerFactory(() => EnrollmentBloc(
         getEnrollments: getIt(),
         processPayment: getIt(),
+        getEnrollmentDetails: getIt(),
       ));
   // Use cases
   getIt.registerLazySingleton(() => GetEnrollments(getIt()));
   getIt.registerLazySingleton(() => ProcessPayment(getIt()));
+  getIt.registerLazySingleton(() => GetEnrollmentDetails(getIt()));
 
   // Deposit Request Use cases
   getIt.registerLazySingleton(() => SearchCoursesUseCase(getIt()));
@@ -410,4 +414,23 @@ getIt.registerFactory(() => HomeBloc(
       searchCoursesUseCase: getIt(),
     ),
   );
+  // Lessons Feature
+  getIt.registerFactory(() => LessonBloc(getLessonSummaries: getIt()));
+  getIt.registerLazySingleton(() => GetLessonSummaries(getIt()));
+  // //active course
+  //   // Data sources
+  // getIt.registerLazySingleton<ActiveCourseRemoteDataSource>(
+  //   () => ActiveCourseRemoteDataSourceImpl(client: getIt()),
+  // );
+  
+  // // Repository
+  // getIt.registerLazySingleton<ActiveCourseRepository>(
+  //   () => ActiveCourseRepositoryImpl(remoteDataSource: getIt()),
+  // );
+  
+  // // Use cases
+  // getIt.registerLazySingleton(() => GetActiveCourse(repository: getIt()));
+  
+  // // Bloc
+  // getIt.registerFactory(() => ActiveCourseBloc(getActiveCourse: getIt()));
 }

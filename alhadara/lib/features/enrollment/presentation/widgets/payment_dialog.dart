@@ -7,7 +7,7 @@ import '../bloc/enrollments/enrollment_bloc.dart';
 
 class PaymentDialog extends StatefulWidget {
   final int enrollmentId;
-  final double remainingBalance;
+  final String remainingBalance;
 
   const PaymentDialog({
     super.key,
@@ -81,38 +81,64 @@ class _PaymentDialogState extends State<PaymentDialog> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'Remaining Balance: \$${widget.remainingBalance.toStringAsFixed(2)}',
+                      'Remaining Balance: \$${widget.remainingBalance}',
                       style: const TextStyle(fontSize: 16),
                     ),
                     const SizedBox(height: 16),
-                    TextFormField(
-                      controller: _amountController,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        labelText: 'Payment Amount',
-                        prefixText: '\$ ',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: AppColors.mainColor.withOpacity(0.3),
+                          width: 1.5,
                         ),
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.mainColor
+                                .withOpacity(0.1), // Themed shadow color
+                            spreadRadius: 2,
+                            blurRadius: 12,
+                            offset: const Offset(0, 4),
+                          )
+                        ],
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter amount';
-                        }
-                        final amount = double.tryParse(value);
-                        if (amount == null || amount <= 0) {
-                          return 'Enter valid amount';
-                        }
-                        if (amount > widget.remainingBalance) {
-                          return 'Amount exceeds balance';
-                        }
-                        return null;
-                      },
-                      onChanged: (value) {
-                        setState(() {
-                          _enteredAmount = double.tryParse(value) ?? 0;
-                        });
-                      },
+                      child: TextFormField(
+                        controller: _amountController,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          labelText: 'Payment Amount',
+                          labelStyle: TextStyle(color: AppColors.mainColor),
+                          prefixIcon: Icon(Icons.attach_money),
+                          prefixIconColor: Color.fromARGB(255, 200, 155, 155),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: AppColors.mainColor),
+                            // borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter amount';
+                          }
+                          final amount = double.tryParse(value);
+                          if (amount == null || amount <= 0) {
+                            return 'Enter valid amount';
+                          }
+                           final remainingBalance = double.tryParse(widget.remainingBalance) ?? 0;
+                          if (amount > remainingBalance) {
+                            return 'Amount exceeds balance';
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            _enteredAmount = double.tryParse(value) ?? 0;
+                          });
+                        },
+                      ),
                     ),
                     const SizedBox(height: 24),
                     Row(
@@ -120,7 +146,8 @@ class _PaymentDialogState extends State<PaymentDialog> {
                         Expanded(
                           child: OutlinedButton(
                             style: OutlinedButton.styleFrom(
-                              side: const BorderSide(color: AppColors.mainColor),
+                              side:
+                                  const BorderSide(color: AppColors.mainColor),
                             ),
                             onPressed: _isSubmitting
                                 ? null

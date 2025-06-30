@@ -14,7 +14,7 @@ class WishlistPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppScaffold(
       title: 'Wishlist',
-      edgeInsets: const EdgeInsets.all(0),
+      //edgeInsets: const EdgeInsets.all(0),
       body: BlocBuilder<WishlistBloc, WishlistState>(
         builder: (context, state) {
           if (state is WishlistInitial) {
@@ -127,8 +127,9 @@ class WishlistPage extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       elevation: 5,
+      color: Color.fromARGB(255, 245, 230, 230),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(15),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),

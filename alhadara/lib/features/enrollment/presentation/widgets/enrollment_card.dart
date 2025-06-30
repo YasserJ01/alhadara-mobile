@@ -1,3 +1,5 @@
+import 'package:alhadara/dependencies.dart';
+import 'package:alhadara/features/enrollment/presentation/pages/active_course_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:alhadara/features/enrollment/presentation/widgets/payment_dialog.dart';
@@ -27,7 +29,7 @@ class _ExpandableEnrollmentCardState extends State<ExpandableEnrollmentCard> {
         value: bloc,
         child: PaymentDialog(
           enrollmentId: widget.enrollment.id,
-          remainingBalance: widget.enrollment.remainingBalance,
+          remainingBalance: widget.enrollment.remainingBalance.toString(),
         ),
       ),
     );
@@ -86,18 +88,68 @@ class _ExpandableEnrollmentCardState extends State<ExpandableEnrollmentCard> {
                 ),
           ),
         ),
-        Row(
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildStatusChip(widget.enrollment.status),
-            const SizedBox(width: 8),
-            AnimatedRotation(
-              duration: const Duration(milliseconds: 300),
-              turns: _isExpanded ? 0.5 : 0,
-              child: const Icon(
-                Icons.keyboard_arrow_down,
-                color: AppColors.mainColor,
-                size: 30,
+            GestureDetector(
+              onTap: () {
+                //               Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => ActiveCoursePage(courseId: widget.enrollment.id),
+                //   ),
+                // );
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) => getIt<EnrollmentBloc>(),
+                      child: ActiveCoursePage(
+                        courseId: widget.enrollment.id,
+                        scheduleSlotId: widget.enrollment
+                            .scheduleSlot, // تأكد من تمرير enrollment.id
+                      ),
+                    ),
+                  ),
+                );
+              },
+              child: Chip(
+                label: Text(
+                  'View course',
+                  style: TextStyle(
+                    color: AppColors.mainColor,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                backgroundColor: AppColors.mainColor.withOpacity(0.2),
+                // materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
+            ),
+            SizedBox(
+              height: 1,
+            ),
+            Row(
+              children: [
+                _buildStatusChip(widget.enrollment.status),
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 0),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.mainColor
+                        .withOpacity(0.1), // Circular icon background
+                  ),
+                  child: AnimatedRotation(
+                    duration: const Duration(milliseconds: 300),
+                    turns: _isExpanded ? 0.5 : 0,
+                    child: const Icon(
+                      Icons.keyboard_arrow_down,
+                      color: AppColors.mainColor,
+                      size: 30,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -109,9 +161,10 @@ class _ExpandableEnrollmentCardState extends State<ExpandableEnrollmentCard> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _buildPaymentItem('Paid', widget.enrollment.amountPaid, Colors.green),
         _buildPaymentItem(
-            'Remaining', widget.enrollment.remainingBalance, Colors.orange),
+            'Paid', widget.enrollment.amountPaid.toString(), Colors.green),
+        _buildPaymentItem('Remaining',
+            widget.enrollment.remainingBalance.toString(), Colors.orange),
         _buildPaymentStatus(widget.enrollment.paymentStatus),
       ],
     );
@@ -174,7 +227,7 @@ class _ExpandableEnrollmentCardState extends State<ExpandableEnrollmentCard> {
     );
   }
 
-  Widget _buildPaymentItem(String label, double value, Color color) {
+  Widget _buildPaymentItem(String label, String value, Color color) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -186,7 +239,7 @@ class _ExpandableEnrollmentCardState extends State<ExpandableEnrollmentCard> {
           ),
         ),
         Text(
-          '\$${value.toStringAsFixed(2)}',
+          '\$$value',
           style: TextStyle(
             fontSize: 16,
             color: color,
