@@ -1,4 +1,5 @@
 // onboarding_screen.dart
+import 'package:alhadara/features/privet_lesson/presentation/pages/private_lesson_request_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -23,7 +24,7 @@ class OnboardingScreen extends StatelessWidget {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (context) {
-                  return const HomePage();
+                  return const PrivateLessonRequestPage(scheduleSlotId: 281,);
                 },
               ),
             );

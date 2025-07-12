@@ -348,7 +348,8 @@ class _CreateProfileBasicInfoPageState
                               labelText: 'Address',
                               labelStyle: TextStyle(
                                   color: Color.fromARGB(255, 201, 89, 89),
-                                  fontSize: 18)),
+                                  fontSize: 18)
+                                  ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your address';

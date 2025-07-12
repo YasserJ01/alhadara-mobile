@@ -258,7 +258,7 @@ class _CourseScheduleListState extends State<CourseScheduleList> {
               const SizedBox(height: 16),
             ],
 
-            // Selected schedule details card
+            
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(16),

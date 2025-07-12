@@ -4,6 +4,13 @@ import 'package:alhadara/features/courses/domain/usecases/get_recommended_course
 import 'package:alhadara/features/enrollment/domain/usecases/get_enrollment_details.dart';
 import 'package:alhadara/features/enrollment/domain/usecases/get_lesson_summaries.dart';
 import 'package:alhadara/features/enrollment/presentation/bloc/lessons/lesson_bloc.dart';
+import 'package:alhadara/features/privet_lesson/data/datasources/private_lesson_request_remote_data_source.dart';
+import 'package:alhadara/features/privet_lesson/data/repositories/private_lesson_request_repository_impl.dart';
+import 'package:alhadara/features/privet_lesson/domain/repositories/private_lesson_request_repository.dart';
+import 'package:alhadara/features/privet_lesson/domain/usecases/create_private_lesson_request.dart';
+import 'package:alhadara/features/privet_lesson/domain/usecases/delete_private_lesson_request.dart';
+import 'package:alhadara/features/privet_lesson/domain/usecases/get_private_lesson_requests.dart';
+import 'package:alhadara/features/privet_lesson/domain/usecases/pick_proposed_option.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:alhadara/features/courses/data/datasources/courses_remote_data_source.dart';
@@ -417,6 +424,33 @@ getIt.registerFactory(() => HomeBloc(
   // Lessons Feature
   getIt.registerFactory(() => LessonBloc(getLessonSummaries: getIt()));
   getIt.registerLazySingleton(() => GetLessonSummaries(getIt()));
+
+  //private lesson
+   // Data Sources
+  getIt.registerSingleton<PrivateLessonRequestRemoteDataSource>(
+    PrivateLessonRequestRemoteDataSourceImpl(client: getIt<http.Client>()),
+  );
+  
+  // Repositories
+  getIt.registerSingleton<PrivateLessonRequestRepository>(
+    PrivateLessonRequestRepositoryImpl(
+      remoteDataSource: getIt<PrivateLessonRequestRemoteDataSource>(),
+    ),
+  );
+  
+  // Use Cases
+  getIt.registerSingleton<CreatePrivateLessonRequest>(
+    CreatePrivateLessonRequest(getIt<PrivateLessonRequestRepository>()),
+  );
+    getIt.registerSingleton<GetPrivateLessonRequests>(
+    GetPrivateLessonRequests(getIt<PrivateLessonRequestRepository>()),
+  );
+   getIt.registerSingleton<PickProposedOption>(
+    PickProposedOption(getIt<PrivateLessonRequestRepository>()),
+  );
+   getIt.registerSingleton<DeletePrivateLessonRequest>(
+    DeletePrivateLessonRequest(getIt<PrivateLessonRequestRepository>()),
+  );
   // //active course
   //   // Data sources
   // getIt.registerLazySingleton<ActiveCourseRemoteDataSource>(
