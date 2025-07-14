@@ -12,11 +12,14 @@ import 'package:project2/features/courses/presentation/bloc/department_bloc/depa
 import 'package:project2/features/payment/presentation/bloc/deposit_request/deposit_request_bloc.dart';
 import 'package:project2/features/profile/domain/usecases/get_profile.dart';
 import 'package:project2/features/profile/presentation/bloc/view_profile/profile_bloc.dart';
+import 'package:project2/features/quiz/presentation/bloc/quiz_list/quiz_list_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'core/network/api_client.dart';
 import 'features/auth/data/datasources/auth_remote_data_source.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
 import 'features/auth/domain/repositories/auth_repository.dart';
 import 'features/auth/domain/usecases/login_with_phone_usecase.dart';
+import 'features/auth/domain/usecases/refresh_token_usecase.dart';
 import 'features/auth/domain/usecases/register_usecase.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/bloc/register/register_bloc.dart';
@@ -24,12 +27,32 @@ import 'features/courses/presentation/bloc/course_schedule_bloc/course_schedule_
 import 'features/enrollment/data/datasources/enrollment_remote_data_source.dart';
 import 'features/enrollment/data/repositories/enrollment_repository_impl.dart';
 import 'features/enrollment/domain/repositories/enrollment_repository.dart';
+import 'features/enrollment/domain/usecases/create_lesson_combo.dart';
 import 'features/enrollment/domain/usecases/enroll_in_course.dart';
 import 'features/enrollment/domain/usecases/get_enrollments.dart';
+import 'features/enrollment/domain/usecases/get_homework_by_lesson_id.dart';
+import 'features/enrollment/domain/usecases/get_lessons.dart';
+import 'features/enrollment/domain/usecases/get_news_feed_usecase.dart';
 import 'features/enrollment/domain/usecases/process_payment.dart';
+import 'features/enrollment/domain/usecases/publish_post_usecase.dart';
+import 'features/enrollment/presentation/bloc/bulletin_post/bulletin_post_bloc.dart';
 import 'features/enrollment/presentation/bloc/enrolling/enroll_bloc.dart';
 import 'features/enrollment/presentation/bloc/enrollments/enrollment_bloc.dart';
+import 'features/enrollment/presentation/bloc/homeworks/homework_bloc.dart';
+import 'features/enrollment/presentation/bloc/lesson_combo/lesson_combo_bloc.dart';
+import 'features/enrollment/presentation/bloc/lessons/lessons_bloc.dart';
+import 'features/enrollment/presentation/bloc/news_feed/news_feed_bloc.dart';
 import 'features/home/presentation/bloc/home_bloc.dart';
+import 'features/notifications/data/datasources/notification_local_data_source.dart';
+import 'features/notifications/data/datasources/notification_remote_data_source.dart';
+import 'features/notifications/data/repositories/notification_repository_impl.dart';
+import 'features/notifications/domain/repositories/notification_repository.dart';
+import 'features/notifications/domain/usecases/connect_notifications.dart';
+import 'features/notifications/domain/usecases/disconnect_notifications.dart';
+import 'features/notifications/domain/usecases/get_local_notifications.dart';
+import 'features/notifications/domain/usecases/listen_to_notifications.dart';
+import 'features/notifications/domain/usecases/mark_notification_read.dart';
+import 'features/notifications/presentation/bloc/notification_bloc.dart';
 import 'features/payment/data/datasources/payment_remote_data_source.dart';
 import 'features/payment/data/repositories/payment_repository_impl.dart';
 import 'features/payment/domain/repositories/payment_repository.dart';
@@ -52,6 +75,16 @@ import 'features/profile/presentation/bloc/interest_rating/interest_rating_bloc.
 import 'features/profile/presentation/bloc/interest_selection/interest_selection_bloc.dart';
 import 'features/profile/presentation/bloc/profile_image/profile_image_bloc.dart';
 import 'features/profile/presentation/bloc/university_and_study_field_selection/university_studyfield_bloc.dart';
+import 'features/quiz/data/datasources/quiz_remote_datasource.dart';
+import 'features/quiz/data/repositories/quiz_repository_impl.dart';
+import 'features/quiz/domain/repositories/quiz_repository.dart';
+import 'features/quiz/domain/usecases/get_quiz_questions_usecase.dart';
+import 'features/quiz/domain/usecases/get_quizzes_usecase.dart';
+import 'features/quiz/domain/usecases/start_quiz_attempt_usecase.dart';
+import 'features/quiz/domain/usecases/submit_quiz_answers_usecase.dart';
+import 'features/quiz/presentation/bloc/quiz_attempt/quiz_attempt_bloc.dart';
+import 'features/quiz/presentation/bloc/quiz_questions/quiz_questions_bloc.dart';
+import 'features/quiz/presentation/bloc/quiz_submission/quiz_submission_bloc.dart';
 import 'features/search/data/datasources/search_remote_datasource.dart';
 import 'features/search/data/repositories/search_repository_impl.dart';
 import 'features/search/domain/repositories/search_repository.dart';
@@ -97,18 +130,44 @@ void setupDependencies() {
 
   getIt.registerSingleton<http.Client>(http.Client());
 
+  // API Client
+  getIt.registerLazySingleton<ApiClient>(
+    () => ApiClient(getIt<http.Client>(), getIt<AuthRemoteDataSource>()),
+  );
+
   // Auth Feature
   getIt.registerSingleton<AuthRemoteDataSource>(
     AuthRemoteDataSourceImpl(getIt<http.Client>()),
   );
-  getIt.registerSingleton<AuthRepository>(
-    AuthRepositoryImpl(getIt<AuthRemoteDataSource>()),
+  getIt.registerLazySingleton<AuthRepository>(
+    () => AuthRepositoryImpl(getIt<AuthRemoteDataSource>()),
   );
+  // getIt.registerSingleton<AuthRepository>(
+  //   AuthRepositoryImpl(getIt<AuthRemoteDataSource>()),
+  // );
   getIt.registerSingleton<LoginWithPhoneUseCase>(
     LoginWithPhoneUseCase(getIt<AuthRepository>()),
   );
-  getIt.registerFactory(
-      () => AuthBloc(loginWithPhoneUseCase: getIt<LoginWithPhoneUseCase>()));
+  getIt.registerLazySingleton<RefreshTokenUseCase>(
+    () => RefreshTokenUseCase(getIt<AuthRepository>()),
+  );
+
+  // BLoCs
+  getIt.registerFactory<AuthBloc>(
+    () => AuthBloc(
+      loginWithPhoneUseCase: getIt<LoginWithPhoneUseCase>(),
+      refreshTokenUseCase: getIt<RefreshTokenUseCase>(),
+      authRepository: getIt<AuthRepository>(),
+    ),
+  );
+  // getIt.registerFactory(
+  //   () => AuthBloc(
+  //     // loginWithPhoneUseCase: loginUseCase,
+  //     refreshTokenUseCase: getIt<RefreshTokenUseCase>(),
+  //     authRepository: getIt<AuthRepositoryImpl>(),
+  //     loginWithPhoneUseCase: getIt<LoginWithPhoneUseCase>(),
+  //   ),
+  // );
 
   getIt.registerSingleton<RegisterUseCase>(
     RegisterUseCase(getIt<AuthRepository>()),
@@ -237,7 +296,7 @@ void setupDependencies() {
 
   // Data sources
   getIt.registerLazySingleton<ProfileRemoteDataSource>(
-    () => ProfileRemoteDataSourceImpl(getIt()),
+    () => ProfileRemoteDataSourceImpl(getIt(), getIt()),
   );
 
   // Profile Feature - NEW Create Profile dependencies
@@ -332,8 +391,19 @@ void setupDependencies() {
   );
 
   getIt.registerLazySingleton<EnrollmentRemoteDataSource>(
-    () => EnrollmentRemoteDataSourceImpl(client: getIt()),
+    () => EnrollmentRemoteDataSourceImpl(getIt(), getIt()),
   );
+
+  // Lessons Use case
+  getIt.registerLazySingleton(() => GetLessons(getIt()));
+  // Lessons Bloc
+  getIt.registerFactory(() => LessonsBloc(getLessons: getIt()));
+
+  // Homeworks Use cases
+  getIt.registerLazySingleton(() => GetHomeworkByLessonId(getIt()));
+
+  // Homeworks Blocs
+  getIt.registerFactory(() => HomeworkBloc(getHomeworkByLessonId: getIt()));
 
   //Wallet
   // Data sources
@@ -403,4 +473,134 @@ void setupDependencies() {
       searchCoursesUseCase: getIt(),
     ),
   );
+
+  //! Features - Notifications
+  // BLoC
+  getIt.registerFactory(
+    () => NotificationBloc(
+      connectToNotifications: getIt<ConnectToNotifications>(),
+      disconnectFromNotifications: getIt<DisconnectFromNotifications>(),
+      getNotifications: getIt<GetNotifications>(),
+      listenToNotifications: getIt<ListenToNotifications>(),
+      markNotificationAsRead: getIt<MarkNotificationAsRead>(),
+    ),
+  );
+
+  // Use cases
+  getIt.registerLazySingleton(
+      () => ConnectToNotifications(getIt<NotificationRepository>()));
+  getIt.registerLazySingleton(
+      () => DisconnectFromNotifications(getIt<NotificationRepository>()));
+  getIt.registerLazySingleton(
+      () => GetNotifications(getIt<NotificationRepository>()));
+  getIt.registerLazySingleton(
+      () => ListenToNotifications(getIt<NotificationRepository>()));
+  getIt.registerLazySingleton(
+      () => MarkNotificationAsRead(getIt<NotificationRepository>()));
+
+  // Data sources
+  getIt.registerLazySingleton<NotificationRemoteDataSource>(
+    () => NotificationRemoteDataSourceImpl(),
+  );
+
+  getIt.registerLazySingleton<NotificationLocalDataSource>(
+    () => NotificationLocalDataSourceImpl(
+      sharedPreferences: getIt<SharedPreferences>(),
+    ),
+  );
+
+  // Repository
+  getIt.registerLazySingleton<NotificationRepository>(
+    () => NotificationRepositoryImpl(
+      remoteDataSource: getIt<NotificationRemoteDataSource>(),
+      localDataSource: getIt<NotificationLocalDataSource>(),
+    ),
+  );
+
+  // QUIZZES
+  // Data sources
+  getIt.registerLazySingleton<QuizRemoteDataSource>(
+    () => QuizRemoteDataSourceImpl(
+      getIt(),
+      getIt(),
+    ),
+  );
+
+  // Repository
+  getIt.registerLazySingleton<QuizRepository>(
+    () => QuizRepositoryImpl(
+      remoteDataSource: getIt(),
+    ),
+  );
+  // Use Cases
+  getIt.registerLazySingleton(
+    () => GetQuizQuestionsUseCase(
+      repository: getIt(),
+    ),
+  );
+  getIt.registerLazySingleton(
+    () => StartQuizAttemptUseCase(
+      repository: getIt(),
+    ),
+  );
+  getIt.registerLazySingleton(
+    () => GetQuizzesUseCase(
+      repository: getIt(),
+    ),
+  );
+
+  // Use Cases
+  getIt.registerLazySingleton<SubmitQuizAnswersUseCase>(
+    () => SubmitQuizAnswersUseCase(
+      repository: getIt(),
+    ),
+  );
+  // BLoCs
+  getIt.registerFactory(
+    () => QuizListBloc(
+      getQuizzesUseCase: getIt<GetQuizzesUseCase>(),
+    ),
+  );
+  getIt.registerFactory(
+    () => QuizAttemptBloc(
+      startQuizAttemptUseCase: getIt<StartQuizAttemptUseCase>(),
+    ),
+  );
+  getIt.registerFactory(
+    () => QuizQuestionsBloc(
+      getQuizQuestionsUseCase: getIt<GetQuizQuestionsUseCase>(),
+    ),
+  );
+  // BLoCs
+  getIt.registerFactory<QuizSubmissionBloc>(
+    () => QuizSubmissionBloc(
+      submitQuizAnswersUseCase: getIt<SubmitQuizAnswersUseCase>(),
+    ),
+  );
+
+  // News Feed
+  // Use Case
+  getIt.registerLazySingleton(() => GetNewsFeedUseCase(repository: getIt()));
+  // Blocs
+  getIt.registerFactory(
+    () => NewsFeedBloc(
+      getNewsFeedUseCase: getIt(),
+      client: getIt(),
+    ),
+  );
+
+
+  // Teacher Lesson/Homework/Attendance Combo
+  // Use cases
+  getIt.registerLazySingleton(() => CreateLessonCombo(repository: getIt()));
+
+  // BLoCs
+  getIt.registerFactory(() => LessonComboBloc(createLessonCombo: getIt()));
+
+  // Teacher Post to Bulletin Board
+  // Use cases
+  getIt.registerLazySingleton(() => PublishPostUseCase(repository: getIt()));
+  // BloC
+  getIt.registerFactory(() => BulletinPostBloc(publishPostUseCase: getIt()));
+
 }

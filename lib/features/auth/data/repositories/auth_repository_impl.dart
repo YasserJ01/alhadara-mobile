@@ -1,4 +1,5 @@
 // auth/data/repositories/auth_repository_impl.dart
+import '../../../../core/services/token_service.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_remote_data_source.dart';
@@ -16,15 +17,31 @@ class AuthRepositoryImpl implements AuthRepository {
       phone: phone,
       password: password,
     );
-    final response = await remoteDataSource.loginWithPhone(request);
-    print(response['access']);
+
+    final tokenResponse = await remoteDataSource.loginWithPhone(request);
 
     return UserEntity(
       phone: phone,
-      accessToken: response['access'],
-      refreshToken: response['refresh'],
+      accessToken: tokenResponse.access,
+      refreshToken: tokenResponse.refresh,
     );
   }
+
+  // @override
+  // Future<UserEntity> loginWithPhone(String phone, String password) async {
+  //   final request = LoginRequestModel(
+  //     phone: phone,
+  //     password: password,
+  //   );
+  //   final response = await remoteDataSource.loginWithPhone(request);
+  //   print(response['access']);
+  //
+  //   return UserEntity(
+  //     phone: phone,
+  //     accessToken: response['access'],
+  //     refreshToken: response['refresh'],
+  //   );
+  // }
 
   @override
   Future<String> register(
@@ -47,4 +64,22 @@ class AuthRepositoryImpl implements AuthRepository {
     return response['access'] as String;
   }
 
+  @override
+  Future<void> refreshToken() async {
+    final refreshToken = await TokenService.getRefreshToken();
+    if (refreshToken == null) {
+      throw Exception('No refresh token available');
+    }
+    await remoteDataSource.refreshToken(refreshToken);
+  }
+
+  @override
+  Future<void> logout() async {
+    await TokenService.clearTokens();
+  }
+
+  @override
+  Future<bool> isLoggedIn() async {
+    return await TokenService.isLoggedIn();
+  }
 }

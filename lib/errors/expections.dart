@@ -62,3 +62,11 @@ class NotFoundException implements Exception {
   @override
   String toString() => message;
 }
+class JsonException implements Exception {
+  final String message;
+
+  JsonException(this.message);
+
+  @override
+  String toString() => message;
+}

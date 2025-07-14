@@ -1,15 +1,16 @@
 // auth/data/datasources/auth_remote_data_source.dart
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
-import '../../../../core/token.dart';
+import '../../../../core/services/token_service.dart';
 import '../../../../errors/expections.dart';
 import '../models/login_request_model.dart';
+import '../models/refresh_token_request_model.dart';
 import '../models/register_request_model.dart';
+import '../models/token_response_model.dart';
 
 abstract class AuthRemoteDataSource {
-  Future<Map<String, dynamic>> loginWithPhone(LoginRequestModel request);
-
+  Future<TokenResponseModel> loginWithPhone(LoginRequestModel request);
+  Future<TokenResponseModel> refreshToken(String refreshToken);
   Future<Map<String, dynamic>> register(RegisterRequestModel request);
 }
 
@@ -20,26 +21,29 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl(this.client);
 
   @override
-  Future<Map<String, dynamic>> loginWithPhone(LoginRequestModel request) async {
+  Future<TokenResponseModel> loginWithPhone(LoginRequestModel request) async {
     final response = await client.post(
       Uri.parse('http://10.0.2.2:8000/api/auth/jwt/create/'),
-      // Replace with your full API endpoint
       headers: {
         'accept': 'application/json',
         'Content-Type': 'application/json',
       },
       body: jsonEncode(request.toJson()),
     );
+
     final responseBody = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
-      String accessToken = responseBody['access'];
-      Token.token = accessToken;
-      print(Token.token);
-      return responseBody as Map<String, dynamic>;
+      final tokenResponse = TokenResponseModel.fromJson(responseBody);
 
+      // Save tokens securely
+      await TokenService.saveTokens(
+        accessToken: tokenResponse.access,
+        refreshToken: tokenResponse.refresh,
+      );
+
+      return tokenResponse;
     } else if (response.statusCode == 400) {
-      // Handle validation errors
       if (responseBody is Map<String, dynamic>) {
         if (responseBody.containsKey('phone') ||
             responseBody.containsKey('password')) {
@@ -48,13 +52,110 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
       throw ServerException(responseBody.toString());
     } else if (response.statusCode == 401) {
-      // Handle unauthorized (wrong credentials)
       throw UnauthorizedException(
           responseBody['detail'] ?? 'Invalid credentials');
     } else {
       throw ServerException('Failed to login: ${response.statusCode}');
     }
   }
+
+  @override
+  Future<TokenResponseModel> refreshToken(String refreshToken) async {
+    final request = RefreshTokenRequestModel(refresh: refreshToken);
+
+    final response = await client.post(
+      Uri.parse('http://10.0.2.2:8000/api/auth/jwt/refresh/'),
+      headers: {
+        'accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(request.toJson()),
+    );
+
+    final responseBody = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      final tokenResponse = TokenResponseModel.fromJson(responseBody);
+
+      // Save new tokens
+      await TokenService.saveTokens(
+        accessToken: tokenResponse.access,
+        refreshToken: tokenResponse.refresh,
+      );
+
+      return tokenResponse;
+    } else if (response.statusCode == 401) {
+      // Refresh token is invalid or expired
+      await TokenService.clearTokens();
+      throw UnauthorizedException('Session expired. Please login again.');
+    } else {
+      throw ServerException('Failed to refresh token: ${response.statusCode}');
+    }
+  }
+
+
+  // @override
+  // Future<Map<String, dynamic>> loginWithPhone(LoginRequestModel request) async {
+  //   final response = await client.post(
+  //     Uri.parse('http://10.0.2.2:8000/api/auth/jwt/create/'),
+  //     // Replace with your full API endpoint
+  //     headers: {
+  //       'accept': 'application/json',
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: jsonEncode(request.toJson()),
+  //   );
+  //   final responseBody = jsonDecode(response.body);
+  //
+  // //   if (response.statusCode == 200) {
+  // //     final tokenResponse = TokenResponse.fromJson(responseBody);
+  // //
+  // //     // Save tokens securely
+  // //     await TokenManager.saveTokens(
+  // //       accessToken: tokenResponse.access,
+  // //       refreshToken: tokenResponse.refresh,
+  // //     );
+  // //
+  // //     return tokenResponse;
+  // //   } else if (response.statusCode == 400) {
+  // //     if (responseBody is Map<String, dynamic>) {
+  // //       if (responseBody.containsKey('phone') ||
+  // //           responseBody.containsKey('password')) {
+  // //         throw ValidationException(responseBody);
+  // //       }
+  // //     }
+  // //     throw ServerException(responseBody.toString());
+  // //   } else if (response.statusCode == 401) {
+  // //     throw UnauthorizedException(
+  // //         responseBody['detail'] ?? 'Invalid credentials');
+  // //   } else {
+  // //     throw ServerException('Failed to login: ${response.statusCode}');
+  // //   }
+  // // }
+  // //
+  //
+  //   if (response.statusCode == 200) {
+  //     String accessToken = responseBody['access'];
+  //     Token.token = accessToken;
+  //     print(Token.token);
+  //     return responseBody as Map<String, dynamic>;
+  //   } else if (response.statusCode == 400) {
+  //     // Handle validation errors
+  //     if (responseBody is Map<String, dynamic>) {
+  //       if (responseBody.containsKey('phone') ||
+  //           responseBody.containsKey('password')) {
+  //         throw ValidationException(responseBody);
+  //       }
+  //     }
+  //     throw ServerException(responseBody.toString());
+  //   } else if (response.statusCode == 401) {
+  //     // Handle unauthorized (wrong credentials)
+  //     throw UnauthorizedException(
+  //         responseBody['detail'] ?? 'Invalid credentials');
+  //   } else {
+  //     throw ServerException('Failed to login: ${response.statusCode}');
+  //   }
+  // }
 
   // In auth_remote_data_source.dart
   @override
@@ -80,13 +181,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         throw ValidationnException('Invalid registration data');
       } else {
         throw ServerException(
-            responseBody['error'] ?? 'Server error ${response.statusCode}',
+          responseBody['error'] ?? 'Server error ${response.statusCode}',
         );
       }
     } on FormatException {
-      throw ServerException('Invalid server response${response.statusCode}');
+      throw ServerException('Invalid server response${response. statusCode}');
     }
   }
+}
   // @override
   // Future<Map<String, dynamic>> register(RegisterRequestModel request) async {
   //   final response = await client.post(
@@ -111,4 +213,4 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   //   }
   //   throw Exception('Invalid');
   // }
-}
+

@@ -1,35 +1,3 @@
-// // features/security_question/data/datasources/security_question_remote_data_source.dart
-// import '../models/security_question_model.dart';
-// import 'package:dio/dio.dart';
-//
-// abstract class SecurityQuestionRemoteDataSource {
-//   Future<List<SecurityQuestionModel>> getSecurityQuestions(String token);
-// }
-//
-// class SecurityQuestionRemoteDataSourceImpl
-//     implements SecurityQuestionRemoteDataSource {
-//   final Dio dio;
-//
-//   SecurityQuestionRemoteDataSourceImpl(this.dio);
-//
-//   @override
-//   Future<List<SecurityQuestionModel>> getSecurityQuestions(String token) async {
-//     token =
-//         'JWT  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3MDYyMzU3LCJpYXQiOjE3NDcwNTg3NTcsImp0aSI6IjQxN2M4ODQ5Mzg1NzRmODI4OGRiMDkzYmIwNDhmOWU1IiwidXNlcl9pZCI6NiwidXNlcl90eXBlIjoic3R1ZGVudCJ9.eImPQtKSWKQqJPfCZaueqNLL5wfYMDoT_qRoPjUalWA';
-//     final response = await dio.get(
-//       'http://10.0.2.2:8000/api/core/security-questions/',
-//       options: Options(
-//         headers: {'Authorization': token},
-//       ),
-//     );
-//
-//     return (response.data as List)
-//         .map((json) => SecurityQuestionModel.fromJson(json))
-//         .toList();
-//   }
-// }
-
-// features/security_question/data/datasources/security_question_remote_data_source.dart
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/security_question_model.dart';

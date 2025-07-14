@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 
+import '../../../../core/network/api_client.dart';
 import '../../../../core/token.dart';
 import '../../../../errors/expections.dart';
 import '../../../../errors/failures.dart';
@@ -15,29 +16,39 @@ import '../models/studyfield_model.dart';
 //features/profile/data/datasources/profile_remote_data_source.dart
 abstract class ProfileRemoteDataSource {
   Future<ProfileModel> getProfile();
+
   Future<int> createProfile(CreateProfileRequestModel request);
+
   Future<List<UniversityModel>> getUniversities();
+
   Future<List<StudyfieldModel>> getStudyfields();
+
   Future<ProfileImageModel> uploadProfileImage(File imageFile);
+
   Future<List<ProfileImageModel>> getProfileImages(); // Add this method
   Future<List<Map<String, dynamic>>> getInterests();
-  Future<void> saveUserInterests(int profileId, int interestId, int intensity);
 
+  Future<void> saveUserInterests(int profileId, int interestId, int intensity);
 }
 
 class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   final http.Client client;
+  final ApiClient apiClient;
 
-  ProfileRemoteDataSourceImpl(this.client);
+  ProfileRemoteDataSourceImpl(this.client, this.apiClient);
 
   @override
   Future<ProfileModel> getProfile() async {
-    final response = await client.get(
-      Uri.parse('http://10.0.2.2:8000/api/core/profile/me/'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'JWT ${Token.token}',
-      },
+    // final response = await client.get(
+    //   Uri.parse('http://10.0.2.2:8000/api/core/profile/me/'),
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     'Authorization': 'JWT ${Token.token}',
+    //   },
+    // );
+    final response = await apiClient.authenticatedRequest(
+      method: 'GET',
+      endpoint: '/api/core/profile/me/',
     );
 
     if (response.statusCode == 200) {
@@ -72,13 +83,19 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
 
   @override
   Future<int> createProfile(CreateProfileRequestModel request) async {
-    final response = await client.post(
-      Uri.parse('http://10.0.2.2:8000/api/core/profiles/'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'JWT ${Token.token}',
-      },
-      body: json.encode(request.toJson()),
+    // final response = await client.post(
+    //   Uri.parse('http://10.0.2.2:8000/api/core/profiles/'),
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     'Authorization': 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwNTE5Mjc4LCJpYXQiOjE3NTA1MTU2NzgsImp0aSI6Ijk3MTI1MjRhZDM0YTQ4MDNhNjdjYzQyNWQ5NWZhZGZiIiwidXNlcl9pZCI6NiwidXNlcl90eXBlIjoic3R1ZGVudCJ9.WzksGVzS0RpnBS3uOW2x9jESeujIAaLoL_QcEc3U4zI',
+    //   },
+    //   body: json.encode(request.toJson()),
+    // );
+
+    final response = await apiClient.authenticatedRequest(
+      method: 'POST',
+      endpoint: '/api/core/profiles/',
+      jsonBody: request.toJson()
     );
 
     print('Create Profile Response status: ${response.statusCode}');
@@ -198,7 +215,9 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonList = json.decode(response.body);
-        return jsonList.map((json) => ProfileImageModel.fromJson(json)).toList();
+        return jsonList
+            .map((json) => ProfileImageModel.fromJson(json))
+            .toList();
       } else {
         throw ServerFailure();
       }
@@ -211,10 +230,9 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
 
   @override
   Future<List<Map<String, dynamic>>> getInterests() async {
-    final response = await client.get(Uri.parse('http://10.0.2.2:8000/api/core/interests/'),
-        headers: {'Authorization': 'JWT ${Token.token}'}
-    );
-
+    final response = await client.get(
+        Uri.parse('http://10.0.2.2:8000/api/core/interests/'),
+        headers: {'Authorization': 'JWT ${Token.token}'});
 
     if (response.statusCode == 200) {
       return List<Map<String, dynamic>>.from(json.decode(response.body));
@@ -224,21 +242,23 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   }
 
   @override
-  Future<void> saveUserInterests(int profileId, int interestId, int intensity) async {
+  Future<void> saveUserInterests(
+      int profileId, int interestId, int intensity) async {
     final response = await client.post(
-      Uri.parse('http://10.0.2.2:8000/api/core/profiles/$profileId/add_interest/'),
+      Uri.parse(
+          'http://10.0.2.2:8000/api/core/profiles/$profileId/add_interest/'),
       body: json.encode({
         'interest': interestId,
         'intensity': intensity,
       }),
-      headers: {'Content-Type': 'application/json',
-        'Authorization': 'JWT ${Token.token}'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'JWT ${Token.token}'
+      },
     );
 
     if (response.statusCode != 200 && response.statusCode != 201) {
       throw Exception('Failed to save user interests');
     }
   }
-
-
 }
