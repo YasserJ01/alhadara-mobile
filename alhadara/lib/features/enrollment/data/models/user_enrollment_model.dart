@@ -1,12 +1,12 @@
 
 class UserEnrollment {
   final int id;
-  final int student;
+  final int studentId;
   final String studentName;
   final int course;
   final String courseTitle;   
   final int scheduleSlot;
-  final String scheduleSlotDisplay;
+  // final String scheduleSlotDisplay;
   final String status;
   final String paymentStatus;
   // final String paymentMethod;
@@ -20,12 +20,12 @@ class UserEnrollment {
 
   UserEnrollment({
     required this.id,
-    required this.student,
+    required this.studentId,
     required this.studentName,
     required this.course,
     required this.courseTitle,
     required this.scheduleSlot,
-    required this.scheduleSlotDisplay,
+    // required this.scheduleSlotDisplay,
     required this.status,
     required this.paymentStatus,
     // required this.paymentMethod,
@@ -47,12 +47,12 @@ class UserEnrollment {
   factory UserEnrollment.fromJson(Map<String, dynamic> json) {
     return UserEnrollment(
       id: json['id'],
-      student: json['student'],
+      studentId: json['student'],
       studentName: json['student_name'],
       course: json['course'],
       courseTitle: json['course_title'],
       scheduleSlot: json['schedule_slot'],
-      scheduleSlotDisplay: json['schedule_slot_display'],
+      // scheduleSlotDisplay: json['schedule_slot_display'],
       status: json['status'],
       paymentStatus: json['payment_status'],
       // paymentMethod: json['payment_method'],

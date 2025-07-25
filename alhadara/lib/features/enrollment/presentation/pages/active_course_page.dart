@@ -6,6 +6,8 @@ import 'package:alhadara/features/enrollment/presentation/bloc/enrollments/enrol
 import 'package:alhadara/features/enrollment/presentation/bloc/lessons/lesson_bloc.dart';
 import 'package:alhadara/features/enrollment/presentation/widgets/active_course/progress_attendance_card.dart';
 import 'package:alhadara/features/enrollment/presentation/widgets/lessons/assignment_tab.dart';
+import 'package:alhadara/features/feedback/presentation/bloc/feedback_bloc.dart';
+import 'package:alhadara/features/feedback/presentation/pages/feedback_page.dart';
 import 'package:alhadara/features/home/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,9 +15,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ActiveCoursePage extends StatelessWidget {
   final int courseId;
   final int scheduleSlotId;
-
+  final int studentId;
+  final String status;
   const ActiveCoursePage(
-      {super.key, required this.courseId, required this.scheduleSlotId});
+      {super.key,
+      required this.courseId,
+      required this.studentId,
+      required this.scheduleSlotId,
+      required this.status});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +53,7 @@ class ActiveCoursePage extends StatelessWidget {
         body: BlocBuilder<EnrollmentBloc, EnrollmentState>(
           builder: (context, state) {
             if (state is EnrollmentDetailsLoaded) {
-              return _buildCourseDetails(state.enrollment);
+              return _buildCourseDetails(state.enrollment, context);
             } else if (state is EnrollmentError) {
               return Center(child: Text(state.message));
             }
@@ -57,7 +64,7 @@ class ActiveCoursePage extends StatelessWidget {
     );
   }
 
-  Widget _buildCourseDetails(EnrollmentEntity enrollment) {
+  Widget _buildCourseDetails(EnrollmentEntity enrollment, context) {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Column(
@@ -71,13 +78,83 @@ class ActiveCoursePage extends StatelessWidget {
                   double.tryParse(enrollment.courseProgress.toString()) ?? 0,
               attendance: enrollment.attendance),
           const SizedBox(height: 20),
+          if (status == 'completed') ...[
+            const SizedBox(height: 20),
+            _buildFeedbackButton(context),
+            const SizedBox(height: 20),
+          ],
+          const SizedBox(height: 20),
           _buildCourseTabs(enrollment),
         ],
       ),
     );
   }
 
-  // في ملف active_course_page.dart
+  Widget _buildFeedbackButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          gradient: LinearGradient(
+            colors: [
+              AppColors.mainColor.withOpacity(0.8),
+              AppColors.mainColor,
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlocProvider(
+                  create: (context) => getIt<FeedbackBloc>(),
+                  child: FeedbackPage(
+                    scheduleSlotId: scheduleSlotId,
+                    studentId: 5,
+                  ),
+                ),
+              ),
+            );
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.feedback_outlined, color: Colors.white),
+              const SizedBox(width: 8),
+              Text(
+                'Submit Feedback',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildCourseTabs(EnrollmentEntity enrollment) {
     return DefaultTabController(
       length: 2,
@@ -270,21 +347,21 @@ class ActiveCoursePage extends StatelessWidget {
 //   );
 // }
 
-Widget _buildDetailItem(String label, String value) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 8),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        Text(value),
-      ],
-    ),
-  );
-}
+// Widget _buildDetailItem(String label, String value) {
+//   return Padding(
+//     padding: const EdgeInsets.symmetric(vertical: 8),
+//     child: Row(
+//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//       children: [
+//         Text(
+//           label,
+//           style: const TextStyle(fontWeight: FontWeight.bold),
+//         ),
+//         Text(value),
+//       ],
+//     ),
+//   );
+// }
 
 String _formatDate(DateTime date) {
   return '${date.day}/${date.month}/${date.year}';

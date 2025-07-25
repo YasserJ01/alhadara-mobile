@@ -42,10 +42,11 @@ Future<List<EnrollmentEntity>> getEnrollments() async {
     final enrollments = await remoteDataSource.getEnrollments();
     return enrollments.map((enrollment) => EnrollmentEntity(
       id: enrollment.id,
+      studentId: enrollment.studentId,
       studentName: enrollment.studentName,
       courseTitle: enrollment.courseTitle,
       scheduleSlot: enrollment.scheduleSlot,
-      scheduleSlotDisplay: enrollment.scheduleSlotDisplay,
+      // scheduleSlotDisplay: enrollment.scheduleSlotDisplay,
       status: enrollment.status,
       paymentStatus: enrollment.paymentStatus,
       // paymentMethod: enrollment.paymentMethod,
@@ -73,9 +74,10 @@ Future<EnrollmentEntity> getEnrollmentDetails(int enrollmentId) async {
     final enrollment = await remoteDataSource.getEnrollmentDetails(enrollmentId);
     return EnrollmentEntity(
       id: enrollment.id,
+      studentId: enrollment.studentId,
       studentName: enrollment.studentName,
       courseTitle: enrollment.courseTitle,
-      scheduleSlotDisplay: enrollment.scheduleSlotDisplay,
+      // scheduleSlotDisplay: enrollment.scheduleSlotDisplay,
       scheduleSlot: enrollment.scheduleSlot,
       status: enrollment.status,
       paymentStatus: enrollment.paymentStatus,

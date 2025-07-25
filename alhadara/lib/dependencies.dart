@@ -1,9 +1,20 @@
 // dependencies.dart
 import 'package:alhadara/features/auth/presentation/bloc/auth/auth_bloc.dart';
+import 'package:alhadara/features/complaints/data/datasources/complaint_remote_datasource.dart';
+import 'package:alhadara/features/complaints/data/repositories/complaint_repository_impl.dart';
+import 'package:alhadara/features/complaints/domain/repositories/complaint_repository.dart';
+import 'package:alhadara/features/complaints/domain/usecases/get_complaints.dart';
+import 'package:alhadara/features/complaints/domain/usecases/submit_complaint.dart';
+import 'package:alhadara/features/complaints/presentation/bloc/complaint_bloc.dart';
 import 'package:alhadara/features/courses/domain/usecases/get_recommended_courses.dart';
 import 'package:alhadara/features/enrollment/domain/usecases/get_enrollment_details.dart';
 import 'package:alhadara/features/enrollment/domain/usecases/get_lesson_summaries.dart';
 import 'package:alhadara/features/enrollment/presentation/bloc/lessons/lesson_bloc.dart';
+import 'package:alhadara/features/feedback/data/datasources/feedback_remote_data_source.dart';
+import 'package:alhadara/features/feedback/data/repositories/feedback_repository_impl.dart';
+import 'package:alhadara/features/feedback/domain/repositories/feedback_repository.dart';
+import 'package:alhadara/features/feedback/domain/usecases/submit_feedback_usecase.dart';
+import 'package:alhadara/features/feedback/presentation/bloc/feedback_bloc.dart';
 import 'package:alhadara/features/privet_lesson/data/datasources/private_lesson_request_remote_data_source.dart';
 import 'package:alhadara/features/privet_lesson/data/repositories/private_lesson_request_repository_impl.dart';
 import 'package:alhadara/features/privet_lesson/domain/repositories/private_lesson_request_repository.dart';
@@ -190,12 +201,13 @@ void setupDependencies() {
 
   // Home
   // Register the use case
-getIt.registerLazySingleton(() => GetRecommendedCourses(getIt<CoursesRepository>()));
+  getIt.registerLazySingleton(
+      () => GetRecommendedCourses(getIt<CoursesRepository>()));
 
 // Update HomeBloc registration
-getIt.registerFactory(() => HomeBloc(
-  getRecommendedCourses: getIt<GetRecommendedCourses>(),
-));
+  getIt.registerFactory(() => HomeBloc(
+        getRecommendedCourses: getIt<GetRecommendedCourses>(),
+      ));
 
   // Departments Feature
   // Data sources
@@ -426,45 +438,83 @@ getIt.registerFactory(() => HomeBloc(
   getIt.registerLazySingleton(() => GetLessonSummaries(getIt()));
 
   //private lesson
-   // Data Sources
+  // Data Sources
   getIt.registerSingleton<PrivateLessonRequestRemoteDataSource>(
     PrivateLessonRequestRemoteDataSourceImpl(client: getIt<http.Client>()),
   );
-  
+
   // Repositories
   getIt.registerSingleton<PrivateLessonRequestRepository>(
     PrivateLessonRequestRepositoryImpl(
       remoteDataSource: getIt<PrivateLessonRequestRemoteDataSource>(),
     ),
   );
-  
+
   // Use Cases
   getIt.registerSingleton<CreatePrivateLessonRequest>(
     CreatePrivateLessonRequest(getIt<PrivateLessonRequestRepository>()),
   );
-    getIt.registerSingleton<GetPrivateLessonRequests>(
+  getIt.registerSingleton<GetPrivateLessonRequests>(
     GetPrivateLessonRequests(getIt<PrivateLessonRequestRepository>()),
   );
-   getIt.registerSingleton<PickProposedOption>(
+  getIt.registerSingleton<PickProposedOption>(
     PickProposedOption(getIt<PrivateLessonRequestRepository>()),
   );
-   getIt.registerSingleton<DeletePrivateLessonRequest>(
+  getIt.registerSingleton<DeletePrivateLessonRequest>(
     DeletePrivateLessonRequest(getIt<PrivateLessonRequestRepository>()),
+  );
+  //feedback
+  getIt.registerFactory(
+    () => FeedbackBloc(submitFeedbackUseCase: getIt<SubmitFeedbackUseCase>()),
+  );
+
+  getIt.registerLazySingleton(
+      () => SubmitFeedbackUseCase(getIt<FeedbackRepository>()));
+
+  getIt.registerLazySingleton<FeedbackRepository>(
+    () => FeedbackRepositoryImpl(
+        remoteDataSource: getIt<FeedbackRemoteDataSource>()),
+  );
+getIt.registerLazySingleton<FeedbackRemoteDataSource>(
+  () => FeedbackRemoteDataSourceImpl(client: getIt()),
+);
+//complaint
+ // BLoC
+ getIt.registerFactory<ComplaintBloc>(
+  () => ComplaintBloc(submitComplaint: getIt(),      getComplaints: getIt(),
+),
+);
+
+  // Use cases
+  getIt.registerLazySingleton(() => SubmitComplaintUseCase(getIt()));
+    getIt.registerLazySingleton(() => GetComplaints(getIt()));
+
+
+  // Repository
+  getIt.registerLazySingleton<ComplaintRepository>(
+    () => ComplaintRepositoryImpl(
+      remoteDataSource: getIt(),
+    ),
+  );
+
+  // Data sources
+  getIt.registerLazySingleton<ComplaintRemoteDataSource>(
+    () => ComplaintRemoteDataSource( ),
   );
   // //active course
   //   // Data sources
   // getIt.registerLazySingleton<ActiveCourseRemoteDataSource>(
   //   () => ActiveCourseRemoteDataSourceImpl(client: getIt()),
   // );
-  
+
   // // Repository
   // getIt.registerLazySingleton<ActiveCourseRepository>(
   //   () => ActiveCourseRepositoryImpl(remoteDataSource: getIt()),
   // );
-  
+
   // // Use cases
   // getIt.registerLazySingleton(() => GetActiveCourse(repository: getIt()));
-  
+
   // // Bloc
   // getIt.registerFactory(() => ActiveCourseBloc(getActiveCourse: getIt()));
 }

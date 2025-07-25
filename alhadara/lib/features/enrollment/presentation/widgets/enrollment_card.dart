@@ -105,8 +105,9 @@ class _ExpandableEnrollmentCardState extends State<ExpandableEnrollmentCard> {
                       create: (context) => getIt<EnrollmentBloc>(),
                       child: ActiveCoursePage(
                         courseId: widget.enrollment.id,
-                        scheduleSlotId: widget.enrollment
-                            .scheduleSlot, // تأكد من تمرير enrollment.id
+                        scheduleSlotId: widget.enrollment.scheduleSlot,
+                        status: widget.enrollment.status,
+                        studentId: widget.enrollment.studentId,
                       ),
                     ),
                   ),
@@ -178,8 +179,8 @@ class _ExpandableEnrollmentCardState extends State<ExpandableEnrollmentCard> {
         const SizedBox(height: 8),
         _buildInfoRow(Icons.person, 'Student', widget.enrollment.studentName),
         const SizedBox(height: 8),
-        _buildInfoRow(
-            Icons.schedule, 'Schedule', widget.enrollment.scheduleSlotDisplay),
+        // _buildInfoRow(
+        //     Icons.schedule, 'Schedule', widget.enrollment.scheduleSlotDisplay),
         const SizedBox(height: 8),
         _buildInfoRow(Icons.calendar_today, 'Enrollment Date',
             _formatDate(widget.enrollment.enrollmentDate)),

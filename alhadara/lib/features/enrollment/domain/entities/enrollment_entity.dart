@@ -1,9 +1,10 @@
 class EnrollmentEntity {
   final int id;
+  final int studentId;
   final String studentName;
   final String courseTitle;
   final int scheduleSlot;
-  final String scheduleSlotDisplay;
+  // final String scheduleSlotDisplay;
   final String status;
   final String paymentStatus;
   // final String paymentMethod;
@@ -17,10 +18,12 @@ class EnrollmentEntity {
   final double attendance;
 
   EnrollmentEntity(
-      {required this.id,
+      {
+        required this.id,
+        required this.studentId,
       required this.studentName,
       required this.courseTitle,
-      required this.scheduleSlotDisplay,
+      // required this.scheduleSlotDisplay,
       required this.scheduleSlot,
       required this.status,
       required this.paymentStatus,

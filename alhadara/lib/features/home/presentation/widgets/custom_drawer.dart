@@ -1,3 +1,5 @@
+import 'package:alhadara/features/complaints/presentation/bloc/complaint_bloc.dart';
+import 'package:alhadara/features/complaints/presentation/pages/complaint_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,8 +14,10 @@ import '../../../wallet/presentation/pages/wallet_page.dart';
 import '../../../wishlist/presentation/bloc/wishlist_bloc.dart';
 import '../../../wishlist/presentation/pages/wishlist_page.dart';
 
+
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
+  
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +42,6 @@ class CustomDrawer extends StatelessWidget {
                 children: [
                   Column(
                     children: [
-                      // User Profile Section
                       Container(
                         padding: EdgeInsets.only(
                           top: AppSizes.paddingTop(context) +
@@ -79,7 +82,6 @@ class CustomDrawer extends StatelessWidget {
                             ),
                             SizedBox(height: screenHeight * 0.005),
                             Text(
-
                               '0934945318',
                               style: TextStyle(
                                 fontSize: AppSizes.screenWidth(context) * 0.035,
@@ -160,7 +162,8 @@ class CustomDrawer extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => BlocProvider(
-                                    create: (context) => getIt<WishlistBloc>(), // or your DI method
+                                    create: (context) => getIt<
+                                        WishlistBloc>(), // or your DI method
                                     child: const WishlistPage(),
                                   ),
                                 ),
@@ -197,6 +200,22 @@ class CustomDrawer extends StatelessWidget {
                               onTap: () => Navigator.pushNamed(
                                 context,
                                 '/departments',
+                              ),
+                              containerSize: containerSize,
+                              iconSize: iconSize,
+                            ),
+                            _buildDrawerCardItem(
+                              context,
+                              icon: Icons.assignment_add,
+                              title: 'complaints',
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BlocProvider(
+                                    create: (context) => getIt<ComplaintBloc>(),
+                                    child: ComplaintPage(),
+                                  ),
+                                ),
                               ),
                               containerSize: containerSize,
                               iconSize: iconSize,

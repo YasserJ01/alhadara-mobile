@@ -24,7 +24,7 @@ class OnboardingScreen extends StatelessWidget {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (context) {
-                  return const PrivateLessonRequestPage(scheduleSlotId: 281,);
+                  return const HomePage();
                 },
               ),
             );

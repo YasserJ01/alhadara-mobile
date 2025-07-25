@@ -19,8 +19,8 @@ class EnrollmentsView extends StatelessWidget {
         } else if (state is EnrollmentLoaded) {
           return _buildEnrollmentsList(state.enrollments);
         }
-        // إضافة return افتراضي لتجنب التحذير
-        return const SizedBox.shrink(); // أو أي widget افتراضي آخر
+      
+        return const SizedBox.shrink(); 
       },
     );
   }
