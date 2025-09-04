@@ -100,6 +100,7 @@
 // }
 // lib/features/home/presentation/bloc/home_bloc.dart
 
+import 'package:alhadara/features/courses/domain/usecases/get_deals_courses.dart';
 import 'package:alhadara/features/courses/domain/usecases/get_departments.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -112,8 +113,9 @@ part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final GetRecommendedCourses getRecommendedCourses;
+  final GetDealsCourses getDealsCourses;
 
-  HomeBloc({required this.getRecommendedCourses}) : super(HomeInitial()) {
+  HomeBloc({required this.getRecommendedCourses,required this.getDealsCourses}) : super(HomeInitial()) {
     on<LoadHomeData>(_onLoadHomeData);
   }
 
@@ -124,8 +126,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(HomeLoading());
     try {
       final recommendedCourses = await getRecommendedCourses(NoParams());
+       final dealsCourses = await getDealsCourses(NoParams()); 
       emit(HomeLoaded(
         recommendedCourses: recommendedCourses,
+         dealsCourses: dealsCourses,
         featuredCourses: [
           _mockCourse('English Course', 'Brief Description', '\$39'),
           _mockCourse('French Course', 'Brief Description', '\$29'),

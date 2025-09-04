@@ -19,6 +19,7 @@ abstract class CoursesRemoteDataSource {
 
   Future<List<CourseScheduleModel>> getCourseSchedule(int courseId);
    Future<List<CourseModel>> getRecommendedCourses();
+   Future<List<CourseModel>> getDealsCourses();
 }
 
 class CoursesRemoteDataSourceImpl implements CoursesRemoteDataSource {
@@ -92,7 +93,7 @@ class CoursesRemoteDataSourceImpl implements CoursesRemoteDataSource {
   @override
   Future<List<CourseModel>> getCourses(int department, int courseType) async {
     final response = await client.get(
-      Uri.parse('http://10.0.2.2:8000/api/courses/courses/?department=$department&course_type=$courseType'),
+      Uri.parse('http://10.0.2.2:8000/api/courses/courses/?department=$department&course_type=$courseType&lang=ar'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'JWT ${Token.token}'
@@ -172,4 +173,31 @@ class CoursesRemoteDataSourceImpl implements CoursesRemoteDataSource {
       throw ServerFailure();
     }
   }
+   @override
+  Future<List<CourseModel>> getDealsCourses() async {
+    final response = await client.get(
+      Uri.parse('http://10.0.2.2:8000/api/courses/courses/deals/?lang=ar'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'JWT ${Token.token}'
+      },
+    );
+
+    print('Deals response status: ${response.statusCode}');
+    print('Deals response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      final dynamic responseBody = json.decode(response.body);
+      if (responseBody is Map && responseBody.containsKey('message')) {
+        return [];
+      }
+      if (responseBody is List) {
+        return responseBody.map((json) => CourseModel.fromJson(json)).toList();
+      }
+      throw DataFormatFailure();
+    } else {
+      throw ServerFailure();
+    }
+  }
+
 }

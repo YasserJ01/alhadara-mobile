@@ -1,11 +1,14 @@
 // dependencies.dart
+import 'package:alhadara/features/auth/domain/usecases/verify_captcha.dart';
 import 'package:alhadara/features/auth/presentation/bloc/auth/auth_bloc.dart';
+import 'package:alhadara/features/auth/presentation/bloc/captch/captcha_bloc.dart';
 import 'package:alhadara/features/complaints/data/datasources/complaint_remote_datasource.dart';
 import 'package:alhadara/features/complaints/data/repositories/complaint_repository_impl.dart';
 import 'package:alhadara/features/complaints/domain/repositories/complaint_repository.dart';
 import 'package:alhadara/features/complaints/domain/usecases/get_complaints.dart';
 import 'package:alhadara/features/complaints/domain/usecases/submit_complaint.dart';
 import 'package:alhadara/features/complaints/presentation/bloc/complaint_bloc.dart';
+import 'package:alhadara/features/courses/domain/usecases/get_deals_courses.dart';
 import 'package:alhadara/features/courses/domain/usecases/get_recommended_courses.dart';
 import 'package:alhadara/features/enrollment/domain/usecases/get_enrollment_details.dart';
 import 'package:alhadara/features/enrollment/domain/usecases/get_lesson_summaries.dart';
@@ -15,6 +18,15 @@ import 'package:alhadara/features/feedback/data/repositories/feedback_repository
 import 'package:alhadara/features/feedback/domain/repositories/feedback_repository.dart';
 import 'package:alhadara/features/feedback/domain/usecases/submit_feedback_usecase.dart';
 import 'package:alhadara/features/feedback/presentation/bloc/feedback_bloc.dart';
+import 'package:alhadara/features/hall_services/data/datasources/hall_booking_remote_data_source.dart';
+import 'package:alhadara/features/hall_services/data/repositories/hall_booking_repository_impl.dart';
+import 'package:alhadara/features/hall_services/domain/repositories/hall_booking_repository.dart';
+import 'package:alhadara/features/hall_services/domain/usecases/create_booking_usecase.dart.dart';
+import 'package:alhadara/features/hall_services/domain/usecases/get_services_usecase.dart';
+import 'package:alhadara/features/hall_services/domain/usecases/search_halls_usecase.dart';
+import 'package:alhadara/features/hall_services/presentation/bloc/hall_booking_bloc.dart';
+import 'package:alhadara/features/payment/domain/usecases/create_withdrawal_request.dart';
+import 'package:alhadara/features/payment/presentation/bloc/withdraw/withdrawal_bloc.dart';
 import 'package:alhadara/features/privet_lesson/data/datasources/private_lesson_request_remote_data_source.dart';
 import 'package:alhadara/features/privet_lesson/data/repositories/private_lesson_request_repository_impl.dart';
 import 'package:alhadara/features/privet_lesson/domain/repositories/private_lesson_request_repository.dart';
@@ -130,12 +142,17 @@ void setupDependencies() {
   );
   getIt.registerFactory(
       () => AuthBloc(loginWithPhoneUseCase: getIt<LoginWithPhoneUseCase>()));
+      getIt.registerLazySingleton(() => VerifyCaptchaUseCase(getIt<AuthRepository>()));
+
+      
 
   getIt.registerSingleton<RegisterUseCase>(
     RegisterUseCase(getIt<AuthRepository>()),
   );
   getIt.registerFactory(
       () => RegisterBloc(registerUseCase: getIt<RegisterUseCase>()));
+        getIt.registerFactory(() => CaptchaBloc(remoteDataSource: getIt<AuthRemoteDataSource>()));
+
 
   // Security Question Feature
   getIt.registerFactory<SecurityQuestionRemoteDataSource>(
@@ -203,10 +220,13 @@ void setupDependencies() {
   // Register the use case
   getIt.registerLazySingleton(
       () => GetRecommendedCourses(getIt<CoursesRepository>()));
+  getIt.registerLazySingleton(
+      () =>  GetDealsCourses(getIt<CoursesRepository>()));
 
 // Update HomeBloc registration
   getIt.registerFactory(() => HomeBloc(
         getRecommendedCourses: getIt<GetRecommendedCourses>(),
+        getDealsCourses: getIt<GetDealsCourses>(),
       ));
 
   // Departments Feature
@@ -334,9 +354,16 @@ void setupDependencies() {
       createDepositRequest: getIt(),
     ),
   );
+  getIt.registerFactory(
+  () => WithdrawalBloc(
+    createWithdrawalRequest: getIt(),
+  ),
+);
 
   // Deposit Request Use cases
   getIt.registerLazySingleton(() => CreateDepositRequest(getIt()));
+  getIt.registerLazySingleton(() => CreateWithdrawalRequest(getIt()));
+
 
   // Deposit Request Repository
   getIt.registerLazySingleton<PaymentRepository>(
@@ -500,6 +527,34 @@ getIt.registerLazySingleton<FeedbackRemoteDataSource>(
   // Data sources
   getIt.registerLazySingleton<ComplaintRemoteDataSource>(
     () => ComplaintRemoteDataSource( ),
+  );
+  //hall_services
+   getIt.registerSingleton<HallBookingRemoteDataSource>(
+    HallBookingRemoteDataSourceImpl(client: getIt<http.Client>()),
+  );
+  
+  // Repositories
+  getIt.registerSingleton<HallBookingRepository>(
+    HallBookingRepositoryImpl(remoteDataSource: getIt<HallBookingRemoteDataSource>()),
+  );
+  
+  // Use Cases
+  getIt.registerSingleton<SearchHallsUseCase>(
+    SearchHallsUseCase(repository: getIt<HallBookingRepository>()),
+  );
+   getIt.registerSingleton<GetServicesUseCase>(
+    GetServicesUseCase(repository: getIt<HallBookingRepository>()),
+  );
+  getIt.registerFactory(() => CreateBookingUseCase(repository: getIt()));
+
+  
+  // Bloc
+   getIt.registerFactory<HallBookingBloc>(
+    () => HallBookingBloc(
+      searchHallsUseCase: getIt<SearchHallsUseCase>(),
+      getServicesUseCase: getIt<GetServicesUseCase>(),
+      createBookingUseCase: getIt(),
+    ),
   );
   // //active course
   //   // Data sources

@@ -23,3 +23,12 @@ class NotFoundFailure extends Failure {
   @override
   List<Object> get props => [message];
 }
+// errors/failures.dart
+class ValidationFailure extends Failure {
+  final String message;
+
+   ValidationFailure(this.message);
+
+  @override
+  String toString() => message;
+}

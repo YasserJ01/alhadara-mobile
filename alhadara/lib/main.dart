@@ -1,3 +1,4 @@
+import 'package:alhadara/features/hall_services/presentation/pages/hall_booking_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -71,6 +72,7 @@ class MyApp extends StatelessWidget {
               '/login': (context) => const LoginPage(),
               '/departments': (context) => const DepartmentsPage(),
               // '/search':(context) =>const SearchScreen(),
+              '/hall':(context) => HallBookingPage()
             },
           );
         },

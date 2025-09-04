@@ -9,7 +9,11 @@ abstract class AuthRepository {
       String lastName,
       String phone,
       String password,
-      String confirmPassword
+      String confirmPassword,
+       String captchaKey,
+    String captchaAnswer,
       );
+  Future<bool> verifyCaptcha(String key, String answer);
+
   // Future<UserRegisterEntity> register(String firstName,String middleName, String lastName,String phone, String password,String confirm_password); // New method
 }

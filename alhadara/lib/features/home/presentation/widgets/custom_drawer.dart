@@ -1,5 +1,7 @@
 import 'package:alhadara/features/complaints/presentation/bloc/complaint_bloc.dart';
 import 'package:alhadara/features/complaints/presentation/pages/complaint_page.dart';
+import 'package:alhadara/features/hall_services/presentation/bloc/hall_booking_bloc.dart';
+import 'package:alhadara/features/hall_services/presentation/pages/hall_booking_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -207,13 +209,29 @@ class CustomDrawer extends StatelessWidget {
                             _buildDrawerCardItem(
                               context,
                               icon: Icons.assignment_add,
-                              title: 'complaints',
+                              title: 'Complaints',
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => BlocProvider(
                                     create: (context) => getIt<ComplaintBloc>(),
                                     child: ComplaintPage(),
+                                  ),
+                                ),
+                              ),
+                              containerSize: containerSize,
+                              iconSize: iconSize,
+                            ),
+                            _buildDrawerCardItem(
+                              context,
+                              icon: Icons.calendar_month,
+                              title: 'Hall booking',
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BlocProvider(
+                                    create: (context) => getIt<HallBookingBloc>(),
+                                    child: HallBookingPage(),
                                   ),
                                 ),
                               ),

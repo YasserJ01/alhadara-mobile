@@ -10,6 +10,7 @@ class AppScaffold extends StatelessWidget {
   final Color? backgroundColor;
   final Color? textColor;
   final Color? backIconColor;
+  final Color? endIconColor;
   final String title;
   final EdgeInsets? edgeInsets;
   final VoidCallback? onPressedEndIcon;
@@ -24,6 +25,7 @@ class AppScaffold extends StatelessWidget {
       this.backgroundColor,
       this.textColor,
       this.backIconColor,
+      this.endIconColor,
       this.edgeInsets,
       this.onPressedEndIcon,
       this.icon,
@@ -62,7 +64,7 @@ class AppScaffold extends StatelessWidget {
                       icon,
                       // Icons.notifications_outlined,
                       //Icons.home_sharp,Icons.home_sharp,
-                      color: const Color.fromRGBO(162, 12, 13, 1.0),
+                      color:endIconColor?? const Color.fromRGBO(162, 12, 13, 1.0),
                       size: AppSizes.screenWidth(context) * 0.09,
                     ),
                     onPressed: onPressedEndIcon,

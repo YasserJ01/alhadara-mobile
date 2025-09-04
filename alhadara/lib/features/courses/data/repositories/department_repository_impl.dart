@@ -104,4 +104,21 @@ class DepartmentRepositoryImpl implements CoursesRepository {
       throw ServerFailure();
     }
   }
+   @override
+  Future<List<Course>> getDealsCourses() async {
+    try {
+      final models = await remoteDataSource.getDealsCourses();
+      print('Repository received deals courses: $models');
+      return models.map((model) => model.toEntity()).toList();
+    } on FormatException catch (e) {
+      print('Repository format error: $e');
+      throw DataFormatFailure();
+    } on HttpException catch (e) {
+      print('Repository HTTP error: $e');
+      throw ServerFailure();
+    } catch (e) {
+      print('Repository unexpected error: $e');
+      throw ServerFailure();
+    }
+  }
 }

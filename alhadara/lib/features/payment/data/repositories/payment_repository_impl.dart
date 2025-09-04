@@ -1,5 +1,7 @@
 // data/repositories/payment_repository_impl.dart
 import 'dart:io';
+import 'package:alhadara/features/payment/domain/entities/withdrawal_entity.dart';
+
 import '../../../../errors/failures.dart';
 import '../../domain/entities/deposit_method_entity.dart';
 import '../../domain/entities/deposit_request.dart';
@@ -51,4 +53,29 @@ class PaymentRepositoryImpl implements PaymentRepository {
       throw ServerFailure();
     }
   }
+
+  @override
+Future<WithdrawalEntity> createWithdrawalRequest({
+  required double amount,
+  required String pickupDatetime,
+}) async {
+  try {
+    final withdrawalModel = await remoteDataSource.createWithdrawalRequest(
+      amount: amount,
+      pickupDatetime: pickupDatetime,
+    );
+
+    return WithdrawalEntity(
+      id: withdrawalModel.id,
+      amount: withdrawalModel.amount,
+      requestedAt: withdrawalModel.requestedAt,
+      pickupDatetime: withdrawalModel.pickupDatetime,
+      status: withdrawalModel.status,
+      handledAt: withdrawalModel.handledAt,
+    );
+  } catch (e) {
+    if (e is Failure) rethrow;
+    throw ServerFailure();
+  }
+}
 }

@@ -1,3 +1,4 @@
+import 'package:alhadara/features/courses/domain/entites/course.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,6 +17,9 @@ class CourseDetailsBottomSheet extends StatefulWidget {
   final int maxStudent;
   final bool certificationEligible;
   final bool isWishlisted;
+  final bool hasDiscount; // أضف هذا
+  final DiscountInfo? discountInfo; // أضف هذا
+  final String? originalPrice; 
 
   const CourseDetailsBottomSheet({
     super.key,
@@ -27,6 +31,9 @@ class CourseDetailsBottomSheet extends StatefulWidget {
     required this.maxStudent,
     required this.certificationEligible,
     required this.isWishlisted,
+       required this.hasDiscount, // أضف هذا
+    this.discountInfo, // أضف هذا
+    this.originalPrice,
   });
 
   @override
@@ -123,6 +130,9 @@ class _CourseDetailsBottomSheetState extends State<CourseDetailsBottomSheet> {
                 certificationEligible: widget.certificationEligible,
                 selectedScheduleId: selectedScheduleId,
                 isWishlisted: widget.isWishlisted,
+                 hasDiscount: widget.hasDiscount, // أضف هذا
+                discountInfo: widget.discountInfo, // أضف هذا
+                originalPrice: widget.originalPrice,
               ),
 
               const SizedBox(height: 20),

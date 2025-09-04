@@ -1,5 +1,6 @@
 // features/courses/presentation/pages/course_details_page.dart
 import 'package:alhadara/core/constants/app_scaffold.dart';
+import 'package:alhadara/features/courses/domain/entites/course.dart';
 import 'package:alhadara/features/home/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,6 +27,9 @@ class CourseDetailsPage extends StatelessWidget {
   final int maxStudent;
   final bool certificationEligible;
   final bool isWishlisted;
+    final bool hasDiscount; // أضف هذا
+  final DiscountInfo? discountInfo; // أضف هذا
+  final String? originalPrice;
 
   const CourseDetailsPage(
       {Key? key,
@@ -36,7 +40,11 @@ class CourseDetailsPage extends StatelessWidget {
       required this.courseDuration,
       required this.maxStudent,
       required this.certificationEligible,
-      required this.isWishlisted})
+      required this.isWishlisted,
+       required this.hasDiscount, // أضف هذا
+    this.discountInfo, // أضف هذا
+    this.originalPrice,
+      })
       : super(key: key);
 
   @override
@@ -94,6 +102,9 @@ class CourseDetailsPage extends StatelessWidget {
                     maxStudent: maxStudent,
                     certificationEligible: certificationEligible,
                     isWishlisted: isWishlisted,
+                     hasDiscount: hasDiscount, // أضف هذا
+                discountInfo: discountInfo, // أضف هذا
+                originalPrice: originalPrice,
                   ),
                 ],
               ),

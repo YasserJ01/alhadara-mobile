@@ -10,4 +10,5 @@ abstract class CoursesRepository {
   Future<List<Course>> getCourses(int department, int courseType);
   Future<List<CourseSchedule>> getCourseSchedule(int courseID);
   Future<List<Course>> getRecommendedCourses();
+   Future<List<Course>> getDealsCourses(); 
 }

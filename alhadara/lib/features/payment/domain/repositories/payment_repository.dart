@@ -1,5 +1,7 @@
 // domain/repositories/payment_repository.dart
 import 'dart:io';
+import 'package:alhadara/features/payment/domain/entities/withdrawal_entity.dart';
+
 import '../entities/deposit_method_entity.dart';
 import '../entities/deposit_request.dart';
 
@@ -11,4 +13,8 @@ abstract class PaymentRepository {
     required double amount,
   });
   Future<List<DepositMethodEntity>> getDepositMethods();
+Future<WithdrawalEntity> createWithdrawalRequest({
+  required double amount,
+  required String pickupDatetime,
+});
 }

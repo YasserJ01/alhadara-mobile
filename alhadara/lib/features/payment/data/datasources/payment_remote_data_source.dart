@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:alhadara/features/payment/data/models/withdrawal_model.dart';
 import 'package:http/http.dart' as http;
 import '../../../../core/token.dart';
 import '../../../../errors/failures.dart';
 import '../models/deposit_method_model.dart';
 import '../models/deposit_request_model.dart';
-
 
 abstract class PaymentRemoteDataSource {
   Future<DepositRequestModel> createDepositRequest({
@@ -15,6 +15,10 @@ abstract class PaymentRemoteDataSource {
     required double amount,
   });
   Future<List<DepositMethodModel>> getDepositMethods();
+  Future<WithdrawalModel> createWithdrawalRequest({
+    required double amount,
+    required String pickupDatetime,
+  });
 }
 
 class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
@@ -88,15 +92,46 @@ class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
   Future<List<DepositMethodModel>> getDepositMethods() async {
     final response = await client.get(
         Uri.parse('http://10.0.2.2:8000/api/core/deposit-methods/'),
-        headers: {'Authorization': 'JWT ${Token.token}'}
-    );
+        headers: {'Authorization': 'JWT ${Token.token}'});
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonList = json.decode(response.body);
-      return jsonList
-          .map((json) => DepositMethodModel.fromJson(json))
-          .toList();
+      return jsonList.map((json) => DepositMethodModel.fromJson(json)).toList();
     } else {
+      throw ServerFailure();
+    }
+  }
+
+  @override
+  Future<WithdrawalModel> createWithdrawalRequest({
+    required double amount,
+    required String pickupDatetime,
+  }) async {
+    try {
+      final response = await client.post(
+        Uri.parse('http://10.0.2.2:8000/api/core/withdrawals/'),
+        headers: {
+          'Authorization': 'JWT ${Token.token}',
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          'amount': amount.toString(),
+          'pickup_datetime': pickupDatetime,
+        }),
+      );
+
+      print('Withdrawal request response status: ${response.statusCode}');
+      print('Withdrawal request response body: ${response.body}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final jsonData = json.decode(response.body);
+        return WithdrawalModel.fromJson(jsonData);
+      } else {
+        throw ServerFailure();
+      }
+    } catch (e) {
+      if (e is ServerFailure) rethrow;
+      print('Withdrawal request error: $e');
       throw ServerFailure();
     }
   }

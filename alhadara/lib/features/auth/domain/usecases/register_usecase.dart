@@ -1,5 +1,35 @@
-// auth/domain/usecases/register_usecase.dart
+// // auth/domain/usecases/register_usecase.dart
 
+// import '../repositories/auth_repository.dart';
+
+// class RegisterUseCase {
+//   final AuthRepository repository;
+
+//   RegisterUseCase(this.repository);
+
+//   Future<String> call(
+//     String firstName,
+//     String middleName,
+//     String lastName,
+//     String phone,
+//     String password,
+//     String confirm_password,
+//     String captchaKey,
+//     String captchaAnswer,
+//   ) {
+//     return repository.register(
+//       firstName,
+//       middleName,
+//       lastName,
+//       phone,
+//       password,
+//       confirm_password,
+//         captchaKey,
+//       captchaAnswer,
+//     );
+//   }
+// }
+// auth/domain/usecases/register_usecase.dart
 import '../repositories/auth_repository.dart';
 
 class RegisterUseCase {
@@ -14,14 +44,18 @@ class RegisterUseCase {
     String phone,
     String password,
     String confirm_password,
-  ) {
-    return repository.register(
+    String captchaKey,
+    String captchaAnswer,
+  ) async {
+    return await repository.register(
       firstName,
       middleName,
       lastName,
       phone,
       password,
       confirm_password,
+      captchaKey,
+      captchaAnswer,
     );
   }
 }
