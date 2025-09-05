@@ -22,7 +22,7 @@ abstract class ProfileRemoteDataSource {
   Future<List<ProfileImageModel>> getProfileImages(); // Add this method
   Future<List<Map<String, dynamic>>> getInterests();
   Future<void> saveUserInterests(int profileId, int interestId, int intensity);
-
+  Future<void> updateProfile(int profileId, CreateProfileRequestModel request); // Added method
 }
 
 class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
@@ -198,7 +198,9 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonList = json.decode(response.body);
-        return jsonList.map((json) => ProfileImageModel.fromJson(json)).toList();
+        return jsonList
+            .map((json) => ProfileImageModel.fromJson(json))
+            .toList();
       } else {
         throw ServerFailure();
       }
@@ -211,10 +213,9 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
 
   @override
   Future<List<Map<String, dynamic>>> getInterests() async {
-    final response = await client.get(Uri.parse('http://10.0.2.2:8000/api/core/interests/'),
-        headers: {'Authorization': 'JWT ${Token.token}'}
-    );
-
+    final response = await client.get(
+        Uri.parse('http://10.0.2.2:8000/api/core/interests/'),
+        headers: {'Authorization': 'JWT ${Token.token}'});
 
     if (response.statusCode == 200) {
       return List<Map<String, dynamic>>.from(json.decode(response.body));
@@ -224,21 +225,43 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   }
 
   @override
-  Future<void> saveUserInterests(int profileId, int interestId, int intensity) async {
+  Future<void> saveUserInterests(
+      int profileId, int interestId, int intensity) async {
     final response = await client.post(
-      Uri.parse('http://10.0.2.2:8000/api/core/profiles/$profileId/add_interest/'),
+      Uri.parse(
+          'http://10.0.2.2:8000/api/core/profiles/$profileId/add_interest/'),
       body: json.encode({
         'interest': interestId,
         'intensity': intensity,
       }),
-      headers: {'Content-Type': 'application/json',
-        'Authorization': 'JWT ${Token.token}'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'JWT ${Token.token}'
+      },
     );
 
     if (response.statusCode != 200 && response.statusCode != 201) {
       throw Exception('Failed to save user interests');
     }
   }
+@override
+  Future<void> updateProfile(int profileId, CreateProfileRequestModel request) async {
+    final response = await client.put(
+      Uri.parse('http://10.0.2.2:8000/api/core/profiles/$profileId/'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'JWT ${Token.token}',
+      },
+      body: json.encode(request.toJson()),
+    );
 
+    print('Update Profile Response status: ${response.statusCode}');
+    print('Update Profile Response body: ${response.body}');
 
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      throw ServerFailure();
+    }
+  }
 }

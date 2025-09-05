@@ -22,3 +22,4 @@ class LoadCourses extends CoursesEvent {
   @override
   List<Object> get props => [department, courseType, category];
 }
+

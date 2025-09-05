@@ -493,31 +493,6 @@ class HomeForm extends StatelessWidget {
                   ),
                 ),
 
-                // Courses Section
-                SizedBox(height: AppSizes.screenHeight(context) * 0.04),
-                Text(
-                  'Recommendations',
-                  style: TextStyle(
-                    fontSize: AppSizes.screenWidth(context) * 0.05,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.mainColor,
-                  ),
-                ),
-                SizedBox(height: AppSizes.screenHeight(context) * 0.02),
-
-                // Horizontal Scrollable Courses
-                SizedBox(
-                  height: AppSizes.screenHeight(context) * 0.2,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: state.recommendedCourses.length,
-                    itemBuilder: (context, index) {
-                      final course = state.recommendedCourses[index];
-                      return _buildCourseCard(context, course);
-                    },
-                  ),
-                ),
-
                 // Offers Section
                 SizedBox(height: AppSizes.screenHeight(context) * 0.04),
                 Text(
@@ -528,9 +503,8 @@ class HomeForm extends StatelessWidget {
                     color: AppColors.mainColor,
                   ),
                 ),
-                SizedBox(height: AppSizes.screenHeight(context) * 0.02),
+                SizedBox(height: AppSizes.screenHeight(context) * 0.03),
 
-                // استبدل هذا الجزء بالكود الجديد
                 state.dealsCourses.isNotEmpty
                     ? SizedBox(
                         height: AppSizes.screenHeight(context) * 0.2,
@@ -547,6 +521,37 @@ class HomeForm extends StatelessWidget {
                         message: 'No offers available',
                         icon: Icons.local_offer,
                         iconColor: Colors.orange,
+                      ),
+                // Recommendation Section
+                SizedBox(height: AppSizes.screenHeight(context) * 0.04),
+                Text(
+                  'Recommendations',
+                  style: TextStyle(
+                    fontSize: AppSizes.screenWidth(context) * 0.05,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.mainColor,
+                  ),
+                ),
+                SizedBox(height: AppSizes.screenHeight(context) * 0.03),
+
+                // Horizontal Scrollable Courses
+                state.recommendedCourses.isNotEmpty
+                    ? SizedBox(
+                        height: AppSizes.screenHeight(context) * 0.2,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: state.recommendedCourses.length,
+                          itemBuilder: (context, index) {
+                            final course = state.recommendedCourses[index];
+                            return _buildCourseCard(context, course);
+                          },
+                        ),
+                      )
+                    : NoItemWidget(
+                        message: 'No recommendations available',
+                        icon: Icons.error_outline,
+                        iconColor: Colors.orange,
+                        message2: 'Please create your profile',
                       ),
 
                 // Events Section
@@ -609,9 +614,9 @@ class HomeForm extends StatelessWidget {
               maxStudent: course.maxStudents,
               certificationEligible: course.certificationEligible,
               isWishlisted: course.wishlisted,
-               hasDiscount: course.hasDiscount, // أضف هذا
-      discountInfo: course.discountInfo, // أضف هذا
-      originalPrice: course.originalPrice, 
+              hasDiscount: course.hasDiscount, // أضف هذا
+              discountInfo: course.discountInfo, // أضف هذا
+              originalPrice: course.originalPrice,
             ),
           ),
         );
@@ -654,7 +659,6 @@ class HomeForm extends StatelessWidget {
                         ),
                         SizedBox(
                             height: AppSizes.screenHeight(context) * 0.005),
-                        // عرض معلومات الخصم إذا كانت متوفرة
                         if (course.hasDiscount)
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -679,7 +683,6 @@ class HomeForm extends StatelessWidget {
                                         color: AppColors.whiteColor,
                                         decoration: TextDecoration.lineThrough,
                                         decorationColor: Colors.black),
-                                        
                                   ),
                                   SizedBox(
                                     width: AppSizes.screenWidth(context) * 0.01,
@@ -795,9 +798,9 @@ class HomeForm extends StatelessWidget {
                 maxStudent: course.maxStudents,
                 certificationEligible: course.certificationEligible,
                 isWishlisted: course.wishlisted,
-                 hasDiscount: course.hasDiscount, // أضف هذا
-      discountInfo: course.discountInfo, // أضف هذا
-      originalPrice: course.originalPrice, 
+                hasDiscount: course.hasDiscount, // أضف هذا
+                discountInfo: course.discountInfo, // أضف هذا
+                originalPrice: course.originalPrice,
               ),
             ),
           );

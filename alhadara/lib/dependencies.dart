@@ -34,6 +34,8 @@ import 'package:alhadara/features/privet_lesson/domain/usecases/create_private_l
 import 'package:alhadara/features/privet_lesson/domain/usecases/delete_private_lesson_request.dart';
 import 'package:alhadara/features/privet_lesson/domain/usecases/get_private_lesson_requests.dart';
 import 'package:alhadara/features/privet_lesson/domain/usecases/pick_proposed_option.dart';
+import 'package:alhadara/features/profile/domain/usecases/update_profile.dart';
+import 'package:alhadara/features/profile/presentation/bloc/update_profile/update_profile_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:alhadara/features/courses/data/datasources/courses_remote_data_source.dart';
@@ -310,7 +312,8 @@ void setupDependencies() {
       getProfileImages: getIt(), // Add this
     ),
   );
-
+ getIt.registerFactory(() => UpdateProfile(getIt<ProfileRepository>()));
+getIt.registerFactory(() => UpdateProfileBloc(updateProfile: getIt<UpdateProfile>()));
 // Use cases
   getIt.registerLazySingleton(() => GetInterestsUseCase(repository: getIt()));
   getIt.registerLazySingleton(

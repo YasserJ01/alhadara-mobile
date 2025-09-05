@@ -16,4 +16,6 @@ abstract class ProfileRepository {
   Future<List<ProfileImage>> getProfileImages(); // Add this method
   Future<List<InterestEntity>> getInterests();
   Future<void> saveUserInterests(int profileId, int interestId, int intensity);
+  Future<void> updateProfile(int profileId, CreateProfileRequest request); // Added method
+
 }

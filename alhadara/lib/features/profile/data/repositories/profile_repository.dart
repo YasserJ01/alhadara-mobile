@@ -157,5 +157,27 @@ class ProfileRepositoryImpl implements ProfileRepository {
   Future<void> saveUserInterests(int profileId, int interestId, int intensity) {
     return remoteDataSource.saveUserInterests(profileId, interestId, intensity);
   }
-
+  @override
+  Future<void> updateProfile(int profileId, CreateProfileRequest request) async {
+    try {
+      final requestModel = CreateProfileRequestModel(
+        birthDate: request.birthDate,
+        gender: request.gender,
+        address: request.address,
+        academicStatus: request.academicStatus,
+        university: request.university,
+        studyfield: request.studyfield,
+      );
+      await remoteDataSource.updateProfile(profileId, requestModel);
+    } on FormatException catch (e) {
+      print('Repository format error: $e');
+      throw DataFormatFailure();
+    } on HttpException catch (e) {
+      print('Repository HTTP error: $e');
+      throw ServerFailure();
+    } catch (e) {
+      print('Repository unexpected error: $e');
+      throw ServerFailure();
+    }
+  }
 }

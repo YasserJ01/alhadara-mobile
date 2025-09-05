@@ -6,6 +6,7 @@ import 'colors.dart';
 
 class NoItemWidget extends StatelessWidget {
   final String message;
+  final String? message2;
   final IconData? icon;
   final Color? iconColor;
   final double? iconSize;
@@ -14,6 +15,7 @@ class NoItemWidget extends StatelessWidget {
   const NoItemWidget({
     super.key,
     required this.message,
+    this.message2,
     this.icon,
     this.iconColor,
     this.iconSize,
@@ -42,6 +44,19 @@ class NoItemWidget extends StatelessWidget {
                 TextStyle(
                   fontSize: AppSizes.screenWidth(context) *
                       0.06, // 4% of screen width
+                  color: AppColors.greyColor,
+                ),
+          ),
+          SizedBox(
+              height: AppSizes.screenHeight(context) *
+                  0.005), // 2% of screen height
+          Text(
+            message2!,
+            textAlign: TextAlign.center,
+            style: textStyle ??
+                TextStyle(
+                  fontSize: AppSizes.screenWidth(context) *
+                      0.04, // 4% of screen width
                   color: AppColors.greyColor,
                 ),
           ),

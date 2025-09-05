@@ -301,152 +301,172 @@ class CourseDetailsCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Course title with buttons
-        Stack(
+        Row(
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    courseTitle,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                WishlistButton(
-                  courseId: courseId,
-                  initialIsWishlisted: isWishlisted,
-                ),
-                // Enroll button
-                BlocConsumer<EnrollBloc, EnrollState>(
-                  listener: (context, state) {
-                    if (state is EnrollSuccess) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Successfully enrolled in course!'),
-                          backgroundColor: Colors.green,
-                        ),
-                      );
-                      AwesomeDialog(
-                        context: context,
-                        transitionAnimationDuration:
-                            const Duration(milliseconds: 500),
-                        dialogType: DialogType.success,
-                        animType: AnimType.bottomSlide,
-                        headerAnimationLoop: false,
-                        title: 'SUCCESS',
-                        desc: 'Successfully enrolled.. View Enrollments ?',
-                        btnCancelOnPress: () => Navigator.pop(context),
-                        btnOkOnPress: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MultiBlocProvider(
-                              providers: [
-                                BlocProvider(
-                                  create: (context) => getIt<EnrollmentBloc>()
-                                    ..add(FetchEnrollments()),
-                                ),
-                              ],
-                              child: const EnrollmentsPage(),
-                            ),
-                          ),
-                        ),
-                        buttonsBorderRadius: BorderRadius.circular(0),
-                        btnOkColor: Colors.green,
-                        btnCancelColor: Colors.red,
-                        buttonsTextStyle: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 18,
-                        ),
-                      ).show();
-                    } else if (state is EnrollError) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(state.message),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    }
-                  },
-                  builder: (context, state) {
-                    return ElevatedButton(
-                      onPressed:
-                          (state is EnrollLoading || selectedScheduleId == null)
-                              ? null
-                              : () {
-                                  context.read<EnrollBloc>().add(
-                                        EnrollInCourseEvent(
-                                          courseId: courseId,
-                                          scheduleSlotId: selectedScheduleId!,
-                                        ),
-                                      );
-                                },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromRGBO(162, 12, 13, 1.0),
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: state is EnrollLoading
-                          ? const SizedBox(
-                              width: 16,
-                              height: 16,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
-                            )
-                          : const Text(
-                              'Enroll',
-                              style: TextStyle(fontWeight: FontWeight.w600),
-                            ),
-                    );
-                  },
-                ),
-              ],
-            ),
-            // عرض شارة العرض إذا كان هناك خصم
-            if (hasDiscount)
-              Positioned(
-                top: 35,
-                right: 10,
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    'OFFER',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+            Expanded(
+              child: Text(
+                courseTitle,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
+            ),
+            WishlistButton(
+              courseId: courseId,
+              initialIsWishlisted: isWishlisted,
+            ),
+            // Enroll button
+            BlocConsumer<EnrollBloc, EnrollState>(
+              listener: (context, state) {
+                if (state is EnrollSuccess) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Successfully enrolled in course!'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                  AwesomeDialog(
+                    context: context,
+                    transitionAnimationDuration:
+                        const Duration(milliseconds: 500),
+                    dialogType: DialogType.success,
+                    animType: AnimType.bottomSlide,
+                    headerAnimationLoop: false,
+                    title: 'SUCCESS',
+                    desc: 'Successfully enrolled.. View Enrollments ?',
+                    btnCancelOnPress: () => Navigator.pop(context),
+                    btnOkOnPress: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MultiBlocProvider(
+                          providers: [
+                            BlocProvider(
+                              create: (context) => getIt<EnrollmentBloc>()
+                                ..add(FetchEnrollments()),
+                            ),
+                          ],
+                          child: const EnrollmentsPage(),
+                        ),
+                      ),
+                    ),
+                    buttonsBorderRadius: BorderRadius.circular(0),
+                    btnOkColor: Colors.green,
+                    btnCancelColor: Colors.red,
+                    buttonsTextStyle: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18,
+                    ),
+                  ).show();
+                } else if (state is EnrollError) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(state.message),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
+              builder: (context, state) {
+                return ElevatedButton(
+                  onPressed:
+                      (state is EnrollLoading || selectedScheduleId == null)
+                          ? null
+                          : () {
+                              context.read<EnrollBloc>().add(
+                                    EnrollInCourseEvent(
+                                      courseId: courseId,
+                                      scheduleSlotId: selectedScheduleId!,
+                                    ),
+                                  );
+                            },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromRGBO(162, 12, 13, 1.0),
+                    foregroundColor: Colors.white,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: state is EnrollLoading
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Text(
+                          'Enroll',
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                );
+              },
+            ),
           ],
         ),
+        // عرض شارة العرض إذا كان هناك خصم
+        // if (hasDiscount)
+        //   Positioned(
+        //     top: 2,
+        //     right: 120,
+        //     child: Container(
+        //       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        //       decoration: BoxDecoration(
+        //         color: Colors.red,
+        //         borderRadius: BorderRadius.circular(10),
+        //       ),
+        //       child: Text(
+        //         'OFFER',
+        //         style: TextStyle(
+        //           color: Colors.white,
+        //           fontSize: 10,
+        //           fontWeight: FontWeight.bold,
+        //         ),
+        //       ),
+        //     ),
+        //   ),
 
         const SizedBox(height: 20),
 
         // عرض سعر الخصم إذا كان هناك عرض
         if (hasDiscount && originalPrice != null)
           Container(
-            padding: EdgeInsets.all(8),
+            //height: 40,
+            padding: EdgeInsets.all(4),
             decoration: BoxDecoration(
               color: Colors.orange.shade100,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(8),
+                      )),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                    child: Text(
+                      'OFFER',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 80,
+                ),
                 // Text(
                 //   '$originalPrice',
                 //   style: TextStyle(
@@ -476,7 +496,7 @@ class CourseDetailsCard extends StatelessWidget {
                   Text(
                     '${discountInfo!.discountPercentage}% OFF',
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: Colors.red,
                     ),
@@ -500,7 +520,6 @@ class CourseDetailsCard extends StatelessWidget {
               value: '${courseDuration.toString()} h',
             ),
 
-            // Price card - عرض السعر المناسب
             _buildInfoCard(
               title: 'Price',
               child: hasDiscount && originalPrice != null
@@ -510,10 +529,14 @@ class CourseDetailsCard extends StatelessWidget {
                         Text(
                           '$originalPrice',
                           style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey.shade600,
+                              fontSize: 14,
+                              color: Colors.grey.shade700,
                               decoration: TextDecoration.lineThrough,
-                              decorationColor: AppColors.mainColor),
+                              decorationColor: Colors.red,
+                              decorationThickness: 3),
+                        ),
+                        SizedBox(
+                          width: 8,
                         ),
                         Text(
                           '$coursePrice',
@@ -570,6 +593,8 @@ class CourseDetailsCard extends StatelessWidget {
       elevation: 5,
       color: Color.fromARGB(255, 245, 230, 230),
       shape: RoundedRectangleBorder(
+        side:
+            BorderSide(width: 1.5, color: AppColors.mainColor.withOpacity(0.5)),
         borderRadius: BorderRadius.circular(15),
       ),
       child: Padding(
@@ -581,8 +606,8 @@ class CourseDetailsCard extends StatelessWidget {
               child: Text(
                 title,
                 style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey.shade600,
+                  fontSize: 13,
+                  color: Colors.grey.shade800,
                 ),
               ),
             ),
