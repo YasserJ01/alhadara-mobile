@@ -1,7 +1,13 @@
 // presentation/pages/wishlist_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project2/l10n/generated/app_localizations.dart';
+import '../../../../core/constants/app_elevated_button.dart';
 import '../../../../core/constants/app_scaffold.dart';
+import '../../../../core/constants/colors.dart';
+import '../../../../core/theme/app_theme_helper.dart';
+import '../../../../theme/presentation/bloc/theme_bloc.dart';
+import '../../../../theme/presentation/bloc/theme_state.dart';
 import '../bloc/wishlist_bloc.dart';
 import '../bloc/wishlist_event.dart';
 import '../bloc/wishlist_state.dart';
@@ -12,93 +18,110 @@ class WishlistPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
-      title: 'Wishlist',
-      edgeInsets: const EdgeInsets.all(0),
-      body: BlocBuilder<WishlistBloc, WishlistState>(
-        builder: (context, state) {
-          if (state is WishlistInitial) {
-            // Load wishlists when page is first built
-            context.read<WishlistBloc>().add(LoadWishlistsEvent());
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is WishlistLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is WishlistLoaded) {
-            if (state.wishlists.isEmpty) {
-              return const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.favorite_border,
-                      size: 80,
-                      color: Colors.grey,
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      'No courses in your wishlist yet',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Start adding courses you love!',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }
-            return RefreshIndicator(
-              onRefresh: () async {
+    final l10n = AppLocalizations.of(context);
+
+    return BlocBuilder<ThemeBloc, ThemeState>(
+      builder: (context, themeState) {
+        Color backgroundColor = const Color(0xffF4F8FB);
+        Color cardColor = Colors.white;
+        Color textColor = AppColors.mainColor;
+        Color secondaryTextColor = Colors.grey[600]!;
+
+        if (themeState is ThemeLoaded) {
+          backgroundColor = AppThemeHelper.getBackgroundColor(themeState.theme);
+          cardColor = AppThemeHelper.getCardColor(themeState.theme);
+          textColor = AppThemeHelper.getTextColor(themeState.theme);
+          secondaryTextColor = AppThemeHelper.getSecondaryTextColor(themeState.theme);
+        }
+
+        return AppScaffold(
+          title: l10n.wishlist,
+          edgeInsets: const EdgeInsets.all(0),
+          body: BlocBuilder<WishlistBloc, WishlistState>(
+            builder: (context, state) {
+              if (state is WishlistInitial) {
                 context.read<WishlistBloc>().add(LoadWishlistsEvent());
-              },
-              child: ListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemCount: _getTotalCourses(state.wishlists),
-                itemBuilder: (context, index) {
-                  final courseData = _getCourseAtIndex(state.wishlists, index);
-                  return _buildCourseCard(courseData);
-                },
-              ),
-            );
-          } else if (state is WishlistError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.error_outline,
-                    size: 80,
-                    color: Colors.red,
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Failed to load wishlist',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.red,
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is WishlistLoading) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is WishlistLoaded) {
+                if (state.wishlists.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.favorite_border,
+                          size: 80,
+                          color: secondaryTextColor,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          l10n.noWishlistCourses,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: secondaryTextColor,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          l10n.startAddingCourses,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: secondaryTextColor,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      context.read<WishlistBloc>().add(LoadWishlistsEvent());
+                  );
+                }
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    context.read<WishlistBloc>().add(LoadWishlistsEvent());
+                  },
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: _getTotalCourses(state.wishlists),
+                    itemBuilder: (context, index) {
+                      final courseData = _getCourseAtIndex(state.wishlists, index);
+                      return _buildCourseCard(courseData, cardColor, textColor, secondaryTextColor);
                     },
-                    child: const Text('Retry'),
                   ),
-                ],
-              ),
-            );
-          }
-          return const SizedBox();
-        },
-      ),
+                );
+              } else if (state is WishlistError) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.error_outline,
+                        size: 80,
+                        color: Colors.red,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        l10n.failedToLoadWishlist,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          color: Colors.red,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      AppElevatedButton(
+                        onPressed: () {
+                          context.read<WishlistBloc>().add(LoadWishlistsEvent());
+                        },
+                        child: Text(l10n.retry),
+                      ),
+                    ],
+                  ),
+                );
+              }
+              return const SizedBox();
+            },
+          ),
+        );
+      },
     );
   }
 
@@ -123,10 +146,11 @@ class WishlistPage extends StatelessWidget {
     return {'title': '', 'courseTypeName': ''};
   }
 
-  Widget _buildCourseCard(Map<String, String> courseData) {
+  Widget _buildCourseCard(Map<String, String> courseData, Color cardColor, Color textColor, Color secondaryTextColor) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       elevation: 5,
+      color: cardColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
@@ -134,17 +158,16 @@ class WishlistPage extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            // const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     courseData['title'] ?? '',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Color.fromRGBO(162, 12, 13, 1.0),
+                      color: textColor,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -156,14 +179,14 @@ class WishlistPage extends StatelessWidget {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
+                      color: secondaryTextColor.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: Text(
                       courseData['courseTypeName'] ?? '',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: Colors.black,
+                        color: textColor,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

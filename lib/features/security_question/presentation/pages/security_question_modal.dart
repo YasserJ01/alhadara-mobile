@@ -8,9 +8,8 @@ import '../bloc/security_question_bloc.dart';
 import '../widgets/security_question_content.dart';
 
 class SecurityQuestionModal extends StatelessWidget {
-  final String authToken;
 
-  const SecurityQuestionModal({super.key, required this.authToken});
+  const SecurityQuestionModal({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +18,7 @@ class SecurityQuestionModal extends StatelessWidget {
         getSecurityQuestionsUseCase: getIt<GetSecurityQuestionsUseCase>(),
         submitSecurityAnswerUseCase:
             getIt<SubmitSecurityAnswerUseCase>(), // Add this
-      )..add(LoadSecurityQuestions(authToken)),
+      )..add(LoadSecurityQuestions()),
       child: Container(
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -35,9 +34,7 @@ class SecurityQuestionModal extends StatelessWidget {
             right: 16,
           ),
           child: SingleChildScrollView(
-            child: SecurityQuestionContent(
-              authToken: authToken,
-            ),
+            child: SecurityQuestionContent(),
           ),
         ),
       ),

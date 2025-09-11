@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:project2/l10n/generated/app_localizations.dart';
+import '../../../../core/constants/app_elevated_button.dart';
+import '../../../../core/constants/app_scaffold.dart';
 import '../../../../dependencies.dart';
 import '../bloc/interest_selection/interest_selection_bloc.dart';
 import '../widgets/interests_chip.dart';
@@ -13,11 +15,12 @@ class InterestSelectionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Your interests')),
+    final l10n = AppLocalizations.of(context);
+    return AppScaffold(
+      title: l10n.yourInterests,
       body: BlocProvider(
         create: (context) =>
-            getIt<InterestSelectionBloc>()..add(LoadInterests()),
+        getIt<InterestSelectionBloc>()..add(LoadInterests()),
         child: BlocConsumer<InterestSelectionBloc, InterestSelectionState>(
           listener: (context, state) {
             if (state.error != null) {
@@ -36,11 +39,16 @@ class InterestSelectionPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Select up to 3 of your interests',
-                    style: TextStyle(fontSize: 16),
+                   Text(
+                    l10n.selectInterestsLimit,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      //letterSpacing: 1,
+                      //  color: Color.fromARGB(255, 109, 27, 27),
+                    ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 28),
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
@@ -50,32 +58,32 @@ class InterestSelectionPage extends StatelessWidget {
                         isSelected: state.selectedInterests.contains(interest),
                         onTap: () {
                           context.read<InterestSelectionBloc>().add(
-                                ToggleInterestSelection(interest),
-                              );
+                            ToggleInterestSelection(interest),
+                          );
                         },
                       );
                     }).toList(),
                   ),
                   const Spacer(),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: state.selectedInterests.isNotEmpty
-                          ? () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => InterestRatingPage(
-                                    profileId: profileId,
-                                    interests: state.selectedInterests,
-                                  ),
-                                ),
-                              );
-                            }
-                          : null,
-                      child: const Text('Continue'),
+                  AppElevatedButton(
+                    onPressed: state.selectedInterests.isNotEmpty
+                        ? () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => InterestRatingPage(
+                            profileId: profileId,
+                            interests: state.selectedInterests,
+                          ),
+                        ),
+                      );
+                    }
+                        : null,
+                    child: Text(
+                      l10n.continuing,
+                      style: TextStyle(fontSize: 18),
                     ),
-                  ),
+                  )
                 ],
               ),
             );

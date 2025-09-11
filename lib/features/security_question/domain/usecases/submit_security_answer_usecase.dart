@@ -7,12 +7,10 @@ class SubmitSecurityAnswerUseCase {
   SubmitSecurityAnswerUseCase({required this.repository});
 
   Future<void> call({
-    required String token,
     required int questionId,
     required String answer,
   }) async {
     return await repository.submitSecurityAnswer(
-      token: token,
       questionId: questionId,
       answer: answer,
     );

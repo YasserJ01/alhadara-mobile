@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project2/features/enrollment/presentation/widgets/payment_dialog.dart';
+import 'package:project2/l10n/generated/app_localizations.dart';
+import '../../../../core/constants/app_elevated_button.dart';
 import '../../../../core/constants/colors.dart';
+import '../../../../core/theme/app_theme_helper.dart';
+import '../../../../dependencies.dart';
+import '../../../../theme/presentation/bloc/theme_bloc.dart';
+import '../../../../theme/presentation/bloc/theme_state.dart';
 import '../../domain/entities/enrollment_entity.dart';
 import '../bloc/enrollments/enrollment_bloc.dart';
+import '../pages/active_course_page.dart';
 
 class ExpandableEnrollmentCard extends StatefulWidget {
   final EnrollmentEntity enrollment;
@@ -27,7 +34,7 @@ class _ExpandableEnrollmentCardState extends State<ExpandableEnrollmentCard> {
         value: bloc,
         child: PaymentDialog(
           enrollmentId: widget.enrollment.id,
-          remainingBalance: widget.enrollment.remainingBalance,
+          remainingBalance: widget.enrollment.remainingBalance.toString(),
         ),
       ),
     );
@@ -35,69 +42,131 @@ class _ExpandableEnrollmentCardState extends State<ExpandableEnrollmentCard> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.6),
-            spreadRadius: 5,
-            blurRadius: 10,
-            offset: const Offset(0, 3),
+    return BlocBuilder<ThemeBloc, ThemeState>(
+      builder: (context, themeState) {
+        Color backgroundColor = const Color(0xffF4F8FB);
+        Color cardColor = Colors.white;
+        Color textColor = AppColors.mainColor;
+        Color secondaryTextColor = Colors.grey[600]!;
+
+        if (themeState is ThemeLoaded) {
+          backgroundColor = AppThemeHelper.getBackgroundColor(themeState.theme);
+          cardColor = AppThemeHelper.getCardColor(themeState.theme);
+          textColor = AppThemeHelper.getTextColor(themeState.theme);
+          secondaryTextColor = AppThemeHelper.getSecondaryTextColor(themeState.theme);
+        }
+
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          margin: const EdgeInsets.only(bottom: 16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 2,
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Card(
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(12),
-          onTap: () => setState(() => _isExpanded = !_isExpanded),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildHeader(),
-                const SizedBox(height: 8),
-                _buildPaymentSummary(),
-                if (_isExpanded) _buildExpandedContent(),
-              ],
+          child: Card(
+            elevation: 0,
+            color: cardColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: () => setState(() => _isExpanded = !_isExpanded),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildHeader(textColor, secondaryTextColor),
+                    const SizedBox(height: 8),
+                    _buildPaymentSummary(secondaryTextColor),
+                    if (_isExpanded) _buildExpandedContent(textColor, secondaryTextColor),
+                  ],
+                ),
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(Color textColor, Color secondaryTextColor) {
+    final l10n = AppLocalizations.of(context);
     return Row(
       children: [
         Expanded(
           child: Text(
             widget.enrollment.courseTitle.toUpperCase(),
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.mainColor,
-                ),
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: textColor,
+            ),
           ),
         ),
-        Row(
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildStatusChip(widget.enrollment.status),
-            const SizedBox(width: 8),
-            AnimatedRotation(
-              duration: const Duration(milliseconds: 300),
-              turns: _isExpanded ? 0.5 : 0,
-              child: const Icon(
-                Icons.keyboard_arrow_down,
-                color: AppColors.mainColor,
-                size: 30,
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) => getIt<EnrollmentBloc>(),
+                      child: ActiveCoursePage(
+                        courseId: widget.enrollment.id,
+                        scheduleSlotId: widget.enrollment.scheduleSlot,
+                        startDate: widget.enrollment.startDate,
+                          endDate: widget.enrollment.endDate,
+                        studentId: widget.enrollment.student,
+                        status: widget.enrollment.status,
+                      ),
+                    ),
+                  ),
+                );
+              },
+              child: Chip(
+                label: Text(
+                  l10n.viewCourse,
+                  style: TextStyle(
+                    color: textColor,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                backgroundColor: textColor.withOpacity(0.2),
               ),
+            ),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                _buildStatusChip(widget.enrollment.status),
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 0),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: textColor.withOpacity(0.1),
+                  ),
+                  child: AnimatedRotation(
+                    duration: const Duration(milliseconds: 300),
+                    turns: _isExpanded ? 0.5 : 0,
+                    child: Icon(
+                      Icons.keyboard_arrow_down,
+                      color: textColor,
+                      size: 30,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -105,35 +174,41 @@ class _ExpandableEnrollmentCardState extends State<ExpandableEnrollmentCard> {
     );
   }
 
-  Widget _buildPaymentSummary() {
+  Widget _buildPaymentSummary(Color secondaryTextColor) {
+    final l10n = AppLocalizations.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _buildPaymentItem('Paid', widget.enrollment.amountPaid, Colors.green),
         _buildPaymentItem(
-            'Remaining', widget.enrollment.remainingBalance, Colors.orange),
-        _buildPaymentStatus(widget.enrollment.paymentStatus),
+            l10n.paid,
+            widget.enrollment.amountPaid.toString(),
+            Colors.green,
+            secondaryTextColor
+        ),
+        _buildPaymentItem(
+            l10n.remaining,
+            widget.enrollment.remainingBalance.toString(),
+            Colors.orange,
+            secondaryTextColor
+        ),
+        _buildPaymentStatus(widget.enrollment.paymentStatus, secondaryTextColor),
       ],
     );
   }
 
-  Widget _buildExpandedContent() {
+  Widget _buildExpandedContent(Color textColor, Color secondaryTextColor) {
+    final l10n = AppLocalizations.of(context);
     return Column(
       children: [
         const SizedBox(height: 16),
-        const Divider(),
+        Divider(color: secondaryTextColor.withOpacity(0.3)),
         const SizedBox(height: 8),
-        _buildInfoRow(Icons.person, 'Student', widget.enrollment.studentName),
+        _buildInfoRow(Icons.person, l10n.student, widget.enrollment.studentName, textColor, secondaryTextColor),
         const SizedBox(height: 8),
-        _buildInfoRow(
-            Icons.schedule, 'Schedule', widget.enrollment.scheduleSlotDisplay),
-        const SizedBox(height: 8),
-        _buildInfoRow(Icons.calendar_today, 'Enrollment Date',
-            _formatDate(widget.enrollment.enrollmentDate)),
+        _buildInfoRow(Icons.calendar_today, l10n.enrollmentDate,
+            _formatDate(widget.enrollment.enrollmentDate), textColor, secondaryTextColor),
         const SizedBox(height: 16),
-        //  if (widget.enrollment.notes.isNotEmpty) _buildNotesSection(),
-        const SizedBox(height: 16),
-        _buildPaymentButton(),
+        _buildPaymentButton(textColor),
       ],
     );
   }
@@ -174,7 +249,7 @@ class _ExpandableEnrollmentCardState extends State<ExpandableEnrollmentCard> {
     );
   }
 
-  Widget _buildPaymentItem(String label, double value, Color color) {
+  Widget _buildPaymentItem(String label, String value, Color color, Color secondaryTextColor) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -182,11 +257,11 @@ class _ExpandableEnrollmentCardState extends State<ExpandableEnrollmentCard> {
           label,
           style: TextStyle(
             fontSize: 12,
-            color: Colors.grey.shade600,
+            color: secondaryTextColor,
           ),
         ),
         Text(
-          '\$${value.toStringAsFixed(2)}',
+          '\$$value',
           style: TextStyle(
             fontSize: 16,
             color: color,
@@ -197,7 +272,7 @@ class _ExpandableEnrollmentCardState extends State<ExpandableEnrollmentCard> {
     );
   }
 
-  Widget _buildPaymentStatus(String status) {
+  Widget _buildPaymentStatus(String status, Color secondaryTextColor) {
     IconData icon;
     Color color;
     String label;
@@ -227,10 +302,10 @@ class _ExpandableEnrollmentCardState extends State<ExpandableEnrollmentCard> {
     return Column(
       children: [
         Text(
-          'Payment',
+          AppLocalizations.of(context).payment,
           style: TextStyle(
             fontSize: 12,
-            color: Colors.grey.shade600,
+            color: secondaryTextColor,
           ),
         ),
         Row(
@@ -251,11 +326,11 @@ class _ExpandableEnrollmentCardState extends State<ExpandableEnrollmentCard> {
     );
   }
 
-  Widget _buildInfoRow(IconData icon, String label, String value) {
+  Widget _buildInfoRow(IconData icon, String label, String value, Color textColor, Color secondaryTextColor) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, size: 20, color: AppColors.mainColor),
+        Icon(icon, size: 20, color: textColor),
         const SizedBox(width: 8),
         Expanded(
           child: Column(
@@ -265,13 +340,16 @@ class _ExpandableEnrollmentCardState extends State<ExpandableEnrollmentCard> {
                 label,
                 style: TextStyle(
                   fontSize: 12,
-                  color: Colors.grey.shade600,
+                  color: secondaryTextColor,
                 ),
               ),
               const SizedBox(height: 2),
               Text(
                 value,
-                style: const TextStyle(fontSize: 14),
+                style: TextStyle(
+                  fontSize: 14,
+                  color: textColor,
+                ),
               ),
             ],
           ),
@@ -280,42 +358,15 @@ class _ExpandableEnrollmentCardState extends State<ExpandableEnrollmentCard> {
     );
   }
 
-  // Widget _buildNotesSection() {
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: [
-  //       Text(
-  //         'NOTES',
-  //         style: TextStyle(
-  //           fontSize: 12,
-  //           color: Colors.grey.shade600,
-  //           fontWeight: FontWeight.bold,
-  //         ),
-  //       ),
-  //       const SizedBox(height: 4),
-  //       Text(
-  //         widget.enrollment.notes,
-  //         style: const TextStyle(fontSize: 14),
-  //       ),
-  //     ],
-  //   );
-  // }
-
-  Widget _buildPaymentButton() {
+  Widget _buildPaymentButton(Color textColor) {
     return SizedBox(
       width: double.infinity,
-      child: ElevatedButton.icon(
-        icon: const Icon(Icons.payment, size: 20),
-        label: const Text('ADD PAYMENT'),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.mainColor,
-          foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          padding: const EdgeInsets.symmetric(vertical: 14),
-        ),
+      child: AppElevatedButton(
         onPressed: _showPaymentDialog,
+        child: Text(
+          AppLocalizations.of(context).addPayment,
+          style: TextStyle(color: Colors.white),
+        ),
       ),
     );
   }

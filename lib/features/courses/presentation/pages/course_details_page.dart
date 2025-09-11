@@ -12,7 +12,8 @@ import '../bloc/course_schedule_bloc/course_schedule_state.dart';
 import '../widgets/course_details_bottom_sheet.dart';
 import '../widgets/course_details_card.dart';
 import '../widgets/course_schedule_list.dart';
-import '../../../wishlist/presentation/bloc/wishlist_bloc.dart'; // Import WishlistBloc
+import '../../../wishlist/presentation/bloc/wishlist_bloc.dart';
+import '../../domain/entites/course.dart';
 // features/courses/presentation/pages/course_details_page.dart
 
 class CourseDetailsPage extends StatelessWidget {
@@ -24,6 +25,15 @@ class CourseDetailsPage extends StatelessWidget {
   final int maxStudent;
   final bool certificationEligible;
   final bool isWishlisted;
+  final int? requiredLanguage;
+  final String? requiredLanguageName;
+  final int? requiredLanguageLevel;
+  final String? requiredLanguageLevelDisplay;
+  final bool canEnroll;
+  final String languageMessage;
+  final bool hasDiscount;
+  final DiscountInfo? discountInfo;
+  final String? originalPrice;
 
   const CourseDetailsPage({
     Key? key,
@@ -34,7 +44,16 @@ class CourseDetailsPage extends StatelessWidget {
     required this.courseDuration,
     required this.maxStudent,
     required this.certificationEligible,
-    required this.isWishlisted
+    required this.isWishlisted,
+    this.requiredLanguage,
+    required this.canEnroll,
+    required this.languageMessage,
+    this.requiredLanguageLevel,
+    this.requiredLanguageLevelDisplay,
+    this.requiredLanguageName,
+    required this.hasDiscount,
+    this.discountInfo,
+    this.originalPrice,
   }) : super(key: key);
 
   @override
@@ -140,6 +159,15 @@ class CourseDetailsPage extends StatelessWidget {
               maxStudent: maxStudent,
               certificationEligible: certificationEligible,
               isWishlisted: isWishlisted,
+              requiredLanguage: requiredLanguage,
+              requiredLanguageName: requiredLanguageName,
+              requiredLanguageLevel: requiredLanguageLevel,
+              requiredLanguageLevelDisplay: requiredLanguageLevelDisplay,
+              canEnroll: canEnroll,
+              languageMessage: languageMessage,
+              hasDiscount: hasDiscount, // أضف هذا
+              discountInfo: discountInfo, // أضف هذا
+              originalPrice: originalPrice,
             ),
           ],
         ),

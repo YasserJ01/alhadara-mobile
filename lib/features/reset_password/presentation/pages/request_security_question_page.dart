@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RequestSecurityQuestionPage extends StatelessWidget {
+  const RequestSecurityQuestionPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

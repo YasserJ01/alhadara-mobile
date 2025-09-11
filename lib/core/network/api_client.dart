@@ -8,7 +8,9 @@ import '../../errors/expections.dart';
 class ApiClient {
   final http.Client _client;
   final AuthRemoteDataSource _authDataSource;
-  final String baseUrl = "http://10.0.2.2:8000";
+  final String baseUrl = "https://optimum-kodiak-hardy.ngrok-free.app";
+  // final String baseUrl = "http://10.0.2.2:8000";
+  // final String baseUrl = "http://192.168.1.3:8000";
 
   ApiClient(this._client, this._authDataSource);
 
@@ -35,7 +37,7 @@ class ApiClient {
 
     // Prepare headers
     final requestHeaders = {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
       'Authorization': 'JWT $accessToken',
       ...?headers,
     };

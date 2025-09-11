@@ -14,7 +14,8 @@ abstract class SearchRemoteDataSource {
 
 class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
   final http.Client client;
-  static const String baseUrl = 'http://10.0.2.2:8000/api/courses/search/';
+  // static const String baseUrl = 'http://10.0.2.2:8000/api/courses/search/';
+  static const String baseUrl = 'http://192.168.1.3:8000/api/courses/search/';
 
   SearchRemoteDataSourceImpl(this.client);
 

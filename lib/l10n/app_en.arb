@@ -1,0 +1,294 @@
+{
+  "@@locale": "en",
+  "appTitle": "Project2",
+  "@appTitle": {
+    "description": "Application title"
+  },
+  "welcome": "Welcome",
+  "@welcome": {
+    "description": "Welcome message on start screen"
+  },
+  "welcomeSubtitle": "Enjoy the world's fastest and best education",
+  "@welcomeSubtitle": {
+    "description": "Welcome subtitle on start screen"
+  },
+  "signIn": "SIGN IN",
+  "@signIn": {
+    "description": "Sign in button text"
+  },
+  "asAGuest": "AS A GUEST",
+  "@asAGuest": {
+    "description": "Guest button text"
+  },
+  "login": "Login",
+  "@login": {
+    "description": "Login title"
+  },
+  "letsGetStarted": "let's get started",
+  "@letsGetStarted": {
+    "description": "Login subtitle"
+  },
+  "phoneNumber": "Phone Number",
+  "@phoneNumber": {
+    "description": "Phone number field label"
+  },
+  "password": "Password",
+  "@password": {
+    "description": "Password field label"
+  },
+  "forgotPassword": "forgot password ?",
+  "@forgotPassword": {
+    "description": "Forgot password link text"
+  },
+  "saveMyPasswordSecurely": "Save my password securely",
+  "@saveMyPasswordSecurely": {
+    "description": "Save password checkbox text"
+  },
+  "keepMeSignedIn": "Keep me signed in",
+  "@keepMeSignedIn": {
+    "description": "Keep signed in checkbox text"
+  },
+  "enableBiometricLogin": "Enable biometric login",
+  "@enableBiometricLogin": {
+    "description": "Biometric login checkbox text"
+  },
+  "dontHaveAccount": "Don't have an account ?",
+  "@dontHaveAccount": {
+    "description": "Sign up prompt text"
+  },
+  "signUp": " SIGN UP",
+  "@signUp": {
+    "description": "Sign up button text"
+  },
+  "quickLogin": "Quick Login",
+  "@quickLogin": {
+    "description": "Quick login section title"
+  },
+  "savedLogin": "Saved Login",
+  "@savedLogin": {
+    "description": "Saved login button text"
+  },
+  "biometric": "Biometric",
+  "@biometric": {
+    "description": "Biometric login button text"
+  },
+  "clearSavedCredentials": "Clear saved credentials",
+  "@clearSavedCredentials": {
+    "description": "Clear credentials button text"
+  },
+  "error": "Error",
+  "@error": {
+    "description": "Error dialog title"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button"
+  },
+  "authenticate": "Authenticate",
+  "@authenticate": {
+    "description": "Authenticate button"
+  },
+  "biometricLogin": "Biometric Login",
+  "@biometricLogin": {
+    "description": "Biometric login dialog title"
+  },
+  "useBiometricAuth": "Use your biometric authentication to login",
+  "@useBiometricAuth": {
+    "description": "Biometric authentication instruction"
+  },
+  "clearSavedCredentialsTitle": "Clear Saved Credentials",
+  "@clearSavedCredentialsTitle": {
+    "description": "Clear credentials dialog title"
+  },
+  "clearSavedCredentialsMessage": "Are you sure you want to clear your saved login credentials?",
+  "@clearSavedCredentialsMessage": {
+    "description": "Clear credentials confirmation message"
+  },
+  "clear": "Clear",
+  "@clear": {
+    "description": "Clear button text"
+  },
+  "pleaseEnterPhoneNumber": "Please enter your phone number",
+  "@pleaseEnterPhoneNumber": {
+    "description": "Phone number validation message"
+  },
+  "pleaseEnterPassword": "Please enter your password",
+  "@pleaseEnterPassword": {
+    "description": "Password validation message"
+  },
+  "languageSettings": "Language Settings",
+  "@languageSettings": {
+    "description": "Language settings title"
+  },
+  "selectLanguage": "Select Language",
+  "@selectLanguage": {
+    "description": "Select language instruction"
+  },
+  "english": "English",
+  "@english": {
+    "description": "English language option"
+  },
+  "arabic": "العربية",
+  "@arabic": {
+    "description": "Arabic language option"
+  },
+  "recommendation": "Recommendations",
+  "@recommendation": {
+    "description": "User Recommendations"
+  },
+  "offers": "Offers",
+  "search": "Search",
+  "hadara": "Hadara",
+  "profile": "Profile",
+  "wallet": "Wallet",
+  "wishlist": "Wishlist",
+  "enrollments": "Enrollments",
+  "courses": "Courses",
+  "loyalty": "Loyalty Points",
+  "entrance": "Entrance Exam",
+  "noProfileFound": "No Profile Found",
+  "noProfileFoundMessage": "You don't have a profile yet. Would you like to create one?",
+  "createProfile": "Create Profile",
+  "birthDate": "Birth Date",
+  "gender": "Gender",
+  "selectYourGender": "Select your gender",
+  "address": "Address",
+  "academicStatus": "Academic Status",
+  "selectYourAcademicStatus": "Select your academic status",
+  "male": "male",
+  "female": "female",
+  "highSchool": "high school",
+  "notStudying": "not studying",
+  "undergraduate": "undergraduate",
+  "graduate": "graduate",
+  "continuing": "Continue",
+  "basicinfo": "Basic Information",
+  "university": "University",
+  "studyField": "Study Field",
+  "selectYourUniversity": "Select your university",
+  "selectYourStudyField": "Select your study field",
+  "universityAndStudyField": "University & Study Field",
+  "pleaseSelectUniversity": "Please select a university",
+  "pleaseSelectStudyField": "Please select a study field",
+  "pleaseSelectBirthDate": "Please select your birth date",
+  "pleaseSelectGender": "Please select your gender",
+  "pleaseEnterAddress": "Please enter your address",
+  "pleaseSelectAcademicStatus": "Please select your academic status",
+  "yourInterests": "Your interests",
+  "selectInterestsLimit": "Select up to 3 of your interests",
+  "ratingInterest": "Rate your level of interest for each",
+  "submit" : "Submit",
+  "errorPickingImage": "Error picking image",
+  "errorTakingPhoto": "Error taking photo",
+  "selectImageSource": "Select Image Source",
+  "gallery": "Gallery",
+  "camera": "Camera",
+  "uploadProfileImage": "Upload your profile image",
+  "selectImage": "Select Image",
+  "changeImage": "Change Image",
+  "uploading": "Uploading...",
+  "upload": "Upload",
+  "uploadingProfilePicture": "Uploading your profile picture...",
+  "personalInfo" : "Personal Information",
+  "academicInfo" : "Academic Details",
+  "yourBalance": "Your Balance",
+  "transactions": "Transactions",
+  "deposit": "DEPOSIT",
+  "withdraw": "WITHDRAW",
+  "viewDetails": "View Details",
+  "transactionDetails": "Transaction Details",
+  "transactionType": "Transaction Type",
+  "amount": "Amount",
+  "date": "Date",
+  "status": "Status",
+  "description": "Description",
+  "close": "Close",
+  "next": "Next",
+  "methodSelection": "Please select a method first",
+  "pleaseMakeValidSelection": "Please make a valid selection",
+  "bankTransferDetails": "Bank Transfer Details",
+  "moneyTransferDetails": "Money Transfer Details",
+  "bankName": "Bank Name",
+  "accountName": "Account Name",
+  "accountNumber": "Account Number",
+  "company": "Company",
+  "receiver": "Receiver",
+  "phone": "Phone",
+  "ifReadyToPayClickHere": "If you are ready to pay click here",
+  "confirmPayment": "Confirm Payment",
+  "pleaseSelectTransactionScreenshot": "Please select a transaction screenshot",
+  "createDepositRequest": "Create Deposit Request",
+  "depositRequestSubmitted": "Deposit request submitted successfully!",
+  "transactionScreenshot": "Transaction Screenshot",
+  "noScreenshotSelected": "No screenshot selected",
+  "addScreenshot": "Add Screenshot",
+  "changeScreenshot": "Change Screenshot",
+  "transactionNumber": "Transaction Number",
+  "enterTransactionNumber": "Enter transaction number",
+  "transactionNumberRequired": "Transaction number is required",
+  "enterAmount": "Enter amount",
+  "amountRequired": "Amount is required",
+  "pleaseEnterValidAmount": "Please enter a valid amount",
+  "submitting": "Submitting...",
+  "submitRequest": "Submit Request",
+  "submittingDepositRequest": "Submitting your deposit request...",
+  "noWishlistCourses": "No courses in your wishlist yet",
+  "startAddingCourses": "Start adding courses you love!",
+  "failedToLoadWishlist": "Failed to load wishlist",
+  "retry": "Retry",
+  "noWishlistCourses": "No courses in your wishlist yet",
+  "startAddingCourses": "Start adding courses you love!",
+  "failedToLoadWishlist": "Failed to load wishlist",
+  "viewCourse": "View course",
+  "student": "Student",
+  "enrollmentDate": "Enrollment Date",
+  "addPayment": "ADD PAYMENT",
+  "paid": "Paid",
+  "remaining": "Remaining",
+  "payment": "Payment",
+  "makePayment": "Make Payment",
+  "remainingBalance": "Remaining Balance",
+  "paymentAmount": "Payment Amount",
+  "pleaseEnterAmount": "Please enter amount",
+  "enterValidAmount": "Enter valid amount",
+  "amountExceedsBalance": "Amount exceeds balance",
+  "courseDetails": "Course Details",
+  "startQuiz": "Start Quiz",
+  "courseProgress": "Course Progress",
+  "lessonsCount": "Lessons Count",
+  "amountPaid": "Amount Paid",
+  "attendance": "Attendance",
+  "progress": "Progress",
+  "lessons": "Lessons",
+  "hall": "Hall",
+  "time": "Time",
+  "downloading": "Downloading",
+  "pleaseWait": "Please wait",
+  "couldNotOpenTelegram": "Could not open Telegram",
+  "couldNotLoadImage": "Could not load image",
+  "chooseDownloadMethod": "Choose download method",
+  "directDownload": "Direct Download",
+  "viaTelegram": "Via Telegram",
+  "viewAll": "View All",
+  "homeworkAssignments": "Homework Assignments",
+  "noHomeworkAssigned": "No homework assigned for this lesson",
+  "lessons": "Lessons",
+  "classSchedule": "Class Schedule",
+  "showAll": "Show All",
+  "noLessonsScheduled": "No lessons scheduled for",
+  "noLessonsFound": "No lessons found",
+  "tapToViewHomework": "Tap to view homework",
+  "allLessonsCompleted": "All lessons completed",
+  "homework": "Homework",
+  "mandatory": "Mandatory",
+  "optional": "Optional",
+  "deadline": "Deadline",
+  "maxScore": "Max Score",
+  "departments": "Departments",
+  "courseTypes": "Course Types",
+  "offlineCachedDataFrom": "Offline - Showing cached data from",
+  "offlineCachedData": "Offline - Showing cached data",
+  "retryWhenOnline": "Retry when online",
+  "connectToInternet": "Connect to internet",
+  "workshops": "Workshops"
+}

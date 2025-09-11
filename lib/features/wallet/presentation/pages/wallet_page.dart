@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project2/l10n/generated/app_localizations.dart';
 
 import '../../../../core/constants/app_scaffold.dart';
 import '../../../../core/constants/colors.dart';
@@ -13,6 +14,7 @@ class WalletPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return MultiBlocProvider(
         providers: [
           BlocProvider(
@@ -22,12 +24,12 @@ class WalletPage extends StatelessWidget {
                 getIt<TransactionBloc>()..add(LoadTransactionsEvent()),
           )
         ],
-        child: const AppScaffold(
-          edgeInsets: EdgeInsets.all(0),
-          title: 'Wallet',
-          textColor: AppColors.whiteColor,
-          backIconColor: AppColors.whiteColor,
-          backgroundColor: AppColors.mainColor,
+        child:  AppScaffold(
+          edgeInsets: const EdgeInsets.all(0),
+          title: l10n.wallet,
+          // textColor: AppColors.whiteColor,
+          // backIconColor: AppColors.whiteColor,
+          // backgroundColor: AppColors.mainColor,
           body: WalletForm(),
         ));
   }

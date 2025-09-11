@@ -41,30 +41,29 @@ class LessonsBloc extends Bloc<LessonsEvent, LessonsState> {
   }
 
   void _onFilterLessonsByDate(
-    FilterLessonsByDate event,
-    Emitter<LessonsState> emit,
-  ) {
+      FilterLessonsByDate event,
+      Emitter<LessonsState> emit,
+      ) {
     if (state is LessonsLoaded) {
       final currentState = state as LessonsLoaded;
 
-      // If date is null or outside our range, show all lessons
-      if (event.selectedDate == null || !_isDateInRange(event.selectedDate!)) {
+      if (event.selectedDate == null) {
+        // Show all lessons
         emit(currentState.copyWith(
           filteredLessons: currentState.allLessons,
           selectedDate: null,
         ));
-        return;
+      } else {
+        // Filter lessons by selected date
+        final filteredLessons = currentState.allLessons
+            .where((lesson) => _isSameDay(lesson.lessonDate, event.selectedDate!))
+            .toList();
+
+        emit(currentState.copyWith(
+          filteredLessons: filteredLessons,
+          selectedDate: event.selectedDate,
+        ));
       }
-
-      // Filter lessons by selected date
-      final filteredLessons = currentState.allLessons
-          .where((lesson) => _isSameDay(lesson.lessonDate, event.selectedDate!))
-          .toList();
-
-      emit(currentState.copyWith(
-        filteredLessons: filteredLessons,
-        selectedDate: event.selectedDate,
-      ));
     }
   }
 
@@ -102,9 +101,9 @@ class LessonsBloc extends Bloc<LessonsEvent, LessonsState> {
   }
 }
 
-bool _isDateInRange(DateTime date) {
-  final startDate = DateTime(2025, 7, 5);
-  final endDate = DateTime(2025, 8, 4);
-  return (date.isAfter(startDate.subtract(const Duration(days: 1))) &&
-      date.isBefore(endDate.add(const Duration(days: 1))));
-}
+// bool _isDateInRange(DateTime date) {
+//   final startDate = DateTime(2025, 7, 5);
+//   final endDate = DateTime(2025, 8, 4);
+//   return (date.isAfter(startDate.subtract(const Duration(days: 1))) &&
+//       date.isBefore(endDate.add(const Duration(days: 1))));
+// }

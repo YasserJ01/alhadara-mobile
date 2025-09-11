@@ -1,6 +1,4 @@
 // auth/domain/usecases/register_usecase.dart
-import 'package:project2/features/auth/domain/entities/user_register_entity.dart';
-
 import '../repositories/auth_repository.dart';
 
 class RegisterUseCase {
@@ -15,14 +13,20 @@ class RegisterUseCase {
     String phone,
     String password,
     String confirm_password,
-  ) {
-    return repository.register(
+    String captchaKey,
+    String captchaAnswer,
+  ) async {
+    print("RegisterUseCase called with params: $firstName");
+
+    return await repository.register(
       firstName,
       middleName,
       lastName,
       phone,
       password,
       confirm_password,
+      captchaKey,
+      captchaAnswer,
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../../auth/presentation/widgets/login_form.dart';
 import 'login_modal.dart';
 
@@ -8,14 +9,13 @@ class StartButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Column(
       children: [
-
+        // Sign In Button
         SizedBox(
           height: MediaQuery.of(context).size.height / 14,
-          // height: 52,
           width: double.infinity,
-          // width: 335,
           child: OutlinedButton(
             style: OutlinedButton.styleFrom(
               side: const BorderSide(
@@ -23,50 +23,43 @@ class StartButtons extends StatelessWidget {
                 width: 2,
               ),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(
-                  1,
-                ),
+                borderRadius: BorderRadius.circular(1),
               ),
             ),
-            // onPressed: () => Navigator.pushNamed(context, '/login'),
-            // onPressed: () => showModalBottomSheet(
-            //   context: context,
-            //   isScrollControlled: true,
-            //   backgroundColor: Colors.transparent,
-            //   builder: (context) => const LoginModal(),
-            // ),
             onPressed: () => showModalBottomSheet(
               context: context,
               isScrollControlled: true,
               backgroundColor: Colors.transparent,
               builder: (context) => const LoginModal(),
             ),
-            child: const Text(
-              'SIGN IN',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400),
+            child: Text(
+              l10n.signIn,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.w400,
+              ),
             ),
           ),
         ),
-        SizedBox(height: MediaQuery.of(context).size.height/30),
+
+        SizedBox(height: MediaQuery.of(context).size.height / 30),
+
+        // Guest Button
         SizedBox(
           height: MediaQuery.of(context).size.height / 14,
           width: double.infinity,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(
-                  1,
-                ),
+                borderRadius: BorderRadius.circular(1),
               ),
-              backgroundColor: Colors.white
+              backgroundColor: Colors.white,
             ),
             onPressed: () => Navigator.pushNamed(context, '/departments'),
-            child: const Text(
-              'AS A GUEST',
-              style: TextStyle(
+            child: Text(
+              l10n.asAGuest,
+              style: const TextStyle(
                 color: Color.fromRGBO(162, 12, 13, 1.0),
                 fontSize: 20,
                 fontWeight: FontWeight.w400,

@@ -21,7 +21,6 @@ abstract class QuizRemoteDataSource {
 class QuizRemoteDataSourceImpl implements QuizRemoteDataSource {
   final http.Client client;
   final ApiClient apiClient;
-  static const String baseUrl = 'http://10.0.2.2:8000/api/quiz';
 
   QuizRemoteDataSourceImpl(this.client, this.apiClient);
 
@@ -34,7 +33,7 @@ class QuizRemoteDataSourceImpl implements QuizRemoteDataSource {
       // );
       final response = await apiClient.authenticatedRequest(
         method: 'GET',
-        endpoint: '/api/quiz/quizzes/?schedule_slot=$scheduleSlotId',
+        endpoint: '/api/quiz/quizzes/?schedule_slot=$scheduleSlotId&lang=ar',
       );
 
       if (response.statusCode == 200) {

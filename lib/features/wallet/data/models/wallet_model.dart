@@ -4,14 +4,14 @@ import '../../domain/entities/wallet_entity.dart';
 class WalletModel {
   final int id;
   final int user;
-  final String userUsername;
+  // final String userUsername;
   final String currentBalance;
   final DateTime lastUpdated;
 
   WalletModel({
     required this.id,
     required this.user,
-    required this.userUsername,
+    // required this.userUsername,
     required this.currentBalance,
     required this.lastUpdated,
   });
@@ -20,7 +20,7 @@ class WalletModel {
     return WalletModel(
       id: json['id'] ?? 0, // Default value if null
       user: json['user'] ?? 0,
-      userUsername: json['user_username'] ?? '', // Empty string if null
+      // userUsername: json['user_username'] ?? '', // Empty string if null
       currentBalance: json['current_balance']?.toString() ?? '0.00', // Ensure string and provide default
       lastUpdated: json['last_updated'] != null 
           ? DateTime.parse(json['last_updated'])
@@ -32,7 +32,7 @@ class WalletModel {
     return WalletEntity(
       id: id,
       user: user,
-      userUsername: userUsername,
+      // userUsername: userUsername,
       currentBalance: currentBalance,
       lastUpdated: lastUpdated,
     );

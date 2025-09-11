@@ -42,7 +42,7 @@ class _ProfileImagesDisplayPageState extends State<ProfileImagesDisplayPage> {
                       child: CircularProgressIndicator(
                         value: loadingProgress.expectedTotalBytes != null
                             ? loadingProgress.cumulativeBytesLoaded /
-                                loadingProgress.expectedTotalBytes!
+                            loadingProgress.expectedTotalBytes!
                             : null,
                       ),
                     );
@@ -140,7 +140,7 @@ class _ProfileImagesDisplayPageState extends State<ProfileImagesDisplayPage> {
                         child: CircularProgressIndicator(
                           value: loadingProgress.expectedTotalBytes != null
                               ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
+                              loadingProgress.expectedTotalBytes!
                               : null,
                         ),
                       ),
@@ -290,7 +290,7 @@ class _ProfileImagesDisplayPageState extends State<ProfileImagesDisplayPage> {
         onPressed: () async {
           // Navigate to upload page
           final result =
-              await Navigator.pushNamed(context, '/upload-profile-image');
+          await Navigator.pushNamed(context, '/upload-profile-image');
           // Refresh images if upload was successful
           if (result == true) {
             _refreshImages();

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-
+//domain/entities
 class Department extends Equatable {
   final int id;
   final String name;

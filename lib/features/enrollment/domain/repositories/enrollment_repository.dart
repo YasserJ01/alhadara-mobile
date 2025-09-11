@@ -6,7 +6,9 @@ import '../entities/enrollment.dart';
 import '../entities/enrollment_entity.dart';
 import '../entities/homework.dart';
 import '../entities/lesson.dart';
+import '../entities/lesson_summary.dart';
 import '../entities/news_feed_entity.dart';
+import '../entities/private_lesson_request.dart';
 
 abstract class EnrollmentRepository {
   Future<EnrollEntity> enrollInCourse({
@@ -14,8 +16,24 @@ abstract class EnrollmentRepository {
     required int scheduleSlotId,
     required String notes,
   });
+  
+  Future<PrivateLessonRequest> createPrivateLessonRequest({
+    required int scheduleSlot,
+    required String preferredDate,
+    required String preferredTimeFrom,
+    required String preferredTimeTo,
+  });
+  Future<List<PrivateLessonRequest>> getPrivateLessonRequests();
+
+  Future<PrivateLessonRequest> pickProposedOption({
+    required int requestId,
+    required int optionId,
+  });
+  Future<void> deletePrivateLessonRequest(int requestId);
   Future<List<EnrollmentEntity>> getEnrollments();
+  Future<EnrollmentEntity> getEnrollmentDetails(int enrollmentId);
   Future<void> processPayment(int enrollmentId, double amount);
+  Future<List<LessonSummary>> getLessonSummaries(int scheduleSlotId);
   Future<List<Lesson>> getLessons(int scheduleSlotId);
   Future<List<Homework>> getHomeworkByLessonId(int lessonId);
   Future<List<NewsFeedEntity>> getNewsFeed(int scheduleSlotId);

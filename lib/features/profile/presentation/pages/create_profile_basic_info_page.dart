@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project2/l10n/generated/app_localizations.dart';
+import '../../../../core/constants/app_elevated_button.dart';
 import '../../../../core/constants/app_scaffold.dart';
+import '../../../../core/constants/colors.dart';
 import '../../../../dependencies.dart';
 import '../bloc/create_profile/create_profile_bloc.dart';
 import '../bloc/interest_selection/interest_selection_bloc.dart';
@@ -27,6 +30,7 @@ class _CreateProfileBasicInfoPageState
   String? _selectedAcademicStatus;
   DateTime? _selectedDate;
 
+  //TODO
   final List<String> _genders = ['male', 'female'];
   final List<String> _academicStatuses = [
     'high_school',
@@ -49,6 +53,23 @@ class _CreateProfileBasicInfoPageState
       // 18 years ago
       firstDate: DateTime(1950),
       lastDate: DateTime.now(),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: AppColors.mainColor,
+              onPrimary: Colors.white,
+              onSurface: Colors.black,
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.mainColor,
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
     if (picked != null && picked != _selectedDate) {
       setState(() {
@@ -99,8 +120,9 @@ class _CreateProfileBasicInfoPageState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return AppScaffold(
-      title: 'Create Profile',
+      title: l10n.createProfile,
       body: SingleChildScrollView(
         child: BlocListener<CreateProfileBloc, CreateProfileState>(
           listener: (context, state) {
@@ -146,98 +168,309 @@ class _CreateProfileBasicInfoPageState
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const Text(
-                        'Basic Information',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: 1,
-                          color: Colors.black,
+                      Text(
+                        l10n.basicinfo,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          //letterSpacing: 1,
+                          //  color: Color.fromARGB(255, 109, 27, 27),
                         ),
                       ),
                       const SizedBox(height: 20),
-                      TextFormField(
-                        controller: _birthDateController,
-                        decoration: const InputDecoration(
-                          labelText: 'Birth Date',
-                          suffixIcon: Icon(Icons.calendar_today),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8), // Increased padding
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: AppColors.mainColor
+                                .withOpacity(0.3), // Softer border color
+                            width: 1.5, // Slightly thicker border
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.mainColor
+                                  .withOpacity(0.1), // Themed shadow color
+                              spreadRadius: 2,
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
+                            )
+                          ],
                         ),
-                        readOnly: true,
-                        onTap: _selectDate,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please select your birth date';
-                          }
-                          return null;
-                        },
+                        child: TextFormField(
+                          controller: _birthDateController,
+                          decoration: InputDecoration(
+                            focusedBorder: const UnderlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: AppColors.mainColor)),
+                            labelText: l10n.birthDate,
+                            labelStyle: const TextStyle(
+                                color: Color.fromARGB(255, 201, 89, 89),
+                                fontSize: 18),
+                            suffixIcon: const Icon(
+                              Icons.calendar_today,
+                              color: AppColors.mainColor,
+                            ),
+                          ),
+                          style: TextStyle(
+                            color: _birthDateController.text.isEmpty
+                                ? Colors.grey
+                                : Colors.black,
+                          ),
+                          readOnly: true,
+                          onTap: _selectDate,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return l10n.pleaseSelectBirthDate;
+                            }
+                            return null;
+                          },
+                        ),
                       ),
                       const SizedBox(height: 16),
-                      DropdownButtonFormField<String>(
-                        value: _selectedGender,
-                        decoration: const InputDecoration(labelText: 'Gender'),
-                        items: _genders.map((gender) {
-                          return DropdownMenuItem(
-                            value: gender,
-                            child: Text(gender.toUpperCase()),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedGender = value;
-                          });
-                        },
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Please select your gender';
-                          }
-                          return null;
-                        },
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8), // Increased padding
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: AppColors.mainColor
+                                .withOpacity(0.3), // Softer border color
+                            width: 1.5, // Slightly thicker border
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.mainColor
+                                  .withOpacity(0.1), // Themed shadow color
+                              spreadRadius: 2,
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
+                            )
+                          ],
+                        ),
+                        child: DropdownButtonFormField<String>(
+                          dropdownColor: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          elevation: 8,
+                          value: _selectedGender,
+                          icon: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 0),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.mainColor
+                                  .withOpacity(0.1), // Circular icon background
+                            ),
+                            child: Icon(
+                              Icons.keyboard_arrow_down_rounded,
+                              // Rounded arrow icon
+                              color: AppColors.mainColor,
+                              size: 24, // Larger icon
+                            ),
+                          ),
+                          style: TextStyle(
+                            color: Colors.grey[
+                                800], // Darker text for better readability
+                            fontSize: 16, // Slightly larger font
+                            fontWeight: FontWeight.w500,
+                          ),
+                          hint: Text(
+                            l10n.selectYourGender,
+                            style: TextStyle(
+                              color: Colors.grey[
+                                  500], // Hint style when nothing is selected
+                              fontSize: 16,
+                            ),
+                          ),
+                          decoration: InputDecoration(
+                              focusedBorder: const UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: AppColors.mainColor)),
+                              labelText: l10n.gender,
+                              labelStyle: const TextStyle(
+                                  color: Color.fromARGB(255, 201, 89, 89),
+                                  fontSize: 18)),
+                          items: _genders.map((gender) {
+                            return DropdownMenuItem(
+                              alignment: Alignment.center,
+                              value: gender,
+                              child: Text(
+                                gender,
+                                // style: TextStyle(
+                                //     color: AppColors.mainColor, fontSize: 18),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedGender = value;
+                            });
+                          },
+                          validator: (value) {
+                            if (value == null) {
+                              return l10n.pleaseSelectGender;
+                            }
+                            return null;
+                          },
+                        ),
                       ),
                       const SizedBox(height: 16),
-                      TextFormField(
-                        controller: _addressController,
-                        decoration: const InputDecoration(labelText: 'Address'),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your address';
-                          }
-                          return null;
-                        },
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8), // Increased padding
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: AppColors.mainColor
+                                .withOpacity(0.3), // Softer border color
+                            width: 1.5, // Slightly thicker border
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.mainColor
+                                  .withOpacity(0.1), // Themed shadow color
+                              spreadRadius: 2,
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
+                            )
+                          ],
+                        ),
+                        child: TextFormField(
+                          controller: _addressController,
+                          decoration: InputDecoration(
+                              focusedBorder: const UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: AppColors.mainColor)),
+                              labelText: l10n.address,
+                              labelStyle: const TextStyle(
+                                  color: Color.fromARGB(255, 201, 89, 89),
+                                  fontSize: 18)),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return l10n.pleaseEnterAddress;
+                            }
+                            return null;
+                          },
+                        ),
                       ),
                       const SizedBox(height: 16),
-                      DropdownButtonFormField<String>(
-                        value: _selectedAcademicStatus,
-                        decoration:
-                            const InputDecoration(labelText: 'Academic Status'),
-                        items: _academicStatuses.map((status) {
-                          return DropdownMenuItem(
-                            value: status,
-                            child:
-                                Text(status.replaceAll('_', ' ').toUpperCase()),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedAcademicStatus = value;
-                          });
-                        },
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Please select your academic status';
-                          }
-                          return null;
-                        },
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8), // Increased padding
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: AppColors.mainColor
+                                .withOpacity(0.3), // Softer border color
+                            width: 1.5, // Slightly thicker border
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.mainColor
+                                  .withOpacity(0.1), // Themed shadow color
+                              spreadRadius: 2,
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
+                            )
+                          ],
+                        ),
+                        child: DropdownButtonFormField<String>(
+                          dropdownColor: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          elevation: 8,
+                          icon: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 0),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.mainColor
+                                  .withOpacity(0.1), // Circular icon background
+                            ),
+                            child: Icon(
+                              Icons.keyboard_arrow_down_rounded,
+                              // Rounded arrow icon
+                              color: AppColors.mainColor,
+                              size: 24, // Larger icon
+                            ),
+                          ),
+                          style: TextStyle(
+                            color: Colors.grey[
+                                800], // Darker text for better readability
+                            fontSize: 16, // Slightly larger font
+                            fontWeight: FontWeight.w500,
+                          ),
+                          hint: Text(
+                            l10n.selectYourAcademicStatus,
+                            style: TextStyle(
+                              color: Colors.grey[
+                                  500], // Hint style when nothing is selected
+                              fontSize: 16,
+                            ),
+                          ),
+                          value: _selectedAcademicStatus,
+                          decoration: InputDecoration(
+                              focusedBorder: const UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: AppColors.mainColor)),
+                              labelText: l10n.academicStatus,
+                              labelStyle: TextStyle(
+                                  color: Color.fromARGB(255, 201, 89, 89),
+                                  fontSize: 18)),
+                          items: _academicStatuses.map((status) {
+                            return DropdownMenuItem(
+                              alignment: Alignment.center,
+                              value: status,
+                              child: Text(
+                                status.replaceAll('_', ' '),
+                                // style: TextStyle(
+                                //     color: AppColors.mainColor, fontSize: 18),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedAcademicStatus = value;
+                            });
+                          },
+                          validator: (value) {
+                            if (value == null) {
+                              return l10n.pleaseSelectAcademicStatus;
+                            }
+                            return null;
+                          },
+                        ),
                       ),
-                      const SizedBox(height: 32),
-                      ElevatedButton(
+                      const SizedBox(height: 122),
+                      AppElevatedButton(
                         onPressed: _continue,
                         child: Text(
                           (_selectedAcademicStatus == 'high_school' ||
                                   _selectedAcademicStatus == 'not_studying')
-                              ? 'Create Profile'
-                              : 'Continue',
+                              ? l10n.createProfile
+                              : l10n.continuing,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
+                      )
+                      // ElevatedButton(
+                      //   onPressed: _continue,
+                      //   child:
+                      // Text(
+                      //     (_selectedAcademicStatus == 'high_school' ||
+                      //             _selectedAcademicStatus == 'not_studying')
+                      //         ? 'Create Profile'
+                      //         : 'Continue',
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

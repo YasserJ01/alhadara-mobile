@@ -6,7 +6,9 @@ import '../../../../errors/failures.dart';
 import '../../domain/entities/enrollment_entity.dart';
 import '../../domain/entities/homework.dart';
 import '../../domain/entities/lesson.dart';
+import '../../domain/entities/lesson_summary.dart';
 import '../../domain/entities/news_feed_entity.dart';
+import '../../domain/entities/private_lesson_request.dart';
 import '../datasources/enrollment_remote_data_source.dart';
 import '../../domain/entities/enrollment.dart';
 import '../../domain/repositories/enrollment_repository.dart';
@@ -67,20 +69,63 @@ class EnrollmentRepositoryImpl implements EnrollmentRepository {
   Future<List<EnrollmentEntity>> getEnrollments() async {
     try {
       final enrollments = await remoteDataSource.getEnrollments();
-      return enrollments
-          .map((enrollment) => EnrollmentEntity(
-                id: enrollment.id,
-                studentName: enrollment.studentName,
-                courseTitle: enrollment.courseTitle,
-                scheduleSlotDisplay: enrollment.scheduleSlotDisplay,
-                status: enrollment.status,
-                paymentStatus: enrollment.paymentStatus,
-                enrollmentDate: enrollment.enrollmentDate,
-                amountPaid: enrollment.amountPaid,
-                remainingBalance: enrollment.remainingBalance,
-                notes: enrollment.notes,
-              ))
-          .toList();
+      return enrollments.map((enrollment) =>
+          EnrollmentEntity(
+            id: enrollment.id,
+            studentName: enrollment.studentName,
+            courseTitle: enrollment.courseTitle,
+            scheduleSlot: enrollment.scheduleSlot,
+            // scheduleSlotDisplay: enrollment.scheduleSlotDisplay,
+            status: enrollment.status,
+            paymentStatus: enrollment.paymentStatus,
+            // paymentMethod: enrollment.paymentMethod,
+            // paymentMethodDisplay: enrollment.paymentMethodDisplay,
+            enrollmentDate: enrollment.enrollmentDate,
+            amountPaid: enrollment.amountPaid,
+            remainingBalance: enrollment.remainingBalance,
+            // isGuest: enrollment.isGuest,
+            courseProgress: enrollment.courseProgress,
+            lessonsCount: enrollment.lessonsCount,
+            attendance: enrollment.attendance,
+            startDate: enrollment.startDate,
+            endDate: enrollment.endDate,
+            student: enrollment.student
+          )).toList();
+    } catch (e) {
+      if (e is HttpFailure) {
+        throw HttpFailure();
+      } else {
+        throw ServerFailure();
+      }
+    }
+  }
+
+  @override
+  Future<EnrollmentEntity> getEnrollmentDetails(int enrollmentId) async {
+    try {
+      final enrollment = await remoteDataSource.getEnrollmentDetails(
+          enrollmentId);
+      return EnrollmentEntity(
+        id: enrollment.id,
+        studentName: enrollment.studentName,
+        courseTitle: enrollment.courseTitle,
+        // scheduleSlotDisplay: enrollment.scheduleSlotDisplay,
+        scheduleSlot: enrollment.scheduleSlot,
+        status: enrollment.status,
+        paymentStatus: enrollment.paymentStatus,
+        // paymentMethod: enrollment.paymentMethod,
+        // paymentMethodDisplay: enrollment.paymentMethodDisplay,
+        enrollmentDate: enrollment.enrollmentDate,
+        amountPaid: enrollment.amountPaid,
+        remainingBalance: enrollment.remainingBalance,
+        // isGuest: enrollment.isGuest,
+        courseProgress: enrollment.courseProgress,
+        lessonsCount: enrollment.lessonsCount,
+        attendance: enrollment.attendance,
+        startDate: enrollment.startDate,
+        endDate: enrollment.endDate,
+        student: enrollment.student
+      );
     } catch (e) {
       if (e is HttpFailure) {
         throw HttpFailure();
@@ -100,6 +145,15 @@ class EnrollmentRepositoryImpl implements EnrollmentRepository {
       } else {
         throw ServerFailure();
       }
+    }
+  }
+
+  @override
+  Future<List<LessonSummary>> getLessonSummaries(int scheduleSlotId) async {
+    try {
+      return await remoteDataSource.getLessonSummaries(scheduleSlotId);
+    } catch (e) {
+      throw ServerFailure();
     }
   }
 
@@ -139,7 +193,7 @@ class EnrollmentRepositoryImpl implements EnrollmentRepository {
   Future<List<Homework>> getHomeworkByLessonId(int lessonId) async {
     try {
       final homeworkModels =
-          await remoteDataSource.getHomeworkByLessonId(lessonId);
+      await remoteDataSource.getHomeworkByLessonId(lessonId);
       return homeworkModels
           .map((model) => _homeworkMapToEntity(model))
           .toList();
@@ -169,6 +223,8 @@ class EnrollmentRepositoryImpl implements EnrollmentRepository {
       updatedAt: model.updatedAt,
     );
   }
+
+  // features/courses/data/repositories/enrollment_repository_impl.dart
 
   @override
   Future<List<NewsFeedEntity>> getNewsFeed(int scheduleSlotId) async {
@@ -242,6 +298,8 @@ class EnrollmentRepositoryImpl implements EnrollmentRepository {
       throw ServerException(e.message);
     }
   }
+
+
   @override
   Future<void> publishPost(BulletinPostModel post) async {
     try {
@@ -260,4 +318,44 @@ class EnrollmentRepositoryImpl implements EnrollmentRepository {
       throw ServerFailure();
     }
   }
+
+  @override
+  Future<PrivateLessonRequest> createPrivateLessonRequest({
+    required int scheduleSlot,
+    required String preferredDate,
+    required String preferredTimeFrom,
+    required String preferredTimeTo,
+  }) async {
+    final model = await remoteDataSource.createPrivateLessonRequest(
+      scheduleSlot: scheduleSlot,
+      preferredDate: preferredDate,
+      preferredTimeFrom: preferredTimeFrom,
+      preferredTimeTo: preferredTimeTo,
+    );
+    return model.toEntity();
+  }
+
+  @override
+  Future<List<PrivateLessonRequest>> getPrivateLessonRequests() async {
+    final models = await remoteDataSource.getPrivateLessonRequests();
+    return models.map((model) => model.toEntity()).toList();
+  }
+
+  @override
+  Future<PrivateLessonRequest> pickProposedOption({
+    required int requestId,
+    required int optionId,
+  }) async {
+    final model = await remoteDataSource.pickProposedOption(
+      requestId: requestId,
+      optionId: optionId,
+    );
+    return model.toEntity();
+  }
+
+  @override
+  Future<void> deletePrivateLessonRequest(int requestId) async {
+    await remoteDataSource.deletePrivateLessonRequest(requestId);
+  }
+
 }

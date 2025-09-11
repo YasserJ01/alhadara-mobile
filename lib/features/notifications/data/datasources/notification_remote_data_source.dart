@@ -10,19 +10,26 @@ import '../models/websocket_message_model.dart';
 
 abstract class NotificationRemoteDataSource {
   Stream<NotificationModel> get notificationStream;
+
   Future<void> connect();
+
   Future<void> disconnect();
+
   Future<List<NotificationModel>> getNotifications();
+
   Future<void> markAsRead(int notificationId);
+
   bool get isConnected;
 }
 
 class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
-  static const String _baseWsUrl = 'ws://10.0.2.2:8000/ws/notifications/';
+  // static const String _baseWsUrl = 'ws://10.0.2.2:8000/ws/notifications/';
+  // static const String _baseWsUrl = 'ws://192.168.1.3:8000/ws/notifications/';
+  static const String _baseWsUrl = 'wss://optimum-kodiak-hardy.ngrok-free.app/ws/notifications/';
 
   WebSocketChannel? _channel;
   final StreamController<NotificationModel> _notificationController =
-  StreamController<NotificationModel>.broadcast();
+      StreamController<NotificationModel>.broadcast();
 
   Timer? _reconnectTimer;
   Timer? _heartbeatTimer;
@@ -34,7 +41,8 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
   static const Duration _heartbeatInterval = Duration(seconds: 30);
 
   @override
-  Stream<NotificationModel> get notificationStream => _notificationController.stream;
+  Stream<NotificationModel> get notificationStream =>
+      _notificationController.stream;
 
   @override
   bool get isConnected => _isConnected;
@@ -128,7 +136,8 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
     }
 
     _reconnectAttempts++;
-    print('Scheduling reconnect attempt $_reconnectAttempts in ${_reconnectDelay.inSeconds} seconds');
+    print(
+        'Scheduling reconnect attempt $_reconnectAttempts in ${_reconnectDelay.inSeconds} seconds');
 
     _reconnectTimer?.cancel();
     _reconnectTimer = Timer(_reconnectDelay, () {
@@ -158,7 +167,8 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
   Future<List<NotificationModel>> getNotifications() async {
     // Implementation for fetching historical notifications via HTTP
     // This would use your existing ApiClient
-    throw UnimplementedError('Implement HTTP endpoint for getting notifications');
+    throw UnimplementedError(
+        'Implement HTTP endpoint for getting notifications');
   }
 
   @override

@@ -1,6 +1,9 @@
 // lib/features/news_feed/presentation/widgets/news_feed_tab_view.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project2/core/constants/colors.dart';
+import 'package:project2/l10n/generated/app_localizations.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../domain/entities/news_feed_entity.dart';
 import '../bloc/news_feed/news_feed_bloc.dart';
@@ -45,7 +48,7 @@ class _NewsFeedTabViewState extends State<NewsFeedTabView>
         // Bulletin Board Header
         Container(
           margin: const EdgeInsets.all(16),
-          padding: const EdgeInsets.symmetric(horizontal: 8),
+          // padding: const EdgeInsets.symmetric(horizontal: 8),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
@@ -61,14 +64,17 @@ class _NewsFeedTabViewState extends State<NewsFeedTabView>
           child: TabBar(
             controller: _tabController,
             isScrollable: true,
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.blue.shade800,
+            labelColor: AppColors.whiteColor,
+            unselectedLabelColor: AppColors.mainColor,
             indicator: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: Colors.blue.shade800,
+              color: AppColors.mainColor,
             ),
             tabs: const [
-              Tab(text: 'All Posts'),
+              Padding(
+                padding: EdgeInsets.all(1.0),
+                child: Tab(text: 'All Posts'),
+              ),
               Tab(text: 'Messages'),
               Tab(text: 'Homework'),
               Tab(text: 'Quizzes'),
@@ -108,6 +114,7 @@ class _NewsFeedTabViewState extends State<NewsFeedTabView>
   }
 
   Widget _buildTabContent(List<NewsFeedEntity> items) {
+    final l10n = AppLocalizations.of(context);
     if (items.isEmpty) {
       return const Center(
         child: NewsFeedEmptyState(),
@@ -126,6 +133,15 @@ class _NewsFeedTabViewState extends State<NewsFeedTabView>
             Future.delayed(const Duration(milliseconds: 100), () {
               context.read<NewsFeedBloc>().add(DownloadFile(url, fileName));
             });
+          },
+          onOpenTelegramLink: (url) async {
+            if (await canLaunchUrl(Uri.parse(url))) {
+              await launchUrl(Uri.parse(url));
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(l10n.couldNotOpenTelegram)),
+              );
+            }
           },
         );
       },

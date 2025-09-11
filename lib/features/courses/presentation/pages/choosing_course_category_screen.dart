@@ -4,6 +4,7 @@ import 'package:project2/core/constants/app_back_button.dart';
 import 'package:project2/core/constants/colors.dart';
 import 'package:project2/core/constants/app_size.dart';
 import 'package:project2/features/courses/presentation/pages/courses_page.dart';
+import 'package:project2/l10n/generated/app_localizations.dart';
 
 class CourseCategoryPage extends StatelessWidget {
   final int departmentId;
@@ -85,7 +86,7 @@ class CourseCategoryPage extends StatelessWidget {
           children: [
             _buildCategoryTile(
               context,
-              title: 'Workshops',
+              title: AppLocalizations.of(context).workshops,
               icon: Icons.work_outline,
               onTap: () {
                 Navigator.push(
@@ -103,7 +104,7 @@ class CourseCategoryPage extends StatelessWidget {
             SizedBox(height: AppSizes.screenHeight(context) * 0.02),
             _buildCategoryTile(
               context,
-              title: 'Courses',
+              title: AppLocalizations.of(context).courses,
               icon: Icons.school_outlined,
               onTap: () {
                 Navigator.push(

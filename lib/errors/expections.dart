@@ -28,6 +28,15 @@ class UnauthorizedException implements Exception {
   String toString() => message;
 }
 
+class LocalStorageException implements Exception {
+  final String message;
+
+  LocalStorageException(this.message);
+
+  @override
+  String toString() => message;
+}
+
 class ValidationException implements Exception {
   final Map<String, dynamic> errors;
 
@@ -36,6 +45,7 @@ class ValidationException implements Exception {
   @override
   String toString() => errors.toString();
 }
+
 class ValidationnException implements Exception {
   final String errors;
 
@@ -62,6 +72,7 @@ class NotFoundException implements Exception {
   @override
   String toString() => message;
 }
+
 class JsonException implements Exception {
   final String message;
 
@@ -70,3 +81,15 @@ class JsonException implements Exception {
   @override
   String toString() => message;
 }
+
+class NetworkException implements Exception {
+  final String message;
+
+  NetworkException(this.message);
+
+  @override
+  String toString() => message;
+}
+
+class NoInternetException implements Exception {}
+

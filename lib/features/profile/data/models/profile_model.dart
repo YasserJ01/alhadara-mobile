@@ -1,21 +1,29 @@
 import '../../domain/entity/profile.dart';
 import 'interest_model.dart';
+
 //data/models/profile_model.dart
 class ProfileModel extends Profile {
-  const ProfileModel({
-    required super.id,
-    required super.birthDate,
-    required super.gender,
-    required super.address,
-    required super.academicStatus,
-    required super.image,
-    required super.university,
-    required super.studyfield,
-    required super.interests,
-    required super.fullName,
-    required super.universityName,
-    required super.studyfieldName,
-  });
+  const ProfileModel(
+      {required super.id,
+      required super.birthDate,
+      required super.gender,
+      required super.address,
+      required super.academicStatus,
+      required super.image,
+      required super.university,
+      required super.studyfield,
+      required super.interests,
+      required super.fullName,
+      required super.universityName,
+      required super.studyfieldName,
+      super.englishLevel,
+      super.englishLevelDisplay,
+      super.frenchLevel,
+      super.frenchLevelDisplay,
+      super.germanLevel,
+      super.germanLevelDisplay,
+      super.spanishLevel,
+      super.spanishLevelDisplay});
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
     return ProfileModel(
@@ -34,6 +42,14 @@ class ProfileModel extends Profile {
       fullName: json['full_name'],
       universityName: json['university_name'],
       studyfieldName: json['studyfield_name'],
+      englishLevel: json['english_level'],
+      englishLevelDisplay: json['english_level_display'],
+      frenchLevel: json['french_level'],
+      frenchLevelDisplay: json['french_level_display'],
+      germanLevel: json['german_level'],
+      germanLevelDisplay: json['german_level_display'],
+      spanishLevel: json['spanish_level'],
+      spanishLevelDisplay: json['spanish_level_display'],
     );
   }
 
@@ -46,11 +62,20 @@ class ProfileModel extends Profile {
       'academic_status': academicStatus,
       'university': university,
       'studyfield': studyfield,
-      'interests': interests.map((interest) =>
-          (interest as InterestModel).toJson()).toList(),
+      'interests': interests
+          .map((interest) => (interest as InterestModel).toJson())
+          .toList(),
       'full_name': fullName,
       'university_name': universityName,
       'studyfield_name': studyfieldName,
+      'english_level': englishLevel,
+      'english_level_display': englishLevelDisplay,
+      'german_level': germanLevel,
+      'german_level_display': germanLevelDisplay,
+      'french_level': frenchLevel,
+      'french_level_display': frenchLevelDisplay,
+      'spanish_level': spanishLevel,
+      'spanish_level_display': spanishLevelDisplay,
     };
   }
 }

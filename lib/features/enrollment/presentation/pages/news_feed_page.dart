@@ -1,167 +1,12 @@
-// // lib/features/news_feed/presentation/pages/news_feed_page.dart
-// import 'package:flutter/material.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
-//
-// import '../../domain/entities/news_feed_entity.dart';
-// import '../bloc/news_feed/news_feed_bloc.dart';
-// import '../bloc/news_feed/news_feed_event.dart';
-// import '../bloc/news_feed/news_feed_state.dart';
-// import '../widgets/news_feed_empty_state.dart';
-// import '../widgets/news_feed_error_state.dart';
-// import '../widgets/news_feed_item.dart';
-//
-// class NewsFeedPage extends StatelessWidget {
-//   final int scheduleSlotId;
-//
-//   const NewsFeedPage({
-//     Key? key,
-//     required this.scheduleSlotId,
-//   }) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Course News Feed'),
-//         backgroundColor: Colors.blue.shade600,
-//         foregroundColor: Colors.white,
-//         elevation: 0,
-//         actions: [
-//           IconButton(
-//             icon: const Icon(Icons.refresh),
-//             onPressed: () {
-//               context.read<NewsFeedBloc>().add(RefreshNewsFeed(scheduleSlotId));
-//             },
-//           ),
-//         ],
-//       ),
-//       body: BlocConsumer<NewsFeedBloc, NewsFeedState>(
-//         listener: (context, state) {
-//           if (state is NewsFeedDownloadSuccess) {
-//             ScaffoldMessenger.of(context).showSnackBar(
-//               SnackBar(
-//                 content: Text(state.message),
-//                 backgroundColor: Colors.green,
-//                 duration: const Duration(seconds: 3),
-//               ),
-//             );
-//           } else if (state is NewsFeedDownloadError) {
-//             ScaffoldMessenger.of(context).showSnackBar(
-//               SnackBar(
-//                 content: Text(state.message),
-//                 backgroundColor: Colors.red,
-//                 duration: const Duration(seconds: 3),
-//               ),
-//             );
-//           }
-//         },
-//         builder: (context, state) {
-//           if (state is NewsFeedInitial) {
-//             context.read<NewsFeedBloc>().add(LoadNewsFeed(scheduleSlotId));
-//             return const Center(child: CircularProgressIndicator());
-//           } else if (state is NewsFeedLoading) {
-//             return const Center(
-//               child: CircularProgressIndicator(),
-//             );
-//           } else if (state is NewsFeedLoaded) {
-//             return _buildNewsFeedList(context, state.newsFeed);
-//           } else if (state is NewsFeedDownloading) {
-//             return _buildDownloadingState(context, state);
-//           } else if (state is NewsFeedDownloadSuccess) {
-//             return _buildNewsFeedList(context, state.newsFeed);
-//           } else if (state is NewsFeedDownloadError) {
-//             return _buildNewsFeedList(context, state.newsFeed);
-//           } else if (state is NewsFeedError) {
-//             return NewsFeedErrorState(
-//               message: state.message,
-//               onRetry: () {
-//                 context.read<NewsFeedBloc>().add(LoadNewsFeed(scheduleSlotId));
-//               },
-//             );
-//           }
-//           return const SizedBox();
-//         },
-//       ),
-//     );
-//   }
-//
-//   Widget _buildNewsFeedList(BuildContext context, List<dynamic> newsFeed) {
-//     if (newsFeed.isEmpty) {
-//       return const NewsFeedEmptyState();
-//     }
-//
-//     return RefreshIndicator(
-//       onRefresh: () async {
-//         context.read<NewsFeedBloc>().add(RefreshNewsFeed(scheduleSlotId));
-//       },
-//       child: ListView.builder(
-//         padding: const EdgeInsets.all(16),
-//         itemCount: newsFeed.length,
-//         itemBuilder: (context, index) {
-//           final item = newsFeed[index];
-//           return NewsFeedItem(
-//             item: item,
-//             onTap: () => _handleItemTap(context, item),
-//             onDownload: (url, fileName) {
-//               // Add small delay to ensure UI updates properly
-//               Future.delayed(const Duration(milliseconds: 100), () {
-//                 context.read<NewsFeedBloc>().add(DownloadFile(url, fileName));
-//               });
-//             },
-//           );
-//         },
-//       ),
-//     );
-//   }
-//
-//   Widget _buildDownloadingState(BuildContext context, NewsFeedDownloading state) {
-//     return Stack(
-//       children: [
-//         _buildNewsFeedList(context, state.newsFeed),
-//         Container(
-//           color: Colors.black.withOpacity(0.5),
-//           child: Center(
-//             child: Card(
-//               child: Padding(
-//                 padding: const EdgeInsets.all(20),
-//                 child: Column(
-//                   mainAxisSize: MainAxisSize.min,
-//                   children: [
-//                     const CircularProgressIndicator(),
-//                     const SizedBox(height: 16),
-//                     Text(
-//                       'Downloading ${state.fileName}...',
-//                       style: const TextStyle(fontSize: 16),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-//
-//   void _handleItemTap(BuildContext context, item) {
-//     switch (item.type) {
-//       case NewsFeedType.homework:
-//       // TODO: Navigate to homework page
-//       // Navigator.push(context, MaterialPageRoute(builder: (_) => HomeworkPage(id: item.relatedHomework)));
-//         break;
-//       case NewsFeedType.quiz:
-//       // TODO: Navigate to quiz page
-//       // Navigator.push(context, MaterialPageRoute(builder: (_) => QuizPage(id: item.relatedQuiz)));
-//         break;
-//       default:
-//         break;
-//     }
-//   }
-// }
-// lib/features/news_feed/presentation/pages/news_feed_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project2/l10n/generated/app_localizations.dart';
 
+import '../../../../core/constants/colors.dart';
+import '../../../../core/services/news_feed_socket_service.dart';
+import '../../../../core/theme/app_theme_helper.dart';
+import '../../../../theme/presentation/bloc/theme_bloc.dart';
+import '../../../../theme/presentation/bloc/theme_state.dart';
 import '../../domain/entities/news_feed_entity.dart';
 import '../bloc/news_feed/news_feed_bloc.dart';
 import '../bloc/news_feed/news_feed_event.dart';
@@ -170,7 +15,7 @@ import '../widgets/news_feed_empty_state.dart';
 import '../widgets/news_feed_error_state.dart';
 import '../widgets/news_feed_tab_view.dart';
 
-class NewsFeedPage extends StatelessWidget {
+class NewsFeedPage extends StatefulWidget {
   final int scheduleSlotId;
 
   const NewsFeedPage({
@@ -179,119 +24,128 @@ class NewsFeedPage extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<NewsFeedPage> createState() => _NewsFeedPageState();
+}
+
+class _NewsFeedPageState extends State<NewsFeedPage> {
+  late NewsFeedSocketService _socketService;
+
+  @override
+  void initState() {
+    super.initState();
+    _socketService = NewsFeedSocketService(widget.scheduleSlotId);
+    _setupWebSocket();
+  }
+
+  void _setupWebSocket() {
+    _socketService.connect();
+    _socketService.stream.listen((newItem) {
+      if (mounted) {
+        context.read<NewsFeedBloc>().add(NewsFeedItemAdded(newItem));
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _socketService.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Course Bulletin Board'),
-        backgroundColor: Colors.blue.shade800,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(16),
-          ),
-          // actions: [
-          //   IconButton(
-          //     icon: const Icon(Icons.refresh),
-          //     onPressed: () {
-          //       context.read<NewsFeedBloc>().add(RefreshNewsFeed(scheduleSlotId));
-          //     },
-          //   ),
-          // ],
-        ),
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.blue.shade50,
-              Colors.white,
-            ],
-          ),
-        ),
-        child: BlocConsumer<NewsFeedBloc, NewsFeedState>(
-          listener: (context, state) {
-            if (state is NewsFeedDownloadSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.green,
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  duration: const Duration(seconds: 3),
-                ),
-              );
-            } else if (state is NewsFeedDownloadError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.red,
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  duration: const Duration(seconds: 3),
-                ),
-              );
-            }
-          },
-          builder: (context, state) {
-            if (state is NewsFeedInitial) {
-              context.read<NewsFeedBloc>().add(LoadNewsFeed(scheduleSlotId));
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is NewsFeedLoading) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (state is NewsFeedLoaded) {
-              return NewsFeedTabView(
-                newsFeed: state.newsFeed,
-                scheduleSlotId: scheduleSlotId,
-              );
-            } else if (state is NewsFeedDownloading) {
-              return Stack(
-                children: [
-                  NewsFeedTabView(
+    return BlocBuilder<ThemeBloc, ThemeState>(
+      builder: (context, themeState) {
+        Color backgroundColor = const Color(0xffF4F8FB);
+        Color textColor = AppColors.mainColor;
+
+        if (themeState is ThemeLoaded) {
+          backgroundColor = AppThemeHelper.getBackgroundColor(themeState.theme);
+          textColor = AppThemeHelper.getTextColor(themeState.theme);
+        }
+
+        return Scaffold(
+          backgroundColor: backgroundColor,
+          body: Container(
+            color: Colors.transparent,
+            child: BlocConsumer<NewsFeedBloc, NewsFeedState>(
+              listener: (context, state) {
+                if (state is NewsFeedDownloadSuccess) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(state.message),
+                      backgroundColor: Colors.green,
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      duration: const Duration(seconds: 3),
+                    ),
+                  );
+                } else if (state is NewsFeedDownloadError) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(state.message),
+                      backgroundColor: Colors.red,
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      duration: const Duration(seconds: 3),
+                    ),
+                  );
+                }
+              },
+              builder: (context, state) {
+                if (state is NewsFeedInitial) {
+                  context.read<NewsFeedBloc>().add(LoadNewsFeed(widget.scheduleSlotId));
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state is NewsFeedLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state is NewsFeedLoaded) {
+                  return NewsFeedTabView(
                     newsFeed: state.newsFeed,
-                    scheduleSlotId: scheduleSlotId,
-                  ),
-                  _buildDownloadingOverlay(context, state),
-                ],
-              );
-            } else if (state is NewsFeedDownloadSuccess) {
-              return NewsFeedTabView(
-                newsFeed: state.newsFeed,
-                scheduleSlotId: scheduleSlotId,
-              );
-            } else if (state is NewsFeedDownloadError) {
-              return NewsFeedTabView(
-                newsFeed: state.newsFeed,
-                scheduleSlotId: scheduleSlotId,
-              );
-            } else if (state is NewsFeedError) {
-              return NewsFeedErrorState(
-                message: state.message,
-                onRetry: () {
-                  context
-                      .read<NewsFeedBloc>()
-                      .add(LoadNewsFeed(scheduleSlotId));
-                },
-              );
-            }
-            return const SizedBox();
-          },
-        ),
-      ),
+                    scheduleSlotId: widget.scheduleSlotId,
+                  );
+                } else if (state is NewsFeedDownloading) {
+                  return Stack(
+                    children: [
+                      NewsFeedTabView(
+                        newsFeed: state.newsFeed,
+                        scheduleSlotId: widget.scheduleSlotId,
+                      ),
+                      _buildDownloadingOverlay(context, state, textColor),
+                    ],
+                  );
+                } else if (state is NewsFeedDownloadSuccess) {
+                  return NewsFeedTabView(
+                    newsFeed: state.newsFeed,
+                    scheduleSlotId: widget.scheduleSlotId,
+                  );
+                } else if (state is NewsFeedDownloadError) {
+                  return NewsFeedTabView(
+                    newsFeed: state.newsFeed,
+                    scheduleSlotId: widget.scheduleSlotId,
+                  );
+                } else if (state is NewsFeedError) {
+                  return NewsFeedErrorState(
+                    message: state.message,
+                    onRetry: () {
+                      context.read<NewsFeedBloc>().add(LoadNewsFeed(widget.scheduleSlotId));
+                    },
+                  );
+                }
+                return const SizedBox();
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildDownloadingOverlay(
-      BuildContext context, NewsFeedDownloading state) {
+  Widget _buildDownloadingOverlay(BuildContext context, NewsFeedDownloading state, Color textColor) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       color: Colors.black.withOpacity(0.5),
       child: Center(
@@ -306,12 +160,11 @@ class NewsFeedPage extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 CircularProgressIndicator(
-                  valueColor:
-                      AlwaysStoppedAnimation<Color>(Colors.blue.shade800),
+                  valueColor: AlwaysStoppedAnimation<Color>(textColor),
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  'Downloading ${state.fileName}...',
+                  '${l10n.downloading} ${state.fileName}...',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
@@ -319,7 +172,7 @@ class NewsFeedPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Please wait',
+                  l10n.pleaseWait,
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey.shade600,

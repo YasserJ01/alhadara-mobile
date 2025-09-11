@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 class Lesson extends Equatable {
   final int id;
   final String title;
-  final String notes;
+  final String? notes;
   final int course;
   final int scheduleSlot;
   final int lessonOrder;
@@ -28,7 +28,7 @@ class Lesson extends Equatable {
   List<Object> get props => [
     id,
     title,
-    notes,
+    notes!,
     course,
     scheduleSlot,
     lessonOrder,

@@ -15,6 +15,8 @@ class EnrollmentsView extends StatelessWidget {
         if (state is EnrollmentInitial || state is EnrollmentLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is EnrollmentError) {
+          print("Fail");
+          print(state.message);
           return Center(child: Text(state.message));
         } else if (state is EnrollmentLoaded) {
           return _buildEnrollmentsList(state.enrollments);

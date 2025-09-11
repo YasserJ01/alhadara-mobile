@@ -1,12 +1,19 @@
 import 'package:equatable/equatable.dart';
-
 import '../../domain/entites/department.dart';
+import 'package:hive/hive.dart';
 
+part 'department_model.g.dart'; // Generated file
+
+@HiveType(typeId: 0) // Unique typeId for each model
 class DepartmentModel extends Equatable {
+  @HiveField(0)
   final int id;
-  final String name;
-  final String description;
 
+  @HiveField(1)
+  final String name;
+
+  @HiveField(2)
+  final String description;
 
   const DepartmentModel({
     required this.id,
@@ -33,11 +40,22 @@ class DepartmentModel extends Equatable {
   @override
   List<Object> get props => [id, name, description];
 
-Department toEntity() {
-  return Department(
-    id: id,
-    name: name,
-    description: description,
-  );
-}
+  Department toEntity() {
+    return Department(
+      id: id,
+      name: name,
+      description: description,
+    );
+  }
+  DepartmentModel copyWith({
+    int? id,
+    String? name,
+    String? description,
+  }) {
+    return DepartmentModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+    );
+  }
 }

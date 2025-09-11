@@ -21,13 +21,13 @@ class CoursesForm extends StatelessWidget {
         if (state is CoursesInitial || state is CoursesLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is CoursesError) {
-          return  NoItemWidget(
+          return NoItemWidget(
             message: state.message,
             icon: Icons.error_outline,
             iconColor: Colors.red,
           );
         } else if (state is CoursesEmpty) {
-          return  NoItemWidget(
+          return NoItemWidget(
             message: state.message,
             icon: Icons.search_off,
           );
@@ -67,6 +67,15 @@ class CoursesForm extends StatelessWidget {
                                   certificationEligible:
                                       course.certificationEligible,
                                   isWishlisted: course.wishlisted,
+                                  requiredLanguage: course.requiredLanguage,
+                                  requiredLanguageName: course.requiredLanguageName,
+                                  requiredLanguageLevel: course.requiredLanguageLevel,
+                                  requiredLanguageLevelDisplay: course.requiredLanguageLevelDisplay,
+                                  canEnroll: course.canEnroll,
+                                  languageMessage: course.languageMessage,
+                                  hasDiscount: course.hasDiscount,
+                                  discountInfo: course.discountInfo,
+                                  originalPrice: course.originalPrice,
                                 ),
                               ),
                             ),
@@ -88,7 +97,8 @@ class CoursesForm extends StatelessWidget {
                                       10), // Slightly smaller radius
                                 ),
                                 elevation: 1,
-                                margin: EdgeInsets.zero, // Remove default margin
+                                margin: EdgeInsets.zero,
+                                // Remove default margin
                                 child: SizedBox(
                                   height: cardHeight,
                                   child: Row(
@@ -123,20 +133,21 @@ class CoursesForm extends StatelessWidget {
                                             horizontal: padding *
                                                 0.8, // Slightly reduced padding
                                             vertical:
-                                            AppSizes.screenHeight(context) *
-                                                0.01,
+                                                AppSizes.screenHeight(context) *
+                                                    0.01,
                                           ),
                                           child: Column(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                                MainAxisAlignment.center,
                                             crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Text(
                                                 course.title,
                                                 style: TextStyle(
-                                                  fontSize: AppSizes.screenWidth(
-                                                      context) *
+                                                  fontSize: AppSizes
+                                                          .screenWidth(
+                                                              context) *
                                                       0.039, // Slightly smaller
                                                   fontWeight: FontWeight.w500,
                                                   color: AppColors.greyColor,
@@ -146,33 +157,38 @@ class CoursesForm extends StatelessWidget {
                                               ),
                                               SizedBox(
                                                   height: AppSizes.screenHeight(
-                                                      context) *
+                                                          context) *
                                                       0.01),
                                               Row(
                                                 children: [
                                                   Text(
                                                     '${course.duration}h',
                                                     style: TextStyle(
-                                                      fontSize: AppSizes
-                                                          .screenWidth(
-                                                          context) *
-                                                          0.035, // Slightly smaller
-                                                      color: AppColors.mainColor,
+                                                      fontSize:
+                                                          AppSizes.screenWidth(
+                                                                  context) *
+                                                              0.035,
+                                                      // Slightly smaller
+                                                      color:
+                                                          AppColors.mainColor,
                                                     ),
                                                   ),
                                                   SizedBox(
-                                                      width: AppSizes.screenWidth(
-                                                          context) *
-                                                          0.15),
+                                                      width:
+                                                          AppSizes.screenWidth(
+                                                                  context) *
+                                                              0.15),
                                                   Text(
                                                     '${course.price}\$',
                                                     style: TextStyle(
                                                       fontSize:
-                                                      AppSizes.screenWidth(
-                                                          context) *
-                                                          0.035,
-                                                      color: AppColors.mainColor,
-                                                      fontWeight: FontWeight.w500,
+                                                          AppSizes.screenWidth(
+                                                                  context) *
+                                                              0.035,
+                                                      color:
+                                                          AppColors.mainColor,
+                                                      fontWeight:
+                                                          FontWeight.w500,
                                                     ),
                                                   ),
                                                 ],
@@ -194,7 +210,8 @@ class CoursesForm extends StatelessWidget {
                                   child: Container(
                                     width: AppSizes.screenWidth(context) *
                                         0.08, // Slightly smaller
-                                    height: AppSizes.screenHeight(context) * 0.04,
+                                    height:
+                                        AppSizes.screenHeight(context) * 0.04,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(100),
                                       color: Colors.white,

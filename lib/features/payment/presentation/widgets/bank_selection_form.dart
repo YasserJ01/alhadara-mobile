@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project2/l10n/generated/app_localizations.dart';
 import '../../../../core/constants/app_elevated_button.dart';
 import '../../../../core/constants/app_size.dart';
 import '../../../../core/constants/colors.dart';
@@ -11,10 +12,11 @@ class BankSelectionForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return BlocBuilder<DepositBloc, DepositState>(
       builder: (context, state) {
         if (state is! DepositLoaded || state.selectedMethod == null) {
-          return const Center(child: Text('Please select a method first'));
+          return  Center(child: Text(l10n.methodSelection));
         }
 
         final method = state.selectedMethod!;
@@ -206,7 +208,7 @@ class BankSelectionForm extends StatelessWidget {
                           );
                         },
                         child: Text(
-                          'Next',
+                          l10n.next,
                           style: TextStyle(
                             fontSize: AppSizes.responsiveFontSize(context,
                                 mobile: 18, tablet: 20, desktop: 22),

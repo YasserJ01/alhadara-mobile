@@ -7,7 +7,7 @@ class GetSecurityQuestionsUseCase {
 
   GetSecurityQuestionsUseCase({required this.repository});
 
-  Future<List<SecurityQuestionEntity>> call(String token) async {
-    return await repository.getSecurityQuestions(token);
+  Future<List<SecurityQuestionEntity>> call() async {
+    return await repository.getSecurityQuestions();
   }
 }

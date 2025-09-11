@@ -1,3 +1,4 @@
+//TODO : add other fields
 class UserEnrollment {
   final int id;
   final int student;
@@ -5,29 +6,34 @@ class UserEnrollment {
   final int course;
   final String courseTitle;
   final int scheduleSlot;
-  final String scheduleSlotDisplay;
   final String status;
   final String paymentStatus;
   final DateTime enrollmentDate;
   final double amountPaid;
   final double remainingBalance;
-  final String notes;
+  final double courseProgress;
+  final int lessonsCount;
+  final double attendance;
+  final DateTime startDate;
+  final DateTime endDate;
 
-  UserEnrollment({
-    required this.id,
-    required this.student,
-    required this.studentName,
-    required this.course,
-    required this.courseTitle,
-    required this.scheduleSlot,
-    required this.scheduleSlotDisplay,
-    required this.status,
-    required this.paymentStatus,
-    required this.enrollmentDate,
-    required this.amountPaid,
-    required this.remainingBalance,
-    required this.notes,
-  });
+  UserEnrollment(
+      {required this.id,
+      required this.student,
+      required this.studentName,
+      required this.course,
+      required this.courseTitle,
+      required this.scheduleSlot,
+      required this.status,
+      required this.paymentStatus,
+      required this.enrollmentDate,
+      required this.amountPaid,
+      required this.remainingBalance,
+      required this.courseProgress,
+      required this.lessonsCount,
+      required this.attendance,
+      required this.startDate,
+      required this.endDate});
 
   factory UserEnrollment.fromJson(Map<String, dynamic> json) {
     return UserEnrollment(
@@ -37,13 +43,16 @@ class UserEnrollment {
       course: json['course'],
       courseTitle: json['course_title'],
       scheduleSlot: json['schedule_slot'],
-      scheduleSlotDisplay: json['schedule_slot_display'],
       status: json['status'],
       paymentStatus: json['payment_status'],
       enrollmentDate: DateTime.parse(json['enrollment_date']),
       amountPaid: double.parse(json['amount_paid']),
       remainingBalance: json['remaining_balance'].toDouble(),
-      notes: json['notes'],
+      courseProgress: json['course_progress'].toDouble(),
+      lessonsCount: json['lessons_count'],
+      attendance: json['attendance_percentage'].toDouble(),
+      startDate: DateTime.parse(json['schedule_slot_display']['validity_period']['start']),
+      endDate: DateTime.parse(json['schedule_slot_display']['validity_period']['end']),
     );
   }
 }

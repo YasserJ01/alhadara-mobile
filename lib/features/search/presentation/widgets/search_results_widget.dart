@@ -1,5 +1,10 @@
 // lib/features/search/presentation/widgets/search_results_widget.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/constants/colors.dart';
+import '../../../../core/theme/app_theme_helper.dart';
+import '../../../../theme/presentation/bloc/theme_bloc.dart';
+import '../../../../theme/presentation/bloc/theme_state.dart';
 import '../../domain/entities/search_result.dart';
 
 class SearchResultsWidget extends StatelessWidget {
@@ -14,54 +19,70 @@ class SearchResultsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Search Query Display
-          Text(
-            'Results for "$query"',
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
+    return BlocBuilder<ThemeBloc, ThemeState>(
+      builder: (context, themeState) {
+        Color backgroundColor = const Color(0xffF4F8FB);
+        Color cardColor = Colors.white;
+        Color textColor = AppColors.mainColor;
+        Color secondaryTextColor = Colors.grey[600]!;
+
+        if (themeState is ThemeLoaded) {
+          backgroundColor = AppThemeHelper.getBackgroundColor(themeState.theme);
+          cardColor = AppThemeHelper.getCardColor(themeState.theme);
+          textColor = AppThemeHelper.getTextColor(themeState.theme);
+          secondaryTextColor = AppThemeHelper.getSecondaryTextColor(themeState.theme);
+        }
+
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Search Query Display
+              Text(
+                'Results for "$query"',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: textColor,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '${_getTotalResultsCount()} results found',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: secondaryTextColor,
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Departments Section
+              if (result.departments.isNotEmpty) ...[
+                _buildSectionHeader('Departments', result.departments.length, textColor, secondaryTextColor),
+                const SizedBox(height: 12),
+                ...result.departments.map((dept) => _buildDepartmentCard(dept, cardColor, textColor, secondaryTextColor)),
+                const SizedBox(height: 24),
+              ],
+
+              // Course Types Section
+              if (result.courseTypes.isNotEmpty) ...[
+                _buildSectionHeader('Course Types', result.courseTypes.length, textColor, secondaryTextColor),
+                const SizedBox(height: 12),
+                ...result.courseTypes.map((type) => _buildCourseTypeCard(type, cardColor, textColor, secondaryTextColor)),
+                const SizedBox(height: 24),
+              ],
+
+              // Courses Section
+              if (result.courses.isNotEmpty) ...[
+                _buildSectionHeader('Courses', result.courses.length, textColor, secondaryTextColor),
+                const SizedBox(height: 12),
+                ...result.courses.map((course) => _buildCourseCard(course, cardColor, textColor, secondaryTextColor)),
+              ],
+            ],
           ),
-          const SizedBox(height: 8),
-          Text(
-            '${_getTotalResultsCount()} results found',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[600],
-            ),
-          ),
-          const SizedBox(height: 24),
-
-          // Departments Section
-          if (result.departments.isNotEmpty) ...[
-            _buildSectionHeader('Departments', result.departments.length),
-            const SizedBox(height: 12),
-            ...result.departments.map((dept) => _buildDepartmentCard(dept)),
-            const SizedBox(height: 24),
-          ],
-
-          // Course Types Section
-          if (result.courseTypes.isNotEmpty) ...[
-            _buildSectionHeader('Course Types', result.courseTypes.length),
-            const SizedBox(height: 12),
-            ...result.courseTypes.map((type) => _buildCourseTypeCard(type)),
-            const SizedBox(height: 24),
-          ],
-
-          // Courses Section
-          if (result.courses.isNotEmpty) ...[
-            _buildSectionHeader('Courses', result.courses.length),
-            const SizedBox(height: 12),
-            ...result.courses.map((course) => _buildCourseCard(course)),
-          ],
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -69,22 +90,22 @@ class SearchResultsWidget extends StatelessWidget {
     return result.departments.length + result.courseTypes.length + result.courses.length;
   }
 
-  Widget _buildSectionHeader(String title, int count) {
+  Widget _buildSectionHeader(String title, int count, Color textColor, Color secondaryTextColor) {
     return Row(
       children: [
         Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Colors.black87,
+            color: textColor,
           ),
         ),
         const SizedBox(width: 8),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
-            color: Colors.blue[100],
+            color: secondaryTextColor.withOpacity(0.2),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Text(
@@ -92,7 +113,7 @@ class SearchResultsWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.bold,
-              color: Colors.blue[800],
+              color: textColor,
             ),
           ),
         ),
@@ -100,11 +121,12 @@ class SearchResultsWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildDepartmentCard(Department department) {
+  Widget _buildDepartmentCard(Department department, Color cardColor, Color textColor, Color secondaryTextColor) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       child: Card(
         elevation: 2,
+        color: cardColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -130,9 +152,10 @@ class SearchResultsWidget extends StatelessWidget {
                   children: [
                     Text(
                       department.name,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
+                        color: textColor,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -140,7 +163,7 @@ class SearchResultsWidget extends StatelessWidget {
                       department.description,
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.grey[600],
+                        color: secondaryTextColor,
                       ),
                     ),
                   ],
@@ -149,7 +172,7 @@ class SearchResultsWidget extends StatelessWidget {
               Icon(
                 Icons.arrow_forward_ios,
                 size: 16,
-                color: Colors.grey[400],
+                color: secondaryTextColor,
               ),
             ],
           ),
@@ -158,11 +181,12 @@ class SearchResultsWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildCourseTypeCard(CourseType courseType) {
+  Widget _buildCourseTypeCard(CourseType courseType, Color cardColor, Color textColor, Color secondaryTextColor) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       child: Card(
         elevation: 2,
+        color: cardColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -188,9 +212,10 @@ class SearchResultsWidget extends StatelessWidget {
                   children: [
                     Text(
                       courseType.name,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
+                        color: textColor,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -198,7 +223,7 @@ class SearchResultsWidget extends StatelessWidget {
                       courseType.departmentName,
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.grey[600],
+                        color: secondaryTextColor,
                       ),
                     ),
                   ],
@@ -207,7 +232,7 @@ class SearchResultsWidget extends StatelessWidget {
               Icon(
                 Icons.arrow_forward_ios,
                 size: 16,
-                color: Colors.grey[400],
+                color: secondaryTextColor,
               ),
             ],
           ),
@@ -216,11 +241,12 @@ class SearchResultsWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildCourseCard(Course course) {
+  Widget _buildCourseCard(Course course, Color cardColor, Color textColor, Color secondaryTextColor) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       child: Card(
         elevation: 2,
+        color: cardColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -249,9 +275,10 @@ class SearchResultsWidget extends StatelessWidget {
                       children: [
                         Text(
                           course.title,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
+                            color: textColor,
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -259,7 +286,7 @@ class SearchResultsWidget extends StatelessWidget {
                           course.departmentName,
                           style: TextStyle(
                             fontSize: 14,
-                            color: Colors.grey[600],
+                            color: secondaryTextColor,
                           ),
                         ),
                       ],
@@ -269,7 +296,7 @@ class SearchResultsWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        '\${course.price}',
+                        '\ ${course.price}',
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -301,7 +328,7 @@ class SearchResultsWidget extends StatelessWidget {
                 course.description,
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.grey[700],
+                  color: secondaryTextColor,
                 ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
@@ -309,9 +336,9 @@ class SearchResultsWidget extends StatelessWidget {
               const SizedBox(height: 12),
               Row(
                 children: [
-                  _buildInfoChip(Icons.schedule, '${course.duration} weeks'),
+                  _buildInfoChip(Icons.schedule, '${course.duration} weeks', secondaryTextColor),
                   const SizedBox(width: 8),
-                  _buildInfoChip(Icons.people, '${course.maxStudents} max'),
+                  _buildInfoChip(Icons.people, '${course.maxStudents} max', secondaryTextColor),
                   const SizedBox(width: 8),
                   _buildCategoryChip(course.category),
                   const Spacer(),
@@ -324,7 +351,7 @@ class SearchResultsWidget extends StatelessWidget {
                   else
                     Icon(
                       Icons.favorite_border,
-                      color: Colors.grey[400],
+                      color: secondaryTextColor,
                       size: 20,
                     ),
                 ],
@@ -336,23 +363,23 @@ class SearchResultsWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoChip(IconData icon, String text) {
+  Widget _buildInfoChip(IconData icon, String text, Color secondaryTextColor) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.grey[100],
+        color: secondaryTextColor.withOpacity(0.1),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: Colors.grey[600]),
+          Icon(icon, size: 14, color: secondaryTextColor),
           const SizedBox(width: 4),
           Text(
             text,
             style: TextStyle(
               fontSize: 12,
-              color: Colors.grey[600],
+              color: secondaryTextColor,
             ),
           ),
         ],

@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../../../../core/network/api_client.dart';
 import '../models/security_question_model.dart';
 
 abstract class SecurityQuestionRemoteDataSource {
-  Future<List<SecurityQuestionModel>> getSecurityQuestions(String token);
+  Future<List<SecurityQuestionModel>> getSecurityQuestions();
 
   Future<void> submitSecurityAnswer({
     // Add this method signature
-    required String token,
     required int questionId,
     required String answer,
   });
@@ -16,18 +16,23 @@ abstract class SecurityQuestionRemoteDataSource {
 class SecurityQuestionRemoteDataSourceImpl
     implements SecurityQuestionRemoteDataSource {
   final http.Client client;
+  final ApiClient apiClient;
 
-  SecurityQuestionRemoteDataSourceImpl(this.client);
+  SecurityQuestionRemoteDataSourceImpl(this.client, this.apiClient);
 
   @override
-  Future<List<SecurityQuestionModel>> getSecurityQuestions(String token) async {
-    final response = await client.get(
-      Uri.parse('http://10.0.2.2:8000/api/core/security-questions/'),
-      headers: {
-        'Authorization': 'JWT $token',
-        'accept': 'application/json',
-        'Content-Type': 'application/json; charset=utf-8', // Add charset
-      },
+  Future<List<SecurityQuestionModel>> getSecurityQuestions() async {
+    // final response = await client.get(
+    //   Uri.parse('http://10.0.2.2:8000/api/core/security-questions/'),
+    //   headers: {
+    //     'Authorization': 'JWT $token',
+    //     'accept': 'application/json',
+    //     'Content-Type': 'application/json; charset=utf-8', // Add charset
+    //   },
+    // );
+    final response = await apiClient.authenticatedRequest(
+      method: 'GET',
+      endpoint: '/api/core/security-questions/',
     );
 
     if (response.statusCode == 200) {
@@ -47,17 +52,24 @@ class SecurityQuestionRemoteDataSourceImpl
 
   @override
   Future<void> submitSecurityAnswer({
-    required String token,
     required int questionId,
     required String answer,
   }) async {
-    final response = await client.post(
-      Uri.parse('http://10.0.2.2:8000/api/core/security-answers/'),
-      headers: {
-        'Authorization': 'JWT $token',
-        'accept': 'application/json',
-        'Content-Type': 'application/json; charset=utf-8',
-      },
+    // final response = await client.post(
+    //   Uri.parse('http://10.0.2.2:8000/api/core/security-answers/'),
+    //   headers: {
+    //     'Authorization': 'JWT $token',
+    //     'accept': 'application/json',
+    //     'Content-Type': 'application/json; charset=utf-8',
+    //   },
+    //   body: jsonEncode({
+    //     'question': questionId,
+    //     'answer': answer,
+    //   }),
+    // );
+    final response = await apiClient.authenticatedRequest(
+      method: 'POST',
+      endpoint: '/api/core/security-answers/',
       body: jsonEncode({
         'question': questionId,
         'answer': answer,

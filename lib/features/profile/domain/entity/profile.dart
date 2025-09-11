@@ -15,6 +15,14 @@ class Profile extends Equatable {
   final String fullName;
   final String? universityName;
   final String? studyfieldName;
+  final int? englishLevel;
+  final String? englishLevelDisplay;
+  final int? germanLevel;
+  final String? germanLevelDisplay;
+  final int? frenchLevel;
+  final String? frenchLevelDisplay;
+  final int? spanishLevel;
+  final String? spanishLevelDisplay;
 
   const Profile({
     required this.id,
@@ -29,6 +37,14 @@ class Profile extends Equatable {
     required this.fullName,
     required this.universityName,
     required this.studyfieldName,
+    this.englishLevel,
+    this.englishLevelDisplay,
+    this.frenchLevel,
+    this.frenchLevelDisplay,
+    this.germanLevel,
+    this.germanLevelDisplay,
+    this.spanishLevel,
+    this.spanishLevelDisplay
   });
 
   @override

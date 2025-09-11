@@ -3,7 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project2/features/profile/presentation/pages/profile_image_upload_page.dart';
 import 'package:project2/features/profile/presentation/pages/profile_images_display_page.dart';
 import 'package:project2/features/profile/presentation/pages/profile_page.dart';
+import 'package:project2/l10n/generated/app_localizations.dart';
 
+import '../../../../core/constants/app_elevated_button.dart';
+import '../../../../core/constants/app_scaffold.dart';
+import '../../../../core/constants/colors.dart';
 import '../../../../dependencies.dart';
 import '../../domain/entity/interests.dart';
 import '../../domain/usecases/save_user_interests_usecase.dart';
@@ -23,14 +27,15 @@ class InterestRatingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return BlocProvider(
       create: (context) => InterestRatingBloc(
         saveUserInterestsUseCase: getIt<SaveUserInterestsUseCase>(),
         // Must match
         interests: interests,
       ),
-      child: Scaffold(
-        appBar: AppBar(title: const Text('Rate Your Interests')),
+      child: AppScaffold(
+        title: l10n.yourInterests,
         body: BlocConsumer<InterestRatingBloc, InterestRatingState>(
           listener: (context, state) {
             if (state.error != null) {
@@ -44,7 +49,8 @@ class InterestRatingPage extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => BlocProvider(
-                    create: (context) => getIt<ProfileImageBloc>(), // or your DI method
+                    create: (context) =>
+                        getIt<ProfileImageBloc>(), // or your DI method
                     child: const ProfileImageUploadPage(),
                   ),
                 ),
@@ -71,10 +77,16 @@ class InterestRatingPage extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Rate your level of interest for each',
-                    style: TextStyle(fontSize: 16),
+                  Text(
+                    l10n.ratingInterest,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      // letterSpacing: 1,
+                      //  color: Color.fromARGB(255, 109, 27, 27),
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Expanded(
@@ -92,7 +104,10 @@ class InterestRatingPage extends StatelessWidget {
                               children: [
                                 Text(
                                   interest.name,
-                                  style: const TextStyle(fontSize: 18),
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.mainColor),
                                 ),
                                 const SizedBox(height: 8),
                                 Row(
@@ -122,18 +137,30 @@ class InterestRatingPage extends StatelessWidget {
                       },
                     ),
                   ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        context.read<InterestRatingBloc>().add(
-                              SubmitInterestsEvent(
-                                  profileId), // Using correct event type
-                            );
-                      },
-                      child: const Text('Submit'),
+                  AppElevatedButton(
+                    onPressed: () {
+                      context.read<InterestRatingBloc>().add(
+                            SubmitInterestsEvent(
+                                profileId), // Using correct event type
+                          );
+                    },
+                    child: Text(
+                      l10n.submit,
+                      style: TextStyle(fontSize: 18),
                     ),
-                  ),
+                  )
+                  // SizedBox(
+                  //   width: double.infinity,
+                  //   child: ElevatedButton(
+                  //     onPressed: () {
+                  //       context.read<InterestRatingBloc>().add(
+                  //             SubmitInterestsEvent(
+                  //                 profileId), // Using correct event type
+                  //           );
+                  //     },
+                  //     child: const Text('Submit'),
+                  //   ),
+                  // ),
                 ],
               ),
             );

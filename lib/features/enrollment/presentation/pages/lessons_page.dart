@@ -1,258 +1,15 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
-//
-// class LessonsPage extends StatelessWidget {
-//   const LessonsPage({Key? key}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return LessonsView();
-//   }
-// }
-//
-// class LessonsView extends StatelessWidget {
-//   const LessonsView({Key? key}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Colors.white,
-//       appBar: AppBar(
-//         backgroundColor: Colors.white,
-//         elevation: 0,
-//         leading: IconButton(
-//           icon: const Icon(Icons.arrow_back_ios, color: Colors.black, size: 20),
-//           onPressed: () => Navigator.pop(context),
-//         ),
-//         title: const Text(
-//           'Lessons',
-//           style: TextStyle(
-//             color: Colors.red,
-//             fontSize: 18,
-//             fontWeight: FontWeight.w500,
-//           ),
-//         ),
-//         centerTitle: true,
-//         actions: [
-//           Stack(
-//             children: [
-//               IconButton(
-//                 icon: const Icon(Icons.notifications_outlined, color: Colors.black),
-//                 onPressed: () {},
-//               ),
-//               Positioned(
-//                 right: 8,
-//                 top: 8,
-//                 child: Container(
-//                   width: 8,
-//                   height: 8,
-//                   decoration: const BoxDecoration(
-//                     color: Colors.red,
-//                     shape: BoxShape.circle,
-//                   ),
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ],
-//       ),
-//       body: Padding(
-//             padding: const EdgeInsets.all(20.0),
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 const Text(
-//                   'Class Schedule',
-//                   style: TextStyle(
-//                     fontSize: 20,
-//                     fontWeight: FontWeight.w600,
-//                     color: Colors.black,
-//                   ),
-//                 ),
-//                 const SizedBox(height: 20),
-//                 _buildDateSelector(context, state),
-//                 const SizedBox(height: 30),
-//                 Expanded(
-//                   child: _buildSessionsList(state.sessions),
-//                 ),
-//               ],
-//             ),
-//           );
-//         },
-//       ),
-//     );
-//   }
-//
-//   Widget _buildDateSelector(BuildContext context, LessonsState state) {
-//     final days = ['M', 'T', 'W', 'T', 'F', 'S', 'M'];
-//     final dates = [24, 25, 26, 27, 28, 29, 30];
-//
-//     return Column(
-//       children: [
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceAround,
-//           children: List.generate(7, (index) {
-//             return Text(
-//               days[index],
-//               style: TextStyle(
-//                 fontSize: 14,
-//                 color: Colors.grey[600],
-//                 fontWeight: FontWeight.w500,
-//               ),
-//             );
-//           }),
-//         ),
-//         const SizedBox(height: 12),
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceAround,
-//           children: List.generate(7, (index) {
-//             final date = dates[index];
-//             final isSelected = date == state.selectedDay;
-//
-//             return GestureDetector(
-//               onTap: () {
-//                 context.read<LessonsBloc>().add(SelectDate(date));
-//               },
-//               child: Container(
-//                 width: 36,
-//                 height: 36,
-//                 decoration: BoxDecoration(
-//                   color: isSelected ? Colors.blue : Colors.transparent,
-//                   borderRadius: BorderRadius.circular(8),
-//                 ),
-//                 child: Center(
-//                   child: Text(
-//                     '$date',
-//                     style: TextStyle(
-//                       fontSize: 16,
-//                       color: isSelected ? Colors.white : Colors.black,
-//                       fontWeight: FontWeight.w500,
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//             );
-//           }),
-//         ),
-//         const SizedBox(height: 8),
-//         Container(
-//           height: 3,
-//           margin: const EdgeInsets.symmetric(horizontal: 20),
-//           decoration: BoxDecoration(
-//             color: Colors.blue,
-//             borderRadius: BorderRadius.circular(2),
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-//
-//   Widget _buildSessionsList(List<SessionModel> sessions) {
-//     return ListView.builder(
-//       itemCount: sessions.length,
-//       itemBuilder: (context, index) {
-//         final session = sessions[index];
-//         final isLast = index == sessions.length - 1;
-//
-//         return Row(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             // Timeline
-//             Column(
-//               children: [
-//                 Container(
-//                   width: 24,
-//                   height: 24,
-//                   decoration: BoxDecoration(
-//                     color: session.isCompleted ? Colors.grey[400] : Colors.blue,
-//                     shape: BoxShape.circle,
-//                   ),
-//                   child: session.isCompleted
-//                       ? Icon(
-//                     Icons.check,
-//                     color: Colors.white,
-//                     size: 16,
-//                   )
-//                       : Icon(
-//                     Icons.play_arrow,
-//                     color: Colors.white,
-//                     size: 16,
-//                   ),
-//                 ),
-//                 if (!isLast)
-//                   Container(
-//                     width: 2,
-//                     height: 60,
-//                     margin: const EdgeInsets.symmetric(vertical: 4),
-//                     decoration: BoxDecoration(
-//                       color: Colors.grey[300],
-//                       borderRadius: BorderRadius.circular(1),
-//                     ),
-//                   ),
-//               ],
-//             ),
-//             const SizedBox(width: 16),
-//             // Content
-//             Expanded(
-//               child: Padding(
-//                 padding: const EdgeInsets.only(bottom: 24),
-//                 child: Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     Text(
-//                       session.title,
-//                       style: TextStyle(
-//                         fontSize: 16,
-//                         fontWeight: FontWeight.w600,
-//                         color: session.isCompleted ? Colors.grey[600] : Colors.black,
-//                       ),
-//                     ),
-//                     if (session.time.isNotEmpty) ...[
-//                       const SizedBox(height: 4),
-//                       Row(
-//                         children: [
-//                           Icon(
-//                             Icons.access_time,
-//                             size: 16,
-//                             color: Colors.grey[600],
-//                           ),
-//                           const SizedBox(width: 4),
-//                           Text(
-//                             session.time,
-//                             style: TextStyle(
-//                               fontSize: 14,
-//                               color: Colors.grey[600],
-//                             ),
-//                           ),
-//                         ],
-//                       ),
-//                     ],
-//                     if (session.subject.isNotEmpty) ...[
-//                       const SizedBox(height: 4),
-//                       Text(
-//                         session.subject,
-//                         style: TextStyle(
-//                           fontSize: 14,
-//                           color: Colors.grey[700],
-//                         ),
-//                       ),
-//                     ],
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           ],
-//         );
-//       },
-//     );
-//   }
-// }
 // pages/lessons_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:project2/l10n/generated/app_localizations.dart';
+import '../../../../core/constants/app_elevated_button.dart';
 import '../../../../core/constants/app_scaffold.dart';
+import '../../../../core/constants/colors.dart';
+import '../../../../core/theme/app_theme_helper.dart';
 import '../../../../dependencies.dart';
+import '../../../../theme/presentation/bloc/theme_bloc.dart';
+import '../../../../theme/presentation/bloc/theme_state.dart';
 import '../bloc/homeworks/homework_bloc.dart';
 import '../bloc/lessons/lessons_bloc.dart';
 import '../bloc/lessons/lessons_event.dart';
@@ -262,10 +19,14 @@ import '../widgets/homework_dialog.dart';
 
 class LessonsPage extends StatelessWidget {
   final int scheduleSlotId;
+  final DateTime startDate;
+  final DateTime endDate;
 
   const LessonsPage({
     Key? key,
     required this.scheduleSlotId,
+    required this.startDate,
+    required this.endDate,
   }) : super(key: key);
 
   @override
@@ -280,97 +41,95 @@ class LessonsPage extends StatelessWidget {
           create: (context) => getIt<HomeworkBloc>(), // or your DI method
         ),
       ],
-      child: const LessonsView(),
+      child: LessonsView(
+        scheduleSlotId: scheduleSlotId,
+        startDate: startDate,
+        endDate: endDate,
+      ),
     );
   }
 }
 
 class LessonsView extends StatelessWidget {
-  const LessonsView({Key? key}) : super(key: key);
+  final int scheduleSlotId;
+  final DateTime startDate;
+  final DateTime endDate;
+
+  const LessonsView({
+    Key? key,
+    required this.scheduleSlotId,
+    required this.startDate,
+    required this.endDate,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
-      title: "Lessons",
-      // backgroundColor: Colors.white,
-      // appBar: AppBar(
-      //   backgroundColor: Colors.white,
-      //   elevation: 0,
-      //   leading: IconButton(
-      //     icon: const Icon(Icons.arrow_back_ios, color: Colors.black, size: 20),
-      //     onPressed: () => Navigator.pop(context),
-      //   ),
-      //   title: const Text(
-      //     'Lessons',
-      //     style: TextStyle(
-      //       color: Color(0xFFE53E3E),
-      //       fontSize: 18,
-      //       fontWeight: FontWeight.w600,
-      //     ),
-      //   ),
-      //   centerTitle: true,
-      //   actions: [
-      //     Stack(
-      //       children: [
-      //         IconButton(
-      //           icon: const Icon(Icons.notifications_outlined,
-      //               color: Colors.black, size: 24),
-      //           onPressed: () {},
-      //         ),
-      //         Positioned(
-      //           right: 8,
-      //           top: 8,
-      //           child: Container(
-      //             width: 8,
-      //             height: 8,
-      //             decoration: const BoxDecoration(
-      //               color: Color(0xFFE53E3E),
-      //               shape: BoxShape.circle,
-      //             ),
-      //           ),
-      //         ),
-      //       ],
-      //     ),
-      //   ],
-      // ),
-      body: BlocBuilder<LessonsBloc, LessonsState>(
-        builder: (context, state) {
-          if (state is LessonsLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is LessonsError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    state.message,
-                    style: const TextStyle(fontSize: 16, color: Colors.red),
+    final l10n = AppLocalizations.of(context);
+
+    return BlocBuilder<ThemeBloc, ThemeState>(
+      builder: (context, themeState) {
+        Color backgroundColor = const Color(0xffF4F8FB);
+        Color cardColor = Colors.white;
+        Color textColor = AppColors.mainColor;
+        Color secondaryTextColor = Colors.grey[600]!;
+
+        if (themeState is ThemeLoaded) {
+          backgroundColor = AppThemeHelper.getBackgroundColor(themeState.theme);
+          cardColor = AppThemeHelper.getCardColor(themeState.theme);
+          textColor = AppThemeHelper.getTextColor(themeState.theme);
+          secondaryTextColor =
+              AppThemeHelper.getSecondaryTextColor(themeState.theme);
+        }
+
+        return AppScaffold(
+          title: l10n.lessons,
+          body: BlocBuilder<LessonsBloc, LessonsState>(
+            builder: (context, state) {
+              if (state is LessonsLoading) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is LessonsError) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        state.message,
+                        style: TextStyle(fontSize: 16, color: Colors.red),
+                      ),
+                      const SizedBox(height: 16),
+                      AppElevatedButton(
+                        onPressed: () {
+                          // final scheduleSlotId = (context.widget as LessonsPage).scheduleSlotId;
+                          context
+                              .read<LessonsBloc>()
+                              .add(LoadLessons(scheduleSlotId));
+                        },
+                        child: Text(l10n.retry),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Get scheduleSlotId from the widget
-                      final scheduleSlotId =
-                          (context.widget as LessonsPage).scheduleSlotId;
-                      context
-                          .read<LessonsBloc>()
-                          .add(LoadLessons(scheduleSlotId));
-                    },
-                    child: const Text('Retry'),
-                  ),
-                ],
-              ),
-            );
-          } else if (state is LessonsLoaded) {
-            return _buildLessonsContent(context, state);
-          }
-          return const SizedBox.shrink();
-        },
-      ),
+                );
+              } else if (state is LessonsLoaded) {
+                return _buildLessonsContent(context, state, cardColor,
+                    textColor, secondaryTextColor, startDate, endDate);
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildLessonsContent(BuildContext context, LessonsLoaded state) {
+  Widget _buildLessonsContent(
+      BuildContext context,
+      LessonsLoaded state,
+      Color cardColor,
+      Color textColor,
+      Color secondaryTextColor,
+      DateTime startDate,
+      DateTime endDate) {
+    final l10n = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -379,12 +138,12 @@ class LessonsView extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Class Schedule',
+              Text(
+                l10n.classSchedule,
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
-                  color: Colors.black,
+                  color: textColor,
                 ),
               ),
               if (state.selectedDate != null)
@@ -394,17 +153,18 @@ class LessonsView extends StatelessWidget {
                         .read<LessonsBloc>()
                         .add(const FilterLessonsByDate(null));
                   },
-                  child: const Text(
-                    'Show All',
-                    style: TextStyle(color: Colors.blue),
+                  child: Text(
+                    l10n.showAll,
+                    style: TextStyle(color: textColor),
                   ),
                 ),
             ],
           ),
           const SizedBox(height: 16),
 
-          // Add the date selector here
-          _buildDateSelector(context, state),
+          // Date selector
+          _buildDateSelector(context, state, textColor, secondaryTextColor,
+              startDate, endDate),
 
           const SizedBox(height: 16),
 
@@ -418,35 +178,40 @@ class LessonsView extends StatelessWidget {
                         Icon(
                           Icons.calendar_today,
                           size: 64,
-                          color: Colors.grey[400],
+                          color: secondaryTextColor,
                         ),
                         const SizedBox(height: 16),
                         Text(
                           state.selectedDate != null
-                              ? 'No lessons scheduled for ${DateFormat('MMM dd').format(state.selectedDate!)}'
-                              : 'No lessons found',
+                              ? '${l10n.noLessonsScheduled} ${DateFormat('MMM dd').format(state.selectedDate!)}'
+                              : l10n.noLessonsFound,
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.grey[600],
+                            color: secondaryTextColor,
                           ),
                         ),
                       ],
                     ),
                   )
-                : _buildLessonsList(context, state.filteredLessons),
+                : _buildLessonsList(context, state.filteredLessons, cardColor,
+                    textColor, secondaryTextColor),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildDateSelector(BuildContext context, LessonsLoaded state) {
-    final startDate = DateTime(2025, 7, 5); // July 5, 2025
-    final endDate = DateTime(2025, 8, 4); // August 4, 2025
-    final today = DateTime.now();
-    final initialDate = startDate;
-
-    // Calculate number of days between start and end dates
+  Widget _buildDateSelector(
+    BuildContext context,
+    LessonsLoaded state,
+    Color textColor,
+    Color secondaryTextColor,
+    DateTime startDate1,
+    DateTime endDate1,
+  ) {
+    final startDate =
+        DateTime(startDate1.year, startDate1.month, startDate1.day);
+    final endDate = DateTime(endDate1.year, endDate1.month, endDate1.day);
     final daysCount = endDate.difference(startDate).inDays + 1;
 
     return Container(
@@ -464,7 +229,15 @@ class LessonsView extends StatelessWidget {
 
           return GestureDetector(
             onTap: () {
-              context.read<LessonsBloc>().add(FilterLessonsByDate(date));
+              // Check if date is within your desired range before sending event
+              final isInRange = _isDateInRangeUI(date, startDate1, endDate1);
+
+              if (isInRange) {
+                context.read<LessonsBloc>().add(FilterLessonsByDate(date));
+              } else {
+                // Optionally show a message or visual feedback
+                debugPrint('Date $date is outside valid range');
+              }
             },
             child: Container(
               width: 60,
@@ -473,10 +246,14 @@ class LessonsView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    DateFormat('E').format(date).substring(0, 3),
+                    DateFormat('E', Localizations.localeOf(context).toString())
+                        .format(date)
+                        .substring(0, 3),
                     style: TextStyle(
                       fontSize: 16,
-                      color: isSelected ? Colors.red : Colors.grey[600],
+                      color: isSelected ? textColor : secondaryTextColor,
+                      fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.normal,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -484,14 +261,15 @@ class LessonsView extends StatelessWidget {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: isSelected
-                          ? const Color(0xFFE53E3E)
-                          : Colors.transparent,
+                      color: isSelected ? textColor : Colors.transparent,
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color:
-                            hasLessons ? Colors.grey[400]! : Colors.transparent,
-                        width: 1,
+                        color: hasLessons
+                            ? isSelected
+                                ? Colors.white
+                                : secondaryTextColor
+                            : Colors.transparent,
+                        width: isSelected ? 2 : 1,
                       ),
                     ),
                     child: Center(
@@ -500,7 +278,7 @@ class LessonsView extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: isSelected ? Colors.white : Colors.black,
+                          color: isSelected ? Colors.white : textColor,
                         ),
                       ),
                     ),
@@ -511,8 +289,7 @@ class LessonsView extends StatelessWidget {
                       width: 6,
                       height: 6,
                       decoration: BoxDecoration(
-                        color:
-                            isSelected ? Colors.white : const Color(0xFFE53E3E),
+                        color: isSelected ? Colors.white : textColor,
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -524,14 +301,21 @@ class LessonsView extends StatelessWidget {
       ),
     );
   }
+  bool _isDateInRangeUI(DateTime date, DateTime startDate, DateTime endDate) {
+    return (date.isAfter(startDate.subtract(const Duration(days: 1))) &&
+        date.isBefore(endDate.add(const Duration(days: 1))));
+  }
 
-  bool _isSameDay(DateTime date1, DateTime date2) {
+// Improved _isSameDay method
+  bool _isSameDay(DateTime? date1, DateTime? date2) {
+    if (date1 == null || date2 == null) return false;
     return date1.year == date2.year &&
         date1.month == date2.month &&
         date1.day == date2.day;
   }
 
-  Widget _buildLessonsList(BuildContext context, List<Lesson> lessons) {
+  Widget _buildLessonsList(BuildContext context, List<Lesson> lessons,
+      Color cardColor, Color textColor, Color secondaryTextColor) {
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -539,20 +323,20 @@ class LessonsView extends StatelessWidget {
             final index = entry.key;
             final lesson = entry.value;
             final isLast = index == lessons.length - 1;
-
-            return _buildLessonItem(context, lesson, !isLast);
+            return _buildLessonItem(context, lesson, !isLast, cardColor,
+                textColor, secondaryTextColor);
           }).toList(),
-
-          // Add "Done" item at the end
-          _buildDoneItem(),
+          _buildDoneItem(context, secondaryTextColor),
         ],
       ),
     );
   }
 
-  Widget _buildLessonItem(BuildContext context, Lesson lesson, bool showLine) {
+  Widget _buildLessonItem(BuildContext context, Lesson lesson, bool showLine,
+      Color cardColor, Color textColor, Color secondaryTextColor) {
     final statusColor = _getStatusColor(lesson.status);
     final formattedDate = DateFormat('MMM dd, yyyy').format(lesson.lessonDate);
+    final l10n = AppLocalizations.of(context);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 24),
@@ -573,7 +357,7 @@ class LessonsView extends StatelessWidget {
                 Expanded(
                   child: Container(
                     width: 3,
-                    color: Colors.grey[300],
+                    color: secondaryTextColor.withOpacity(0.3),
                     margin: const EdgeInsets.symmetric(vertical: 4),
                   ),
                 ),
@@ -582,7 +366,7 @@ class LessonsView extends StatelessWidget {
 
             const SizedBox(width: 16),
 
-            // Lesson content - Made tappable with GestureDetector
+            // Lesson content
             Expanded(
               child: GestureDetector(
                 onTap: lesson.hasHomework == true
@@ -594,33 +378,17 @@ class LessonsView extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: cardColor,
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
-                          color: lesson.status == "completed"
-                              ? Colors.green
-                              : Colors.blue,
+                          color: statusColor.withOpacity(0.2),
                           spreadRadius: 2,
                           blurRadius: 4,
                           offset: const Offset(0, 1),
                         ),
                       ],
                     ),
-                    // decoration: BoxDecoration(
-                    //   color: Colors.transparent,
-                    //   borderRadius: BorderRadius.circular(12),
-                    //     border: lesson.status == "completed"
-                    //         ? Border.all(color: Colors.green)
-                    //         : Border.all(color: Colors.blue),
-                    //   boxShadow: [
-                    //     BoxShadow(
-                    //       color: Colors.grey.withOpacity(0.6),
-                    //       spreadRadius: 5,
-                    //       offset: const Offset(0, 3),
-                    //     ),
-                    //   ],
-                    // ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -629,17 +397,17 @@ class LessonsView extends StatelessWidget {
                             Expanded(
                               child: Text(
                                 lesson.title,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
-                                  color: Colors.black,
+                                  color: textColor,
                                 ),
                               ),
                             ),
                             Icon(
                               Icons.assignment_outlined,
                               size: 20,
-                              color: Colors.grey[600],
+                              color: secondaryTextColor,
                             ),
                           ],
                         ),
@@ -649,25 +417,25 @@ class LessonsView extends StatelessWidget {
                             Icon(
                               Icons.calendar_today,
                               size: 16,
-                              color: Colors.grey[600],
+                              color: secondaryTextColor,
                             ),
                             const SizedBox(width: 4),
                             Text(
                               formattedDate,
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.grey[600],
+                                color: secondaryTextColor,
                               ),
                             ),
                           ],
                         ),
-                        if (lesson.notes.isNotEmpty) ...[
+                        if (lesson.notes!.isNotEmpty) ...[
                           const SizedBox(height: 8),
                           Text(
-                            lesson.notes,
+                            lesson.notes!,
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.grey[600],
+                              color: secondaryTextColor,
                             ),
                           ),
                         ],
@@ -693,21 +461,14 @@ class LessonsView extends StatelessWidget {
                             ),
                             lesson.hasHomework == true
                                 ? Text(
-                                    'Tap to view homework',
+                                    l10n.tapToViewHomework,
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: Colors.grey[500],
+                                      color: textColor,
                                       fontStyle: FontStyle.italic,
                                     ),
                                   )
-                                : Text(
-                                    'No homework assigned',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey[500],
-                                      fontStyle: FontStyle.italic,
-                                    ),
-                                  ),
+                                : const SizedBox(),
                           ],
                         ),
                       ],
@@ -722,7 +483,8 @@ class LessonsView extends StatelessWidget {
     );
   }
 
-  Widget _buildDoneItem() {
+  Widget _buildDoneItem(BuildContext context, Color secondaryTextColor) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       margin: const EdgeInsets.only(bottom: 24),
       child: Row(
@@ -732,17 +494,17 @@ class LessonsView extends StatelessWidget {
             width: 12,
             height: 12,
             decoration: BoxDecoration(
-              color: Colors.grey[400],
+              color: secondaryTextColor,
               shape: BoxShape.circle,
             ),
           ),
           const SizedBox(width: 16),
           Text(
-            'All lessons completed',
+            l10n.allLessonsCompleted,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              color: Colors.grey[500],
+              color: secondaryTextColor,
             ),
           ),
         ],
@@ -765,10 +527,8 @@ class LessonsView extends StatelessWidget {
     }
   }
 
-  // Method to show homework dialog
   void _showHomeworkDialog(
       BuildContext context, int lessonId, String lessonTitle) {
-    print(lessonId);
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -782,7 +542,6 @@ class LessonsView extends StatelessWidget {
     );
   }
 }
-
 // class LessonsPage extends StatelessWidget {
 //   final int scheduleSlotId;
 //

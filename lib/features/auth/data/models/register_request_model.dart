@@ -6,6 +6,8 @@ class RegisterRequestModel {
   final String phone;
   final String password;
   final String confirm_password;
+  final String captchaKey;
+  final String captchaAnswer;
 
   RegisterRequestModel({
     required this.firstName,
@@ -14,6 +16,8 @@ class RegisterRequestModel {
     required this.phone,
     required this.password,
     required this.confirm_password,
+    required this.captchaKey,
+    required this.captchaAnswer,
   });
 
   Map<String, dynamic> toJson() => {
@@ -24,5 +28,7 @@ class RegisterRequestModel {
         'password': password,
         'confirm_password': confirm_password,
         'user_type': "student",
+    'captcha_key': captchaKey,
+    'captcha_answer': captchaAnswer,
       };
 }

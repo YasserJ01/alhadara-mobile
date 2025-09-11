@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:project2/features/auth/presentation/pages/login_wrapper.dart';
 import 'package:project2/features/notifications/presentation/pages/notifications_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,13 +11,23 @@ import 'core/services/background_notification_service.dart';
 import 'core/services/notification_service.dart';
 import 'dependencies.dart';
 // import 'features/auth/presentation/pages/login_page.dart';
+import 'features/auth/presentation/bloc/auth_bloc.dart';
+import 'features/courses/data/models/department_model.dart';
 import 'features/courses/presentation/pages/departments_page.dart';
 // import 'features/enrollment/presentation/pages/lessons_page.dart';
+import 'features/home/presentation/pages/home_page.dart';
 import 'features/notifications/presentation/bloc/notification_bloc.dart';
 // import 'features/search/presentation/pages/search_screen.dart';
 import 'features/notifications/presentation/bloc/notification_event.dart';
 import 'features/spalsh_screen/presentation/pages/splash_screen.dart';
 import 'features/start/presentation/pages/start_page.dart';
+import 'l10n/generated/app_localizations.dart';
+import 'localization/domain/entities/language.dart';
+import 'localization/presentation/localization_bloc/localization_bloc.dart';
+import 'localization/presentation/localization_bloc/localization_event.dart';
+import 'localization/presentation/localization_bloc/localization_state.dart';
+import 'theme/presentation/bloc/theme_bloc.dart';
+import 'theme/presentation/bloc/theme_event.dart';
 // import 'localization/app_localizations.dart';
 // import 'localization/localization_bloc/localization_bloc.dart';
 // import 'package:flutter_localizations/flutter_localizations.dart';
@@ -162,19 +175,30 @@ import 'features/start/presentation/pages/start_page.dart';
 //   }
 // }
 // main.dart - Fixed version
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Initialize SharedPreferences first
   final sharedPreferences = await SharedPreferences.getInstance();
   getIt.registerSingleton<SharedPreferences>(sharedPreferences);
+  try {
+    // Initialize Hive
+    await Hive.initFlutter();
 
-  // Setup all dependencies including localization
+    // Register adapters
+    Hive.registerAdapter(DepartmentModelAdapter());
+
+    print('Hive initialized successfully');
+  } catch (e) {
+    print('Error initializing Hive: $e');
+    rethrow;
+  }
+
   setupDependencies();
 
   // Initialize notification service
   await NotificationService.initialize();
   await NotificationService.requestPermissions();
+
   runApp(const MyApp());
 }
 
@@ -187,23 +211,39 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   late NotificationBloc _notificationBloc;
+  late LocalizationBloc _localizationBloc;
+  late ThemeBloc _themeBloc;
+  late AuthBloc _authBloc; // Add AuthBloc
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _notificationBloc = getIt<NotificationBloc>();
+    _localizationBloc = getIt<LocalizationBloc>();
+    _themeBloc = getIt<ThemeBloc>();
+    _authBloc = getIt<AuthBloc>(); // Initialize AuthBloc
 
     // Start notification service when app starts
     NotificationService.startService();
 
     // Connect to notifications in foreground
     _notificationBloc.add(NotificationConnect());
+    _localizationBloc.add(LoadCurrentLanguage());
+    _themeBloc.add(const LoadTheme());
+
+    // Check authentication status on app startup
+    _authBloc.add(CheckAuthStatusRequested());
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _notificationBloc.close();
+    _localizationBloc.close();
+    _themeBloc.close();
+    _authBloc.close(); // Close AuthBloc
+    Hive.close();
     super.dispose();
   }
 
@@ -215,6 +255,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       case AppLifecycleState.resumed:
       // App is in foreground
         _notificationBloc.add(NotificationConnect());
+        // Re-check auth status when app resumes
+        _authBloc.add(CheckAuthStatusRequested());
         break;
       case AppLifecycleState.paused:
       // App is in background
@@ -229,28 +271,74 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<NotificationBloc>.value(value: _notificationBloc),
-        // Add other BLoCs here
+        BlocProvider.value(value: _notificationBloc),
+        BlocProvider.value(value: _localizationBloc),
+        BlocProvider.value(value: _themeBloc),
+        BlocProvider.value(value: _authBloc), // Add AuthBloc to providers
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          fontFamily: 'Poppins',
-          textTheme: const TextTheme(
-            displayLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-            bodyLarge: TextStyle(
-              fontSize: 16,
-              color: Colors.black87,
+      child: BlocBuilder<LocalizationBloc, LocalizationState>(
+        builder: (context, localizationState) {
+          Locale currentLocale = const Locale('en');
+
+          if (localizationState is LocalizationLoaded) {
+            currentLocale = Locale(localizationState.currentLanguage.code);
+          }
+
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+
+            // Localization configuration
+            locale: currentLocale,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: Language.supportedLanguages
+                .map((language) => Locale(language.code))
+                .toList(),
+
+            theme: ThemeData(
+              fontFamily: 'Poppins',
+              textTheme: const TextTheme(
+                displayLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                bodyLarge: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black87,
+                ),
+              ),
             ),
-          ),
-        ),
-        initialRoute: '/start',
-        routes: {
-          '/splashScreen': (context) => const SplashScreen(),
-          '/start': (context) => const StartPage(),
-          '/login': (context) => const AppWrapper(),
-          '/departments': (context) => const DepartmentsPage(),
-          '/notifications': (context) => const NotificationsPage(),
+
+            // Use home instead of initialRoute for dynamic routing
+            home: BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, authState) {
+                // Show loading screen while checking auth status
+                if (authState is AuthInitial || authState is AuthLoading) {
+                  return const SplashScreen(); // or loading screen
+                }
+
+                // If user is authenticated and wants to stay signed in, go directly to home
+                if (authState is AuthAuthenticated) {
+                  return const HomePage();
+                }
+
+                // If user has saved credentials, still show start page but with quick login options
+                // The start page will handle showing the login modal with saved credentials
+                return const StartPage();
+              },
+            ),
+
+            // Keep your existing routes for navigation
+            routes: {
+              '/splashScreen': (context) => const SplashScreen(),
+              '/start': (context) => const StartPage(),
+              '/login': (context) => const AppWrapper(),
+              '/departments': (context) => const DepartmentsPage(),
+              '/notifications': (context) => const NotificationsPage(),
+              '/home': (context) => const HomePage(),
+            },
+          );
         },
       ),
     );

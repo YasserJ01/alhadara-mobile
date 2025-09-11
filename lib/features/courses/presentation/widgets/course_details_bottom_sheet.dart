@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../domain/entites/course.dart';
 import '../bloc/course_schedule_bloc/course_schedule_bloc.dart';
 import '../bloc/course_schedule_bloc/course_schedule_event.dart';
 import '../bloc/course_schedule_bloc/course_schedule_state.dart';
@@ -16,6 +17,15 @@ class CourseDetailsBottomSheet extends StatefulWidget {
   final int maxStudent;
   final bool certificationEligible;
   final bool isWishlisted;
+  final int? requiredLanguage;
+  final String? requiredLanguageName;
+  final int? requiredLanguageLevel;
+  final String? requiredLanguageLevelDisplay;
+  final bool canEnroll;
+  final String languageMessage;
+  final bool hasDiscount; // أضف هذا
+  final DiscountInfo? discountInfo; // أضف هذا
+  final String? originalPrice;
 
   const CourseDetailsBottomSheet({
     super.key,
@@ -27,6 +37,15 @@ class CourseDetailsBottomSheet extends StatefulWidget {
     required this.maxStudent,
     required this.certificationEligible,
     required this.isWishlisted,
+    this.requiredLanguage,
+    required this.canEnroll,
+    required this.languageMessage,
+    this.requiredLanguageLevel,
+    this.requiredLanguageLevelDisplay,
+    this.requiredLanguageName,
+    required this.hasDiscount, // أضف هذا
+    this.discountInfo, // أضف هذا
+    this.originalPrice,
   });
 
   @override
@@ -123,6 +142,15 @@ class _CourseDetailsBottomSheetState extends State<CourseDetailsBottomSheet> {
                 certificationEligible: widget.certificationEligible,
                 selectedScheduleId: selectedScheduleId,
                 isWishlisted: widget.isWishlisted,
+                requiredLanguage: widget.requiredLanguage,
+                requiredLanguageName: widget.requiredLanguageName,
+                requiredLanguageLevel: widget.requiredLanguageLevel,
+                requiredLanguageLevelDisplay: widget.requiredLanguageLevelDisplay,
+                canEnroll: widget.canEnroll,
+                languageMessage: widget.languageMessage,
+                hasDiscount: widget.hasDiscount, // أضف هذا
+                discountInfo: widget.discountInfo, // أضف هذا
+                originalPrice: widget.originalPrice,
               ),
 
               const SizedBox(height: 20),

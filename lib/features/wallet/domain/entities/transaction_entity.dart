@@ -3,8 +3,8 @@ class TransactionEntity {
   final String referenceId;
   final String transactionType;
   final String amount;
-  final String? senderName;
-  final String receiverName;
+  // final String? senderName;
+  // final String? receiverName;
   final String status;
   final String description;
   final DateTime createdAt;
@@ -14,8 +14,8 @@ class TransactionEntity {
     required this.referenceId,
     required this.transactionType,
     required this.amount,
-    this.senderName,
-    required this.receiverName,
+    // this.senderName,
+    // required this.receiverName,
     required this.status,
     required this.description,
     required this.createdAt,

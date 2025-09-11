@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 class LessonModel extends Equatable {
   final int id;
   final String title;
-  final String notes;
+  final String? notes;
   final int course;
   final int scheduleSlot;
   final int lessonOrder;
@@ -27,7 +27,7 @@ class LessonModel extends Equatable {
     return LessonModel(
       id: json['id'] as int,
       title: json['title'] as String,
-      notes: json['notes'] as String,
+      notes: json['notes'] as String? ?? '',
       course: json['course'] as int,
       scheduleSlot: json['schedule_slot'] as int,
       lessonOrder: json['lesson_order'] as int,
@@ -55,7 +55,7 @@ class LessonModel extends Equatable {
   List<Object> get props => [
         id,
         title,
-        notes,
+        notes!,
         course,
         scheduleSlot,
         lessonOrder,

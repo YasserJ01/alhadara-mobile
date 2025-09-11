@@ -101,9 +101,8 @@ import '../bloc/security_question_bloc.dart';
 //  }
 
 class SecurityQuestionContent extends StatefulWidget {
-  final String authToken;
 
-  const SecurityQuestionContent({super.key, required this.authToken});
+  const SecurityQuestionContent({super.key});
 
   @override
   State<SecurityQuestionContent> createState() => _SecurityQuestionContentState();
@@ -192,7 +191,6 @@ class _SecurityQuestionContentState extends State<SecurityQuestionContent> {
             if (_selectedQuestion != null && _answerController.text.isNotEmpty) {
               context.read<SecurityQuestionBloc>().add(
                 SubmitSecurityAnswer(
-                  token: widget.authToken,
                   questionId: _selectedQuestion!.id,
                   answer: _answerController.text,
                 ),

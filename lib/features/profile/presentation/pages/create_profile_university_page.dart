@@ -2,7 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/constants/app_elevated_button.dart';
+import '../../../../core/constants/app_scaffold.dart';
+import '../../../../core/constants/colors.dart';
 import '../../../../dependencies.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../domain/entity/studyfield.dart';
 import '../../domain/entity/university.dart';
 import '../bloc/create_profile/create_profile_bloc.dart';
@@ -51,22 +55,22 @@ class _CreateProfileUniversityPageState
   void _createProfile() {
     if (_formKey.currentState!.validate()) {
       context.read<CreateProfileBloc>().add(CreateProfileSubmitted(
-            birthDate: widget.birthDate,
-            gender: widget.gender,
-            address: widget.address,
-            academicStatus: widget.academicStatus,
-            university: _selectedUniversity!.id,
-            studyfield: _selectedStudyfield!.id,
-          ));
+        birthDate: widget.birthDate,
+        gender: widget.gender,
+        address: widget.address,
+        academicStatus: widget.academicStatus,
+        university: _selectedUniversity!.id,
+        studyfield: _selectedStudyfield!.id,
+      ));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('University & Study Field'),
-      ),
+    final l10n = AppLocalizations.of(context);
+
+    return AppScaffold(
+      title: l10n.createProfile,
       body: MultiBlocListener(
         listeners: [
           BlocListener<CreateProfileBloc, CreateProfileState>(
@@ -133,62 +137,193 @@ class _CreateProfileUniversityPageState
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        const Text(
-                          'University & Study Field',
-                          style: TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
+                         Text(
+                          l10n.universityAndStudyField,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                         const SizedBox(height: 20),
-                        DropdownButtonFormField<University>(
-                          value: _selectedUniversity,
-                          decoration:
-                              const InputDecoration(labelText: 'University'),
-                          items: _universities.map((university) {
-                            return DropdownMenuItem(
-                              value: university,
-                              child: Text(university.name),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedUniversity = value;
-                            });
-                          },
-                          validator: (value) {
-                            if (value == null) {
-                              return 'Please select a university';
-                            }
-                            return null;
-                          },
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8), // Increased padding
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: AppColors.mainColor
+                                  .withOpacity(0.3), // Softer border color
+                              width: 1.5, // Slightly thicker border
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.mainColor
+                                    .withOpacity(0.1), // Themed shadow color
+                                spreadRadius: 2,
+                                blurRadius: 12,
+                                offset: const Offset(0, 4),
+                              )
+                            ],
+                          ),
+                          child: DropdownButtonFormField<University>(
+                            dropdownColor: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            elevation: 8,
+                            icon: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 0),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColors.mainColor.withOpacity(
+                                    0.1), // Circular icon background
+                              ),
+                              child: Icon(
+                                Icons
+                                    .keyboard_arrow_down_rounded, // Rounded arrow icon
+                                color: AppColors.mainColor,
+                                size: 24, // Larger icon
+                              ),
+                            ),
+                            style: TextStyle(
+                              color: Colors.grey[
+                              800], // Darker text for better readability
+                              fontSize: 16, // Slightly larger font
+                              fontWeight: FontWeight.w500,
+                            ),
+                            hint: Text(
+                              l10n.selectYourUniversity,
+                              style: TextStyle(
+                                color: Colors.grey[
+                                500], // Hint style when nothing is selected
+                                fontSize: 16,
+                              ),
+                            ),
+                            value: _selectedUniversity,
+                            decoration:  InputDecoration(
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide:
+                                    BorderSide(color: AppColors.mainColor)),
+                                labelText: l10n.university,
+                                labelStyle: TextStyle(
+                                    color: Color.fromARGB(255, 201, 89, 89),
+                                    fontSize: 16)),
+                            items: _universities.map((university) {
+                              return DropdownMenuItem(
+                                alignment: Alignment.center,
+                                value: university,
+                                child: Text(university.name),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedUniversity = value;
+                              });
+                            },
+                            validator: (value) {
+                              if (value == null) {
+                                return l10n.pleaseSelectUniversity;
+                              }
+                              return null;
+                            },
+                          ),
                         ),
                         const SizedBox(height: 16),
-                        DropdownButtonFormField<Studyfield>(
-                          value: _selectedStudyfield,
-                          decoration:
-                              const InputDecoration(labelText: 'Study Field'),
-                          items: _studyfields.map((studyfield) {
-                            return DropdownMenuItem(
-                              value: studyfield,
-                              child: Text(studyfield.name),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedStudyfield = value;
-                            });
-                          },
-                          validator: (value) {
-                            if (value == null) {
-                              return 'Please select a study field';
-                            }
-                            return null;
-                          },
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8), // Increased padding
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: AppColors.mainColor
+                                  .withOpacity(0.3), // Softer border color
+                              width: 1.5, // Slightly thicker border
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.mainColor
+                                    .withOpacity(0.1), // Themed shadow color
+                                spreadRadius: 2,
+                                blurRadius: 12,
+                                offset: const Offset(0, 4),
+                              )
+                            ],
+                          ),
+                          child: DropdownButtonFormField<Studyfield>(
+                            dropdownColor: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            elevation: 8,
+                            icon: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 0),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColors.mainColor.withOpacity(
+                                    0.1), // Circular icon background
+                              ),
+                              child: Icon(
+                                Icons
+                                    .keyboard_arrow_down_rounded, // Rounded arrow icon
+                                color: AppColors.mainColor,
+                                size: 24, // Larger icon
+                              ),
+                            ),
+                            style: TextStyle(
+                              color: Colors.grey[
+                              800], // Darker text for better readability
+                              fontSize: 16, // Slightly larger font
+                              fontWeight: FontWeight.w500,
+                            ),
+                            hint: Text(
+                              l10n.selectYourStudyField,
+                              style: TextStyle(
+                                color: Colors.grey[
+                                500], // Hint style when nothing is selected
+                                fontSize: 16,
+                              ),
+                            ),
+                            value: _selectedStudyfield,
+                            decoration:  InputDecoration(
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide:
+                                    BorderSide(color: AppColors.mainColor)),
+                                labelText: l10n.studyField,
+                                labelStyle: TextStyle(
+                                    color: Color.fromARGB(255, 201, 89, 89),
+                                    fontSize: 18)),
+                            items: _studyfields.map((studyfield) {
+                              return DropdownMenuItem(
+                                alignment: Alignment.center,
+                                value: studyfield,
+                                child: Text(studyfield.name),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedStudyfield = value;
+                              });
+                            },
+                            validator: (value) {
+                              if (value == null) {
+                                return l10n.pleaseSelectStudyField;
+                              }
+                              return null;
+                            },
+                          ),
                         ),
-                        const SizedBox(height: 32),
-                        ElevatedButton(
+                        const SizedBox(height: 300),
+                        AppElevatedButton(
                           onPressed: _createProfile,
-                          child: const Text('Create Profile'),
-                        ),
+                          child: Text(
+                            l10n.createProfile,
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        )
+                        // ElevatedButton(
+                        //   onPressed: _createProfile,
+                        //   child: const Text('Create Profile'),
+                        // ),
                       ],
                     ),
                   ),

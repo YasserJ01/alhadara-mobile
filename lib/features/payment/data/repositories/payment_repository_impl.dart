@@ -5,6 +5,8 @@ import '../../domain/entities/deposit_method_entity.dart';
 import '../../domain/entities/deposit_request.dart';
 import '../../domain/repositories/payment_repository.dart';
 import '../datasources/payment_remote_data_source.dart';
+import '../../domain/entities/withdrawal_entity.dart';
+
 
 class PaymentRepositoryImpl implements PaymentRepository {
   final PaymentRemoteDataSource remoteDataSource;
@@ -46,6 +48,30 @@ class PaymentRepositoryImpl implements PaymentRepository {
     try {
       final models = await remoteDataSource.getDepositMethods();
       return models.map((model) => model.toEntity()).toList();
+    } catch (e) {
+      if (e is Failure) rethrow;
+      throw ServerFailure();
+    }
+  }
+  @override
+  Future<WithdrawalEntity> createWithdrawalRequest({
+    required double amount,
+    required String pickupDatetime,
+  }) async {
+    try {
+      final withdrawalModel = await remoteDataSource.createWithdrawalRequest(
+        amount: amount,
+        pickupDatetime: pickupDatetime,
+      );
+
+      return WithdrawalEntity(
+        id: withdrawalModel.id,
+        amount: withdrawalModel.amount,
+        requestedAt: withdrawalModel.requestedAt,
+        pickupDatetime: withdrawalModel.pickupDatetime,
+        status: withdrawalModel.status,
+        handledAt: withdrawalModel.handledAt,
+      );
     } catch (e) {
       if (e is Failure) rethrow;
       throw ServerFailure();

@@ -12,12 +12,20 @@ class HomeInitial extends HomeState {}
 class HomeLoading extends HomeState {}
 
 class HomeLoaded extends HomeState {
+  final List<Course> recommendedCourses;
+  final List<Course> dealsCourses;
+
   final List<Map<String, dynamic>> featuredCourses;
 
-  const HomeLoaded({required this.featuredCourses});
+  const HomeLoaded({
+    required this.recommendedCourses,
+    required this.featuredCourses,
+    required this.dealsCourses,
+
+  });
 
   @override
-  List<Object> get props => [featuredCourses];
+  List<Object> get props => [recommendedCourses, featuredCourses,dealsCourses];
 }
 
 class HomeError extends HomeState {

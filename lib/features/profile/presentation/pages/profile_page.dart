@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project2/dependencies.dart';
+import 'package:project2/l10n/generated/app_localizations.dart';
+import '../../../../core/constants/app_elevated_button.dart';
+import '../../../../core/constants/app_scaffold.dart';
+import '../../../../core/constants/colors.dart';
+import '../../../../core/theme/app_theme_helper.dart';
+import '../../../../theme/presentation/bloc/theme_bloc.dart';
+import '../../../../theme/presentation/bloc/theme_state.dart';
+import '../../../home/presentation/pages/home_page.dart';
 import '../bloc/create_profile/create_profile_bloc.dart';
 import '../bloc/view_profile/profile_bloc.dart';
 import '../widgets/profile_content.dart';
@@ -8,45 +16,30 @@ import 'create_profile_basic_info_page.dart';
 
 //profile_page.dart
 class ProfilePage extends StatelessWidget {
-  // final String token;
-
   const ProfilePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return BlocProvider(
       create: (_) => getIt<ProfileBloc>()
         ..add(
           const LoadProfile(),
         ),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        // backgroundColor: Color.fromRGBO(244, 248, 251, 1.0),
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          // backgroundColor: Color.fromRGBO(244, 248, 251, 1.0),
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-            onPressed: () => Navigator.pop(context),
-          ),
-          title: const Text(
-            'Profile',
-            style: TextStyle(
-              color: Color.fromRGBO(162, 12, 13, 1.0),
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
+      child: AppScaffold(
+        title: l10n.profile,
+        icon: Icons.home_outlined,
+        onPressedEndIcon: () {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) {
+                return const HomePage();
+              },
             ),
-          ),
-          centerTitle: true,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.notifications_outlined,
-                  color: Color.fromRGBO(162, 12, 13, 1.0)),
-              onPressed: () {},
-            ),
-          ],
-        ),
+          );
+        },
+        elevation: 5,
         body: BlocBuilder<ProfileBloc, ProfileState>(
           builder: (context, state) {
             if (state is ProfileLoading) {
@@ -60,60 +53,86 @@ class ProfilePage extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
-                        Icons.person_add_alt_1,
-                        size: 64,
-                        color: Color.fromRGBO(162, 12, 13, 1.0),
+                      BlocBuilder<ThemeBloc, ThemeState>(
+                        builder: (context, themeState) {
+                          Color iconColor = AppColors.mainColor;
+                          if (themeState is ThemeLoaded) {
+                            iconColor = AppThemeHelper.getIconColor(themeState.theme);
+                          }
+                          return Icon(
+                            Icons.person_add_alt_1,
+                            size: 64,
+                            color: iconColor,
+                          );
+                        },
                       ),
                       const SizedBox(height: 20),
-                      const Text(
-                        'No Profile Found',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromRGBO(162, 12, 13, 1.0),
-                        ),
+                      BlocBuilder<ThemeBloc, ThemeState>(
+                        builder: (context, themeState) {
+                          Color textColor = AppColors.mainColor;
+                          if (themeState is ThemeLoaded) {
+                            textColor = AppThemeHelper.getTextColor(themeState.theme);
+                          }
+                          return Text(
+                            l10n.noProfileFound,
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: textColor,
+                            ),
+                          );
+                        },
                       ),
                       const SizedBox(height: 10),
-                      const Text(
-                        'You don\'t have a profile yet. Would you like to create one?',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                      BlocBuilder<ThemeBloc, ThemeState>(
+                        builder: (context, themeState) {
+                          Color secondaryColor = Colors.grey;
+                          if (themeState is ThemeLoaded) {
+                            secondaryColor = AppThemeHelper.getSecondaryTextColor(themeState.theme);
+                          }
+                          return Text(
+                            l10n.noProfileFoundMessage,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: secondaryColor
+                            ),
+                          );
+                        },
                       ),
                       const SizedBox(height: 30),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 30,
-                            vertical: 15,
-                          ),
-                          // shadowColor: Colors.black
-                          side: const BorderSide(
-                            style: BorderStyle.solid,
-                            color: Color.fromRGBO(162, 12, 13, 1.0),
-                          ),
-                        ),
-                        onPressed: () {
-                          // Navigate to create profile page
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => BlocProvider(
-                                create: (context) => getIt<CreateProfileBloc>(),
-                                child: const CreateProfileBasicInfoPage(),
+                      BlocBuilder<ThemeBloc, ThemeState>(
+                        builder: (context, themeState) {
+                          Color textColor = AppColors.mainColor;
+                          Color cardColor = Colors.white;
+                          if (themeState is ThemeLoaded) {
+                            textColor = AppThemeHelper.getTextColor(themeState.theme);
+                            cardColor = AppThemeHelper.getCardColor(themeState.theme);
+                          }
+                          return AppElevatedButton(
+                            backgroundColor: cardColor,
+                            side: BorderSide(color: textColor),
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BlocProvider(
+                                    create: (context) => getIt<CreateProfileBloc>(),
+                                    child: const CreateProfileBasicInfoPage(),
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              l10n.createProfile,
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: textColor,
                               ),
                             ),
                           );
                         },
-                        child: const Text(
-                          'Create Profile',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Color.fromRGBO(162, 12, 13, 1.0),
-                          ),
-                        ),
-                      ),
+                      )
                     ],
                   ),
                 ),
@@ -123,18 +142,39 @@ class ProfilePage extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.error_outline,
-                        size: 64, color: Colors.red),
+                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
                     const SizedBox(height: 16),
-                    Text(
-                      'Error loading profile',
-                      style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+                    BlocBuilder<ThemeBloc, ThemeState>(
+                      builder: (context, themeState) {
+                        Color secondaryColor = Colors.grey[600]!;
+                        if (themeState is ThemeLoaded) {
+                          secondaryColor = AppThemeHelper.getSecondaryTextColor(themeState.theme);
+                        }
+                        return Text(
+                          'Error loading profile',
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: secondaryColor
+                          ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 8),
-                    Text(
-                      state.message,
-                      style: TextStyle(fontSize: 14, color: Colors.grey[500]),
-                      textAlign: TextAlign.center,
+                    BlocBuilder<ThemeBloc, ThemeState>(
+                      builder: (context, themeState) {
+                        Color secondaryColor = Colors.grey[500]!;
+                        if (themeState is ThemeLoaded) {
+                          secondaryColor = AppThemeHelper.getSecondaryTextColor(themeState.theme);
+                        }
+                        return Text(
+                          state.message,
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: secondaryColor
+                          ),
+                          textAlign: TextAlign.center,
+                        );
+                      },
                     ),
                     const SizedBox(height: 16),
                     ElevatedButton(

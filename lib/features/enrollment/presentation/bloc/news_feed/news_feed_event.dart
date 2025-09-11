@@ -2,6 +2,8 @@
 // lib/features/news_feed/presentation/bloc/news_feed_event.dart
 import 'package:equatable/equatable.dart';
 
+import '../../../domain/entities/news_feed_entity.dart';
+
 abstract class NewsFeedEvent extends Equatable {
   const NewsFeedEvent();
 
@@ -35,4 +37,12 @@ class DownloadFile extends NewsFeedEvent {
 
   @override
   List<Object> get props => [url, fileName];
+}
+
+class NewsFeedItemAdded extends NewsFeedEvent {
+  final NewsFeedEntity item;
+  const NewsFeedItemAdded(this.item);
+
+  @override
+  List<Object> get props => [item];
 }

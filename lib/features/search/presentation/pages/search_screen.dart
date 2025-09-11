@@ -1,6 +1,10 @@
 // lib/features/search/presentation/pages/search_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/constants/colors.dart';
+import '../../../../core/theme/app_theme_helper.dart';
+import '../../../../theme/presentation/bloc/theme_bloc.dart';
+import '../../../../theme/presentation/bloc/theme_state.dart';
 import '../bloc/search_bloc.dart';
 import '../bloc/search_event.dart';
 import '../bloc/search_state.dart';
@@ -19,71 +23,87 @@ class SearchScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[50],
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Search Bar Section
-            Container(
-              color: Colors.white,
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  Hero(
-                    tag: 'search-bar',
-                    child: Material(
-                      color: Colors.transparent,
-                      child: SearchBarWidget(
-                        initialQuery: initialQuery,
-                        onSearchChanged: (query) {
-                          if (query.isNotEmpty) {
-                            context.read<SearchBloc>().add(
-                              SearchCoursesEvent(query: query),
-                            );
-                          } else {
-                            context.read<SearchBloc>().add(ClearSearchEvent());
-                          }
-                        },
-                        onFilterTap: () => _showFiltersBottomSheet(context),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+    return BlocBuilder<ThemeBloc, ThemeState>(
+      builder: (context, themeState) {
+        Color backgroundColor = const Color(0xffF4F8FB);
+        Color cardColor = Colors.white;
+        Color textColor = AppColors.mainColor;
+        Color secondaryTextColor = Colors.grey[600]!;
 
-            // Results Section
-            Expanded(
-              child: BlocBuilder<SearchBloc, SearchState>(
-                builder: (context, state) {
-                  if (state is SearchInitial) {
-                    return _buildInitialState();
-                  } else if (state is SearchLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (state is SearchLoaded) {
-                    return SearchResultsWidget(
-                      result: state.result,
-                      query: state.query,
-                    );
-                  } else if (state is SearchEmpty) {
-                    return _buildEmptyState(state.query);
-                  } else if (state is SearchError) {
-                    return _buildErrorState(state.message);
-                  }
-                  return const SizedBox.shrink();
-                },
-              ),
+        if (themeState is ThemeLoaded) {
+          backgroundColor = AppThemeHelper.getBackgroundColor(themeState.theme);
+          cardColor = AppThemeHelper.getCardColor(themeState.theme);
+          textColor = AppThemeHelper.getTextColor(themeState.theme);
+          secondaryTextColor = AppThemeHelper.getSecondaryTextColor(themeState.theme);
+        }
+
+        return Scaffold(
+          backgroundColor: backgroundColor,
+          body: SafeArea(
+            child: Column(
+              children: [
+                // Search Bar Section
+                Container(
+                  color: cardColor,
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      Hero(
+                        tag: 'search-bar',
+                        child: Material(
+                          color: Colors.transparent,
+                          child: SearchBarWidget(
+                            initialQuery: initialQuery,
+                            onSearchChanged: (query) {
+                              if (query.isNotEmpty) {
+                                context.read<SearchBloc>().add(
+                                  SearchCoursesEvent(query: query),
+                                );
+                              } else {
+                                context.read<SearchBloc>().add(ClearSearchEvent());
+                              }
+                            },
+                            onFilterTap: () => _showFiltersBottomSheet(context),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Results Section
+                Expanded(
+                  child: BlocBuilder<SearchBloc, SearchState>(
+                    builder: (context, state) {
+                      if (state is SearchInitial) {
+                        return _buildInitialState(secondaryTextColor);
+                      } else if (state is SearchLoading) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (state is SearchLoaded) {
+                        return SearchResultsWidget(
+                          result: state.result,
+                          query: state.query,
+                        );
+                      } else if (state is SearchEmpty) {
+                        return _buildEmptyState(state.query, textColor, secondaryTextColor);
+                      } else if (state is SearchError) {
+                        return _buildErrorState(state.message, textColor, secondaryTextColor);
+                      }
+                      return const SizedBox.shrink();
+                    },
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildInitialState() {
+  Widget _buildInitialState(Color secondaryTextColor) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -91,14 +111,14 @@ class SearchScreen extends StatelessWidget {
           Icon(
             Icons.search,
             size: 80,
-            color: Colors.grey[400],
+            color: secondaryTextColor,
           ),
           const SizedBox(height: 16),
           Text(
             'Search for courses, departments, or course types',
             style: TextStyle(
               fontSize: 16,
-              color: Colors.grey[600],
+              color: secondaryTextColor,
             ),
             textAlign: TextAlign.center,
           ),
@@ -107,7 +127,7 @@ class SearchScreen extends StatelessWidget {
             'Use filters to narrow down your search',
             style: TextStyle(
               fontSize: 14,
-              color: Colors.grey[500],
+              color: secondaryTextColor.withOpacity(0.8),
             ),
           ),
         ],
@@ -115,7 +135,7 @@ class SearchScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState(String query) {
+  Widget _buildEmptyState(String query, Color textColor, Color secondaryTextColor) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -123,14 +143,15 @@ class SearchScreen extends StatelessWidget {
           Icon(
             Icons.search_off,
             size: 80,
-            color: Colors.grey[400],
+            color: secondaryTextColor,
           ),
           const SizedBox(height: 16),
           Text(
             'No results found for "$query"',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
+              color: textColor,
             ),
           ),
           const SizedBox(height: 8),
@@ -138,7 +159,7 @@ class SearchScreen extends StatelessWidget {
             'Try adjusting your search terms or filters',
             style: TextStyle(
               fontSize: 14,
-              color: Colors.grey[600],
+              color: secondaryTextColor,
             ),
           ),
         ],
@@ -146,7 +167,7 @@ class SearchScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildErrorState(String message) {
+  Widget _buildErrorState(String message, Color textColor, Color secondaryTextColor) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -157,11 +178,12 @@ class SearchScreen extends StatelessWidget {
             color: Colors.red[400],
           ),
           const SizedBox(height: 16),
-          const Text(
+          Text(
             'Oops! Something went wrong',
-            style:  TextStyle(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
+              color: textColor,
             ),
           ),
           const SizedBox(height: 8),
@@ -171,7 +193,7 @@ class SearchScreen extends StatelessWidget {
               message,
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.grey[600],
+                color: secondaryTextColor,
               ),
               textAlign: TextAlign.center,
             ),
@@ -182,18 +204,35 @@ class SearchScreen extends StatelessWidget {
   }
 
   void _showFiltersBottomSheet(BuildContext context) {
-    // Get the SearchBloc instance from the current context
     final searchBloc = context.read<SearchBloc>();
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => SearchFiltersWidget(
-        searchBloc: searchBloc, // Pass the SearchBloc instance
-        onApplyFilters: (filters) {
-          searchBloc.add(
-            UpdateFiltersEvent(filters: filters),
+      builder: (context) => BlocBuilder<ThemeBloc, ThemeState>(
+        builder: (context, themeState) {
+          Color cardColor = Colors.white;
+          if (themeState is ThemeLoaded) {
+            cardColor = AppThemeHelper.getCardColor(themeState.theme);
+          }
+
+          return Container(
+            decoration: BoxDecoration(
+              color: cardColor,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+            child: SearchFiltersWidget(
+              searchBloc: searchBloc,
+              onApplyFilters: (filters) {
+                searchBloc.add(
+                  UpdateFiltersEvent(filters: filters),
+                );
+              },
+            ),
           );
         },
       ),

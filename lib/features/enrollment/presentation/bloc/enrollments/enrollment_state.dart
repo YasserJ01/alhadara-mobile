@@ -37,3 +37,12 @@ class PaymentSuccess extends EnrollmentState {
   @override
   List<Object> get props => [message];
 }
+
+class EnrollmentDetailsLoaded extends EnrollmentState {
+  final EnrollmentEntity enrollment;
+
+  const EnrollmentDetailsLoaded(this.enrollment);
+
+  @override
+  List<Object> get props => [enrollment];
+}

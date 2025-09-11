@@ -12,6 +12,8 @@ class RegisterRequested extends RegisterEvent {
   final String phone;
   final String password;
   final String confirm_password;
+  final String captchaKey;
+  final String captchaAnswer;
 
   const RegisterRequested({
     required this.firstName,
@@ -20,6 +22,8 @@ class RegisterRequested extends RegisterEvent {
     required this.phone,
     required this.password,
     required this.confirm_password,
+    required this.captchaKey,
+    required this.captchaAnswer,
   });
 
   @override
@@ -30,5 +34,7 @@ class RegisterRequested extends RegisterEvent {
         phone,
         password,
         confirm_password,
+    captchaKey,
+    captchaAnswer,
       ];
 }

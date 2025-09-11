@@ -6,11 +6,10 @@ abstract class SecurityQuestionEvent extends Equatable {
 }
 
 class LoadSecurityQuestions extends SecurityQuestionEvent {
-  final String authToken;
 
-  const LoadSecurityQuestions(this.authToken);
+  const LoadSecurityQuestions();
 
-  @override List<Object?> get props => [authToken];
+  @override List<Object?> get props => [];
 }
 
 class SelectSecurityQuestion extends SecurityQuestionEvent {
@@ -23,16 +22,14 @@ class SelectSecurityQuestion extends SecurityQuestionEvent {
 }
 
 class SubmitSecurityAnswer extends SecurityQuestionEvent {
-  final String token;
   final int questionId;
   final String answer;
 
   const SubmitSecurityAnswer({
-    required this.token,
     required this.questionId,
     required this.answer,
   });
 
   @override
-  List<Object> get props => [token, questionId, answer];
+  List<Object> get props => [questionId, answer];
 }

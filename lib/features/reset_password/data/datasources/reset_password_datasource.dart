@@ -39,10 +39,12 @@ class PasswordResetApi {
   Future<List<SecurityQuestion>> requestSecurityQuestion(
       String phoneNumber) async {
     final response = await client.post(
-      Uri.parse('http://10.0.2.2:8000/api/core/reset-password/request_reset/'),
+      // Uri.parse('http://10.0.2.2:8000/api/core/reset-password/request_reset/'),
+      Uri.parse('https://optimum-kodiak-hardy.ngrok-free.app/api/core/reset-password/request_reset/'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'phone': phoneNumber}),
     );
+
     print('Raw API response: ${response.body}');
     final responseBody = json.decode(response.body);
     if (response.statusCode == 200) {
@@ -77,8 +79,10 @@ class PasswordResetApi {
     required String answer,
   }) async {
     final response = await client.post(
-      Uri.parse(
-          'http://10.0.2.2:8000/api/core/reset-password/validate_answers/'),
+      // Uri.parse(
+      //     'http://10.0.2.2:8000/api/core/reset-password/validate_answers/'),
+            Uri.parse(
+          'https://optimum-kodiak-hardy.ngrok-free.app/api/core/reset-password/validate_answers/'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'phone': phoneNumber,
@@ -109,7 +113,8 @@ class PasswordResetApi {
     required String confirmPassword,
   }) async {
     final response = await client.post(
-      Uri.parse('http://10.0.2.2:8000/api/core/reset-password/confirm_reset/'),
+      // Uri.parse('http://10.0.2.2:8000/api/core/reset-password/confirm_reset/'),
+      Uri.parse('https://optimum-kodiak-hardy.ngrok-free.app/api/core/reset-password/confirm_reset/'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'reset_token': resetToken,

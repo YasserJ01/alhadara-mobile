@@ -2,6 +2,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:project2/l10n/generated/app_localizations.dart';
+import '../../../../core/constants/app_elevated_button.dart';
+import '../../../../core/constants/app_scaffold.dart';
 import '../../../../dependencies.dart';
 import '../bloc/profile_image/profile_image_bloc.dart';
 import '../bloc/view_profile/profile_bloc.dart';
@@ -19,6 +22,7 @@ class _ProfileImageUploadPageState extends State<ProfileImageUploadPage> {
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage() async {
+    final l10n = AppLocalizations.of(context);
     try {
       final XFile? image = await _picker.pickImage(
         source: ImageSource.gallery,
@@ -34,12 +38,13 @@ class _ProfileImageUploadPageState extends State<ProfileImageUploadPage> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error picking image: $e')),
+        SnackBar(content: Text('${l10n.errorPickingImage}: $e')),
       );
     }
   }
 
   Future<void> _takePhoto() async {
+    final l10n = AppLocalizations.of(context);
     try {
       final XFile? image = await _picker.pickImage(
         source: ImageSource.camera,
@@ -55,28 +60,31 @@ class _ProfileImageUploadPageState extends State<ProfileImageUploadPage> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error taking photo: $e')),
+        SnackBar(content: Text('${l10n.errorTakingPhoto}: $e')),
       );
     }
   }
 
   void _uploadImage() {
     if (_selectedImage != null) {
-      context.read<ProfileImageBloc>().add(UploadProfileImageEvent(_selectedImage!));
+      context
+          .read<ProfileImageBloc>()
+          .add(UploadProfileImageEvent(_selectedImage!));
     }
   }
 
   void _showImageSourceDialog() {
+    final l10n = AppLocalizations.of(context);
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Select Image Source'),
+        title:  Text(l10n.selectImageSource),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
               leading: const Icon(Icons.photo_library),
-              title: const Text('Gallery'),
+              title:  Text(l10n.gallery),
               onTap: () {
                 Navigator.pop(context);
                 _pickImage();
@@ -84,7 +92,7 @@ class _ProfileImageUploadPageState extends State<ProfileImageUploadPage> {
             ),
             ListTile(
               leading: const Icon(Icons.camera_alt),
-              title: const Text('Camera'),
+              title:  Text(l10n.camera),
               onTap: () {
                 Navigator.pop(context);
                 _takePhoto();
@@ -98,16 +106,13 @@ class _ProfileImageUploadPageState extends State<ProfileImageUploadPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Upload Profile Picture'),
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
-      ),
+    final l10n = AppLocalizations.of(context);
+    return AppScaffold(
+      title: l10n.createProfile,
       body: BlocConsumer<ProfileImageBloc, ProfileImageState>(
         listener: (context, state) {
           if (state is ProfileImageUploaded) {
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (context) => BlocProvider(
@@ -138,85 +143,139 @@ class _ProfileImageUploadPageState extends State<ProfileImageUploadPage> {
           return Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Image Preview Section
-                Container(
-                  width: 200,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.grey[300]!, width: 2),
-                    color: Colors.grey[100],
+                 Text(
+                  l10n.uploadProfileImage,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    // letterSpacing: 1,
+                    //  color: Color.fromARGB(255, 109, 27, 27),
                   ),
-                  child: _selectedImage != null
-                      ? ClipOval(
-                    child: Image.file(
-                      _selectedImage!,
-                      fit: BoxFit.cover,
-                      width: 200,
-                      height: 200,
+                ),
+                const SizedBox(height: 32),
+                // Image Preview Section
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 60),
+                  child: Container(
+                    width: 200,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.grey[300]!, width: 2),
+                      color: Colors.grey[100],
                     ),
-                  )
-                      : const Icon(
-                    Icons.person,
-                    size: 100,
-                    color: Colors.grey,
+                    child: _selectedImage != null
+                        ? ClipOval(
+                      child: Image.file(
+                        _selectedImage!,
+                        fit: BoxFit.cover,
+                        width: 200,
+                        height: 200,
+                      ),
+                    )
+                        : const Icon(
+                      Icons.person,
+                      size: 100,
+                      color: Colors.grey,
+                    ),
                   ),
                 ),
 
                 const SizedBox(height: 30),
 
-                // Select Image Button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    onPressed: state is ProfileImageLoading ? null : _showImageSourceDialog,
-                    icon: const Icon(Icons.add_a_photo),
-                    label: Text(_selectedImage == null ? 'Select Image' : 'Change Image'),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
-                    ),
-                  ),
+                AppElevatedButton(
+                  icon: Icon(Icons.add_a_photo),
+                  label: Text(
+                      _selectedImage == null ? l10n.selectImage : l10n.changeImage),
+                  onPressed: state is ProfileImageLoading
+                      ? null
+                      : _showImageSourceDialog,
                 ),
+                // Select Image Button
+                // SizedBox(
+                //   width: double.infinity,
+                //   child:
+                //   ElevatedButton.icon(
+                //     onPressed:
+                // state is ProfileImageLoading
+                //         ? null
+                //         : _showImageSourceDialog,
+                //     icon: const Icon(Icons.add_a_photo),
+                //     label:
+                // Text(_selectedImage == null
+                //         ? 'Select Image'
+                //         : 'Change Image'),
+                //     style: ElevatedButton.styleFrom(
+                //       padding: const EdgeInsets.symmetric(vertical: 12),
+                //       backgroundColor: Colors.blue,
+                //       foregroundColor: Colors.white,
+                //     ),
+                //   ),
+                // ),
 
                 const SizedBox(height: 20),
 
                 // Upload Button
                 if (_selectedImage != null)
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      onPressed: state is ProfileImageLoading ? null : _uploadImage,
-                      icon: state is ProfileImageLoading
-                          ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                        ),
-                      )
-                          : const Icon(Icons.cloud_upload),
-                      label: Text(state is ProfileImageLoading ? 'Uploading...' : 'Upload'),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
+                  AppElevatedButton(
+                    onPressed:
+                    state is ProfileImageLoading ? null : _uploadImage,
+                    icon: state is ProfileImageLoading
+                        ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor:
+                        AlwaysStoppedAnimation<Color>(Colors.white),
                       ),
-                    ),
+                    )
+                        : const Icon(Icons.cloud_upload),
+                    label: Text(state is ProfileImageLoading
+                        ? l10n.uploading
+                        : l10n.upload),
+                    backgroundColor: Colors.green,
                   ),
+                // SizedBox(
+                //   width: double.infinity,
+                //   child: ElevatedButton.icon(
+                //     onPressed:
+                //         state is ProfileImageLoading ? null : _uploadImage,
+                //     icon:
+                //state is ProfileImageLoading
+                //         ? const SizedBox(
+                //             width: 20,
+                //             height: 20,
+                //             child: CircularProgressIndicator(
+                //               strokeWidth: 2,
+                //               valueColor:
+                //                   AlwaysStoppedAnimation<Color>(Colors.white),
+                //             ),
+                //           )
+                //         : const Icon(Icons.cloud_upload),
+                //     label:
+                //Text(state is ProfileImageLoading
+                //         ? 'Uploading...'
+                //         : 'Upload'),
+                //     style: ElevatedButton.styleFrom(
+                //       padding: const EdgeInsets.symmetric(vertical: 12),
+                //       backgroundColor: Colors.green,
+                //       foregroundColor: Colors.white,
+                //     ),
+                //   ),
+                // ),
 
                 const SizedBox(height: 20),
 
                 // Progress Indicator
                 if (state is ProfileImageLoading)
-                  const Column(
+                   Column(
                     children: [
-                      LinearProgressIndicator(),
-                      SizedBox(height: 10),
-                      Text('Uploading your profile picture...'),
+                      const LinearProgressIndicator(),
+                      const SizedBox(height: 10),
+                      Text(l10n.uploadingProfilePicture),
                     ],
                   ),
               ],

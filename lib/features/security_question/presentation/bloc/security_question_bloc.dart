@@ -30,7 +30,7 @@ class SecurityQuestionBloc
   ) async {
     emit(SecurityQuestionsLoading());
     try {
-      final questions = await getSecurityQuestionsUseCase(event.authToken);
+      final questions = await getSecurityQuestionsUseCase();
       emit(SecurityQuestionsLoaded(questions));
     } catch (e) {
       emit(SecurityQuestionError(e.toString()));
@@ -51,7 +51,6 @@ class SecurityQuestionBloc
     emit(SecurityAnswerSubmitting());
     try {
       await submitSecurityAnswerUseCase(
-        token: event.token,
         questionId: event.questionId,
         answer: event.answer,
       );
